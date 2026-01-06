@@ -1,0 +1,227 @@
+'use client'
+
+import React, { useState, useRef, useEffect } from 'react';
+import Tag from '../components/tag';
+import { ChevronDown } from 'lucide-react';
+
+function FaqCard({ question, answer }: { question: string; answer: string }) {
+  const [isOpen, setIsOpen] = useState(false);
+  const contentRef = useRef<HTMLDivElement>(null);
+  const [height, setHeight] = useState('0px');
+
+  // Smooth roll-down
+  useEffect(() => {
+    if (contentRef.current) {
+      setHeight(isOpen ? `${contentRef.current.scrollHeight}px` : '0px');
+    }
+  }, [isOpen]);
+
+  return (
+    <div
+      className={`main-faq-card-container relative mb-6 rounded-lg cursor-pointer select-none
+        border transition-all duration-500 ease-in-out
+        ${isOpen ? 'border-blue-500 border-2' : 'border-gray-300 border'}`}
+      onClick={() => setIsOpen(!isOpen)}
+    >
+      <div className="faq-header flex justify-between p-[20]">
+        <div className="faq-title text-md-semibold text-default-body">{question}</div>
+        <div
+          className={`faq-header-arrow transition-transform duration-300 ${
+            isOpen ? 'rotate-180' : 'rotate-0'
+          }`}
+        >
+          <ChevronDown />
+        </div>
+      </div>
+
+      <div
+        ref={contentRef}
+        style={{ height }}
+        className="overflow-hidden transition-[height] duration-500 ease-in-out"
+      >
+        <div className="faq-answer-text text-sm-medium p-[20]">{answer}</div>
+      </div>
+    </div>
+  );
+}
+
+export default function FaqSession() {
+  return (
+    <section className="mt-[100] mx-[21]">
+      <div className="main-faq-session-container">
+        <div className="main-faq-sesction-content">
+          <Tag text="FAQ" />
+          <div className="text-xl-semibold">
+            <div className="faqsession-header leading-6 my-[30px]">
+              GOT ANY QUESTIONS? <br />
+              <span className="text-primary-default">WE'VE GOT ANSWERS</span>
+            </div>
+          </div>
+
+          <FaqCard
+            question="What services does MASZ-Africa provide?"
+            answer="MASZ-Africa specializes in mining operations support, equipment supply, technical consultancy, safety solutions, and workforce training tailored to the mining and mineral processing industry. We are committed to improving operational efficiency, reducing risks, and promoting sustainable mining practices. Through innovation and industry expertise, we help our partners achieve long-term productivity and growth."
+          />
+
+          <FaqCard
+            question="How can I contact MASZ-Africa for support?"
+            answer="You can reach out via email, phone, or our contact form on the website. Our team is responsive and ready to assist you with your mining operations and equipment needs."
+          />
+
+          <FaqCard
+            question="Does MASZ-Africa offer training services?"
+            answer="Yes, MASZ-Africa provides workforce training tailored to mining operations and safety practices, ensuring your team is skilled and compliant with industry standards."
+          />
+        </div>
+      </div>
+    </section>
+  );
+}
+
+
+
+
+
+
+
+
+
+///////////// ONE ACCORDION OPENS AT A TIME
+
+
+'use client'
+
+import React, { useState, useRef } from 'react'
+import Tag from '../components/tag'
+import { ChevronDown } from 'lucide-react'
+
+export default function FaqSession() {
+  const faqObject = [
+    {
+      id: 1,
+      title: 'What services does MASZ-Africa provide?',
+      subtext:
+        'MASZ-Africa specializes in mining operations support, equipment supply, technical consultancy, safety solutions, and workforce training tailored to the mining and mineral processing industry.',
+    },
+    {
+      id: 2,
+      title: 'How can I contact MASZ-Africa for support?',
+      subtext:
+        'You can reach out via email, phone, or our contact form on the website.',
+    },
+    {
+      id: 3,
+      title: 'Does MASZ-Africa offer training services?',
+      subtext:
+        'Yes, MASZ-Africa provides workforce training tailored to mining operations and safety practices.',
+    },
+    {
+      id: 4,
+      title: 'Where does MASZ-Africa operate?',
+      subtext:
+        'MASZ-Africa operates across West Africa.',
+    },
+    {
+      id: 5,
+      title: 'Why choose MASZ-Africa?',
+      subtext:
+        'MASZ-Africa combines reliability, expertise, innovation, and sustainability.',
+    },
+  ]
+
+  const [openCard, setOpenCard] = useState<number | null>(null)
+  const refs = useRef<(HTMLDivElement | null)[]>([])
+
+  return (
+    <section className="mt-[100] mx-[21]">
+      <div className="main-faq-session-container">
+
+      <Tag text="FAQ" />
+
+      <div className="text-xl-semibold my-[30] leading-6">
+        GOT ANY QUESTIONS? <br />
+        <span className="text-primary-default">WE'VE GOT ANSWERS</span>
+      </div>
+
+      <div className="mt-[80]">
+        {faqObject.map((item, i) => (
+          <div
+            key={item.id}
+            onClick={() => setOpenCard(openCard === i ? null : i)}
+            className={`relative mb-4 cursor-pointer select-none
+              border-2 transition-colors duration-400
+              ${
+                openCard === i
+                  ? 'border-default-primary-thick'
+                  : 'border-default-card-stroke'
+              }`}
+          >
+            {/* Header */}
+            <div
+              className={`relative flex items-center justify-between p-[20]
+                transition-colors duration-300
+                ${
+                  openCard === i
+                    ? 'bg-surface-card-primary'
+                    : 'hover:bg-surface-card-primary'
+                }`}
+            >
+              <div className="text-md-semibold text-default-heading">
+                {item.title}
+              </div>
+
+              <div
+                className={`flex items-center justify-center rounded-full
+                  transition-colors duration-300 w-8 h-8
+                  ${
+                    openCard === i
+                      ? 'bg-surface-card-colored-primary text-light'
+                      : 'bg-transparent'
+                  }`}
+              >
+                <ChevronDown
+                  size={18}
+                  className={`transition-transform duration-500 ease-in-out
+                    ${openCard === i ? 'rotate-180' : 'rotate-0'}`}
+                />
+              </div>
+
+              {/* Divider (NO BORDER GLITCH) */}
+              <span
+                className={`absolute bottom-0 left-0 h-[1] w-full bg-gray-200
+                  transition-opacity duration-300
+                  ${openCard === i ? 'opacity-100' : 'opacity-0'}`}
+              />
+            </div>
+
+            {/* Body */}
+            <div
+              ref={(el) => {
+                refs.current[i] = el
+              }}
+              className="overflow-hidden transition-[max-height] duration-700 ease-[cubic-bezier(0.25,1,0.5,1)]"
+              style={{
+                maxHeight:
+                  openCard === i
+                    ? (refs.current[i]?.scrollHeight ?? 0) + 32
+                    : 0,
+              }}
+            >
+              <div
+                className={`px-[23] py-[20] text-md-medium text-default-body
+                  transition-opacity duration-500
+                  ${openCard === i ? 'opacity-100' : 'opacity-0'}`}
+              >
+                {item.subtext}
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+      <div className="faq-cta-card">
+        
+      </div>
+      </div>
+    </section>
+  )
+}

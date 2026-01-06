@@ -1,0 +1,85 @@
+import React from 'react';
+import AnimationCopy from '../animations/WritingTextAnimation';
+import PerformanceMetrics from '../components/PerformanceMetrics';
+import Image from 'next/image';
+
+function CoreValueSession() {
+  return (
+    <section>
+      <div className="core-value-section-container">
+
+        {/* Header */}
+        <div className="section-header uppercase text-xl-semibold ml-[22px] my-[30px]">
+          what makes us <span className="text-primary-default">stand out</span>
+        </div>
+
+        {/* Description */}
+        <AnimationCopy>
+          <div className="core-value-section-subtext text-lg-medium mx-[25px]">
+            Our uniqueness comes from blending product authenticity with real
+            technical intelligence and dependable service delivery. Every item
+            we supply is verified, traceable, and backed by expert insight
+            tailored to the realities of mining environments. This combination
+            allows us to offer solutions that improve efficiency, reduce risk,
+            and keep operations running without interruption.
+          </div>
+        </AnimationCopy>
+
+        {/* Metrics */}
+        <div className="metrics-container my-[50px]">
+          <PerformanceMetrics text="years of combined experience" value="15+" />
+          <PerformanceMetrics
+            text="clients who rely on our consistent delivery and expertise."
+            value="5+"
+          />
+          <PerformanceMetrics
+            text="client satisfaction built on trust, transparency, and performance."
+            value="99%"
+          />
+          <PerformanceMetrics
+            text="on-time delivery, driven by efficiency and dependable logistics."
+            value="98%"
+          />
+        </div>
+
+        {/* Images */}
+        <div className="core-value-section-images flex flex-col gap-[20px]">
+
+          {/* Image 1 */}
+          <div className="relative h-[300px] mx-[21px] overflow-hidden">
+            <Image
+              src="/homeAssets/Image-3.jpg"
+              alt="Core value visual"
+              fill
+              priority
+              className="object-cover"
+            />
+          </div>
+
+          {/* Image 2 & 3 */}
+          <div className="flex gap-[20px] mx-[21px]">
+            <div className="relative h-[200px] flex-1 overflow-hidden">
+              <Image
+                src="/homeAssets/Image-4.jpg"
+                alt="Core value visual"
+                fill
+                className="object-cover"
+              />
+            </div>
+            <div className="relative h-[200px] flex-1 overflow-hidden">
+              <Image
+                src="/homeAssets/Image-5.jpg"
+                alt="Core value visual"
+                fill
+                className="object-cover"
+              />
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+  );
+}
+
+export default CoreValueSession;
