@@ -96,16 +96,16 @@ function TestimonialSession() {
   }, [isPaused, scrollingItems.length]);
 
   return (
-    <section className="h-screen bg-[#f3f3f3] py-24 mt-[100] relative">
-      <div className="testimonial-session-main-container">
+    <section className="h-screen bg-[#f3f3f3] py-24 mt-[100] relative ">
+      <div className="testimonial-session-main-container lg:mx-[120]">
         <div className="testimonial-session-content">
           <Tag text="testimonial" className="uppercase ml-5" />
-          <div className="testimonial-session-header uppercase text-xl font-semibold my-6 leading-6 ml-5">
+          <div className="testimonial-session-header uppercase text-xl font-semibold my-6 leading-6 ml-5 lg:text-4xl-semibold lg:leading-15">
             Why our clients <br />
             <span className="text-primary-default">love to work with us</span>
           </div>
 
-          <div className="testimonial-section-subtext text-sm font-medium text-default-body ml-5">
+          <div className="testimonial-section-subtext text-md-medium font-medium text-default-body ml-5">
             Our clients choose us for our expert knowledge, <br /> clear
             communication, commitment to their <br /> businesses, ability to
             adapt, and our trustworthy <br /> approach.
@@ -128,7 +128,7 @@ function TestimonialSession() {
               {scrollingItems.map((item, index) => (
                 <div
                   key={index}
-                  className="bg-surface-card-primary border-default-card-stroke w-[280] p-5 flex-shrink-0"
+                  className="bg-surface-card-primary border-default-card-stroke w-[280] lg:w-[320] p-5 flex-shrink-0"
                 >
                   <div className="relative w-10 h-10 mb-4  overflow-hidden ">
                     <Image
@@ -139,7 +139,7 @@ function TestimonialSession() {
                       priority
                     />
                   </div>
-                  <p className="text-sm-medium text-default-body mb-4">{item.subtext}</p>
+                  <p className="text-sm-medium text-default-body lg:my-[40]">{item.subtext}</p>
                   <div className="flex items-center">
                     <div className="relative w-10 h-10 mr-3 rounded-full overflow-hidden border border-gray-400">
                       <Image

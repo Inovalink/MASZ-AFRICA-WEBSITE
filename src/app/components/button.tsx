@@ -22,10 +22,14 @@ const Button: React.FC<ButtonProps> = ({
   type = 'button',
 }) => {
   const variantClasses = {
-    primary: 'button-primary-default text-white hover:bg-blue-600',
-    primaryWhite: 'button-primary-default-light text-primary-default',
-    secondary: 'bg-gray-500 text-white hover:bg-gray-600',
-    outline: 'border border-gray-500 text-gray-500 hover:bg-gray-100',
+    primary:
+      'bg-[#016BF2] text-white hover:bg-blue-600 border-2 lg:bg-transparent',
+    primaryWhite:
+      'button-primary-default-light text-primary-default',
+    secondary:
+      'bg-gray-500 text-white hover:bg-gray-600',
+    outline:
+      'border border-gray-500 text-gray-500 hover:bg-gray-100',
   };
 
   const sizeClasses = {
@@ -40,27 +44,65 @@ const Button: React.FC<ButtonProps> = ({
       onClick={onClick}
       disabled={disabled}
       className={`
-    group flex items-center justify-center gap-2 
-    rounded-full font-medium text-sm-medium
-    transition-all duration-300 uppercase
-    ${variantClasses[variant]} 
-    ${sizeClasses[size]} 
-    ${disabled ? 'opacity-50 cursor-not-allowed' : ''} 
-    ${className}
-  `}
+        text-sm-medium
+        group relative overflow-hidden
+        flex items-center justify-center 
+        rounded-full font-medium uppercase
+        transition-all duration-[700ms]
+        ease-[cubic-bezier(0.25,0.8,0.25,1)]
+        cursor-pointer
+
+        ${variantClasses[variant]}
+        ${sizeClasses[size]}
+        ${disabled ? 'opacity-50 cursor-not-allowed' : ''}
+        ${className}
+
+        /* Desktop-only circular start */
+        lg:w-[48px] lg:h-[48px]
+        lg:px-0
+        <lg:border-3/2></lg:border-3/2> lg:border-blue-600
+        lg:bg-transparent
+        lg:hover:w-auto
+        lg:hover:px-6
+        lg:hover:bg-blue-600
+      `}
     >
-      {label}
+      {/* Label (hidden on desktop until hover) */}
+      <span
+        className="
+          whitespace-nowrap
+          transition-all duration-[600ms]
+          ease-[cubic-bezier(0.25,0.8,0.25,1)]
+          
+
+          lg:opacity-0 lg:max-w-0 lg:overflow-hidden
+          lg:group-hover:opacity-100
+          lg:group-hover:max-w-[200px]
+        "
+      >
+        {label}
+      </span>
+
+      {/* Icon */}
       {icon && (
         <span
-          className="
-        flex items-center justify-center transition-transform duration-700
-        ease-[cubic-bezier(0.25,0.8,0.25,1)]
-        group-hover:translate-x-1
-        animate-[arrowFloat_1.5s_ease-in-out_infinite]
-      "
-        >
-          {icon}
-        </span>
+  className="
+    flex items-center justify-center
+    
+    lg:text-[#016BF2]
+    transition-all duration-[600ms]
+    ease-[cubic-bezier(0.25,0.8,0.25,1)]
+    lg:p-2
+    lg:group-hover:text-white
+    lg:group-hover:border-white
+    lg:group-hover:translate-x-1
+
+    animate-[arrowFloat_1.5s_ease-in-out_infinite]
+  "
+>
+  {icon}
+</span>
+
       )}
     </button>
   );

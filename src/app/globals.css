@@ -2,6 +2,7 @@
 @import "tailwindcss";
 
 
+
 /* base colors */
 :root {
   --card-grey: #D1D8E0;
@@ -341,159 +342,174 @@ body {
  
 }
 
- @layer utilities {
-  .text-xs-regular {
-    font-size: var(--text-display-xs-regular);
-    font-weight: var(--font-weight-regular);
-  }
-  .text-xs-medium {
-    font-size: var(--text-display-xs-medium);
-    font-weight: var(--font-weight-medium);
-  }
-  .text-xs-semibold {
-    font-size: var(--text-display-xs-semibold);
-    font-weight: var(--font-weight-semibold);
-  }
-  .text-xs-bold {
-    font-size: var(--text-display-xs-bold);
-    font-weight: var(--font-weight-bold);
-  }
+/* XS */
+@utility text-xs-regular {
+  font-size: var(--text-display-xs-regular);
+  font-weight: var(--font-weight-regular);
+}
+@utility text-xs-medium {
+  font-size: var(--text-display-xs-medium);
+  font-weight: var(--font-weight-medium);
+}
+@utility text-xs-semibold {
+  font-size: var(--text-display-xs-semibold);
+  font-weight: var(--font-weight-semibold);
+}
+@utility text-xs-bold {
+  font-size: var(--text-display-xs-bold);
+  font-weight: var(--font-weight-bold);
+}
 
-  .text-sm-regular {
-    font-size: var(--text-display-sm-regular);
-    font-weight: var(--font-weight-regular);
-  }
-  .text-sm-medium {
-    font-size: var(--text-display-sm-medium);
-    font-weight: var(--font-weight-medium);
-  }
-  .text-sm-semibold {
-    font-size: var(--text-display-sm-semibold);
-    font-weight: var(--font-weight-semibold);
-  }
-  .text-sm-bold {
-    font-size: var(--text-display-sm-bold);
-    font-weight: var(--font-weight-bold);
-  }
+/* SM */
+@utility text-sm-regular {
+  font-size: var(--text-display-sm-regular);
+  font-weight: var(--font-weight-regular);
+}
+@utility text-sm-medium {
+  font-size: var(--text-display-sm-medium);
+  font-weight: var(--font-weight-medium);
+}
+@utility text-sm-semibold {
+  font-size: var(--text-display-sm-semibold);
+  font-weight: var(--font-weight-semibold);
+}
+@utility text-sm-bold {
+  font-size: var(--text-display-sm-bold);
+  font-weight: var(--font-weight-bold);
+}
 
-  .text-md-regular {
-    font-size: var(--text-display-md-regular);
-    font-weight: var(--font-weight-regular);
-  }
-  .text-md-medium {
-    font-size: var(--text-display-md-medium);
-    font-weight: var(--font-weight-medium);
-  }
-  .text-md-semibold {
-    font-size: var(--text-display-md-semibold);
-    font-weight: var(--font-weight-semibold);
-  }
-  .text-md-bold {
-    font-size: var(--text-display-md-bold);
-    font-weight: var(--font-weight-bold);
-  }
+/* MD */
+@utility text-md-regular {
+  font-size: var(--text-display-md-regular);
+  font-weight: var(--font-weight-regular);
+}
+@utility text-md-medium {
+  font-size: var(--text-display-md-medium);
+  font-weight: var(--font-weight-medium);
+}
+@utility text-md-semibold {
+  font-size: var(--text-display-md-semibold);
+  font-weight: var(--font-weight-semibold);
+}
+@utility text-md-bold {
+  font-size: var(--text-display-md-bold);
+  font-weight: var(--font-weight-bold);
+}
 
-  .text-lg-regular {
-    font-size: var(--text-display-lg-regular);
-    font-weight: var(--font-weight-regular);
-  }
-  .text-lg-medium {
-    font-size: var(--text-display-lg-medium);
-    font-weight: var(--font-weight-medium);
-  }
-  .text-lg-semibold {
-    font-size: var(--text-display-lg-semibold);
-    font-weight: var(--font-weight-semibold);
-  }
-  .text-lg-bold {
-    font-size: var(--text-display-lg-bold);
-    font-weight: var(--font-weight-bold);
-  }
+/* LG */
+@utility text-lg-regular {
+  font-size: var(--text-display-lg-regular);
+  font-weight: var(--font-weight-regular);
+}
+@utility text-lg-medium {
+  font-size: var(--text-display-lg-medium);
+  font-weight: var(--font-weight-medium);
+}
+@utility text-lg-semibold {
+  font-size: var(--text-display-lg-semibold);
+  font-weight: var(--font-weight-semibold);
+}
+@utility text-lg-bold {
+  font-size: var(--text-display-lg-bold);
+  font-weight: var(--font-weight-bold);
+}
 
-  .text-xl-regular {
-    font-size: var(--text-display-xl-regular);
-    font-weight: var(--font-weight-regular);
-  }
-  .text-xl-medium {
-    font-size: var(--text-display-xl-medium);
-    font-weight: var(--font-weight-medium);
-  }
-  .text-xl-semibold {
-    font-size: var(--text-display-xl-semibold);
-    font-weight: var(--font-weight-semibold);
-  }
-  .text-xl-bold {
-    font-size: var(--text-display-xl-bold);
-    font-weight: var(--font-weight-bold);
-  }
+/* XL */
+@utility text-xl-regular {
+  font-size: var(--text-display-xl-regular);
+  font-weight: var(--font-weight-regular);
+}
+@utility text-xl-medium {
+  font-size: var(--text-display-xl-medium);
+  font-weight: var(--font-weight-medium);
+}
+@utility text-xl-semibold {
+  font-size: var(--text-display-xl-semibold);
+  font-weight: var(--font-weight-semibold);
+}
+@utility text-xl-bold {
+  font-size: var(--text-display-xl-bold);
+  font-weight: var(--font-weight-bold);
+}
 
-  .text-2xl-regular {
-    font-size: var(--text-display-2xl-regular);
-    font-weight: var(--font-weight-regular);
-  }
-  .text-2xl-medium {
-    font-size: var(--text-display-2xl-medium);
-    font-weight: var(--font-weight-medium);
-  }
-  .text-2xl-semibold {
-    font-size: var(--text-display-2xl-semibold);
-    font-weight: var(--font-weight-semibold);
-  }
-  .text-2xl-bold {
-    font-size: var(--text-display-2xl-bold);
-    font-weight: var(--font-weight-bold);
-  }
+/* 2XL */
+@utility text-2xl-regular {
+  font-size: var(--text-display-2xl-regular);
+  font-weight: var(--font-weight-regular);
+}
+@utility text-2xl-medium {
+  font-size: var(--text-display-2xl-medium);
+  font-weight: var(--font-weight-medium);
+}
+@utility text-2xl-semibold {
+  font-size: var(--text-display-2xl-semibold);
+  font-weight: var(--font-weight-semibold);
+}
+@utility text-2xl-bold {
+  font-size: var(--text-display-2xl-bold);
+  font-weight: var(--font-weight-bold);
+}
 
-  .text-3xl-regular {
-    font-size: var(--text-display-3xl-regular);
-    font-weight: var(--font-weight-regular);
-  }
-  .text-3xl-medium {
-    font-size: var(--text-display-3xl-medium);
-    font-weight: var(--font-weight-medium);
-  }
-  .text-3xl-semibold {
-    font-size: var(--text-display-3xl-semibold);
-    font-weight: var(--font-weight-semibold);
-  }
-  .text-3xl-bold {
-    font-size: var(--text-display-3xl-bold);
-    font-weight: var(--font-weight-bold);
-  }
+/* 3XL */
+@utility text-3xl-regular {
+  font-size: var(--text-display-3xl-regular);
+  font-weight: var(--font-weight-regular);
+}
+@utility text-3xl-medium {
+  font-size: var(--text-display-3xl-medium);
+  font-weight: var(--font-weight-medium);
+}
+@utility text-3xl-semibold {
+  font-size: var(--text-display-3xl-semibold);
+  font-weight: var(--font-weight-semibold);
+}
+@utility text-3xl-bold {
+  font-size: var(--text-display-3xl-bold);
+  font-weight: var(--font-weight-bold);
+}
 
-  .text-4xl-regular {
-    font-size: var(--text-display-4xl-regular);
-    font-weight: var(--font-weight-regular);
-  }
-  .text-4xl-medium {
-    font-size: var(--text-display-4xl-medium);
-    font-weight: var(--font-weight-medium);
-  }
-  .text-4xl-semibold {
-    font-size: var(--text-display-4xl-semibold);
-    font-weight: var(--font-weight-semibold);
-  }
-  .text-4xl-bold {
-    font-size: var(--text-display-4xl-bold);
-    font-weight: var(--font-weight-bold);
-  }
+/* 4XL */
+@utility text-4xl-regular {
+  font-size: var(--text-display-4xl-regular);
+  font-weight: var(--font-weight-regular);
+  
+}
+@utility text-4xl-medium {
+  font-size: var(--text-display-4xl-medium);
+  font-weight: var(--font-weight-medium);
+}
+@utility text-4xl-semibold {
+  font-size: var(--text-display-4xl-semibold);
+  font-weight: var(--font-weight-semibold);
+}
+@utility text-4xl-bold {
+  font-size: var(--text-display-4xl-bold);
+  font-weight: var(--font-weight-bold);
+}
 
-  .text-5xl-regular {
-    font-size: var(--text-display-5xl-regular);
-    font-weight: var(--font-weight-regular);
-  }
-  .text-5xl-medium {
-    font-size: var(--text-display-5xl-medium);
-    font-weight: var(--font-weight-medium);
-  }
-  .text-5xl-semibold {
-    font-size: var(--text-display-5xl-semibold);
-    font-weight: var(--font-weight-semibold);
-  }
-  .text-5xl-bold {
-    font-size: var(--text-display-5xl-bold);
-    font-weight: var(--font-weight-bold);
-  }
+/* 5XL */
+@utility text-5xl-regular {
+  font-size: var(--text-display-5xl-regular);
+  font-weight: var(--font-weight-regular);
+}
+@utility text-5xl-medium {
+  font-size: var(--text-display-5xl-medium);
+  font-weight: var(--font-weight-medium);
+}
+
+@utility text-5xl-semibold {
+  font-size: var(--text-display-5xl-semibold);
+  font-weight: var(--font-weight-semibold);
+}
+@utility text-5xl-bold {
+  font-size: var(--text-display-5xl-bold);
+  font-weight: var(--font-weight-bold);
+
+}
+
+
+
+
   /* Background color utilities */
   .bg-white-base { background-color: var(--white-base-color); }
   .bg-black-base { background-color: var(--black-base-color); }
@@ -503,7 +519,8 @@ body {
   .bg-surface-card-primary { background-color: var(--surface-card-primary); }
   .bg-surface-card-secondary { background-color: var(--surface-card-secondary); }
   .bg-surface-card-colored-primary { background-color: var(--surface-card-colored-primary); }
-  .bg-surface-card-colored-secondary { background-color: var(--surface-card-colored-secondary); }
+  .bg-surface-card-colored-primary { background-color: var(--surface-card-colored-primary); }
+  .bg-surface-card-colored-secondary { background-color: var(--surface-card-colored-secondary);}
   .bg-surface-overlay { background-color: var(--surface-overlay); }
   .bg-surface-page-primary { background-color: var(--surface-page-primary); }
   .bg-surface-page-secondary { background-color: var(--surface-page-secondary); }
@@ -540,7 +557,7 @@ body {
   .border-stroke-default-dark { border-color: var(--stroke-default-dark); }
 
    .session-tag-default {
-    /* @apply rounded-full px-3 py-1 text-sm font-medium; */
+  
     background-color: var(--session-tag-default);
     color: var(--session-tag-default-secondary);
   }
@@ -587,7 +604,7 @@ body {
 
 
 
-}
+
 
 .electric-border::before {
   content: '';
