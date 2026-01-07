@@ -11,7 +11,7 @@ export default function FaqSession() {
       id: 1,
       title: 'What services does MASZ-Africa provide?',
       subtext:
-        'MASZ-Africa specializes in mining operations support, equipment supply, technical consultancy, safety solutions, and workforce training tailored to the mining and mineral processing industry.',
+        'MASZ-Africa specializes in mining operations support, equipment supply, technical consultancy, safety solutions, and workforce training tailored to the mining and mineral processing industry. We are committed to improving operational efficiency, reducing risks, and promoting sustainable mining practices. Through innovation and industry expertise, we help our partners achieve long-term productivity and growth.',
     },
     {
       id: 2,
@@ -37,6 +37,12 @@ export default function FaqSession() {
       subtext:
         'MASZ-Africa combines reliability, expertise, innovation, and sustainability.',
     },
+     {
+      id: 6,
+      title: 'What services does MASZ-Africa provide?',
+      subtext:
+        'MASZ-Africa specializes in mining operations support, equipment supply, technical consultancy, safety solutions, and workforce training tailored to the mining and mineral processing industry. We are committed to improving operational efficiency, reducing risks, and promoting sustainable mining practices. Through innovation and industry expertise, we help our partners achieve long-term productivity and growth.',
+    },
   ]
 
   // Multi-open state: store all open card indices
@@ -53,17 +59,39 @@ export default function FaqSession() {
   }
 
   return (
-    <section className="mt-[100px] mx-[21px]">
-      <div className="main-faq-section-container">
+    <section className="mt-[100px] mx-[21px] lg:mx-[120] lg:">
+      <div className="main-faq-section-container lg:flex lg:justify-between">
 
-      <Tag text="FAQ" />
+        <div className="faq-left-side-for-large-screens">
+          <Tag text="FAQ" />
+          <div className="faq-title-and-card-for-large-screens lg:flex lg:flex-col lg:justify-between">
 
-      <div className="text-xl-semibold my-[30px] leading-6">
-        GOT ANY QUESTIONS? <br />
-        <span className="text-primary-default">WE'VE GOT ANSWERS</span>
-      </div>
+            <div className="text-xl-semibold my-[30px] leading-6 lg:text-4xl-semibold lg:leading-13 lg:my-[70]">
+              GOT ANY QUESTIONS? <br />
+              <span className="text-primary-default">WE'VE GOT ANSWERS</span>
+            </div>
 
-      <div className="mt-[80px]">
+              {/* faq-cta-card displayed on mobile */}
+            <div className="hidden lg:block faq-cta-card bg-surface-card-colored-primary lg:w-[530] px-[25] py-[25] my-[100] lg:mt-[250] transition-all duration-300">
+              <div className="header uppercase text-light text-lg-semibold lg:text-2xl-semibold">
+                Still have a question?
+              </div>
+              <div className="subtext text-light text-sm-medium lg:text-md-medium my-[25]">
+                Our team of industry experts is ready to provide the clarity and support you need. Whether it’s a general inquiry or a project-specific discussion, we’re just a message away. Reach out today and let us help move your operations forward with confidence.
+              </div>
+              <Button
+                  label="Reach out to us"
+                  variant="primaryWhite"
+                  size="large"
+                  icon={<MoveRight size={16} />}
+                  className=""
+                />
+            </div>
+          </div>
+
+        </div>
+
+      <div className="mt-[80px] lg:w-[40%]">
         {faqObject.map((item, i) => {
           const isOpen = openCards.has(i)
           return (
@@ -80,7 +108,7 @@ export default function FaqSession() {
                   cursor-pointer transition-colors duration-300
                   ${isOpen ? 'bg-surface-card-primary' : 'hover:bg-surface-card-primary'}`}
               >
-                <div className="text-md-semibold text-default-heading">
+                <div className="text-md-semibold text-default-heading lg:text-xl-semibold">
                   {item.title}
                 </div>
 
@@ -127,7 +155,8 @@ export default function FaqSession() {
         })}
       </div>
 
-      <div className="faq-cta-card bg-surface-card-colored-primary px-[25] py-[25] my-[100] transition-all duration-300">
+      {/* faq-cta-card displayed on mobile */}
+      <div className="lg:hidden faq-cta-card bg-surface-card-colored-primary px-[25] py-[25] my-[100] transition-all duration-300">
         <div className="header uppercase text-light text-lg-semibold">
           Still have a question?
         </div>

@@ -696,8 +696,157 @@ body {
 .no-scrollbar {
   scrollbar-width: none;
 }
+/* Show button when li is hovered or button itself is hovered */
+.service-item:hover .service-button,
+.service-button:hover {
+  opacity: 1;
+  transform: translateX(0);
+  pointer-events: auto;
+}
+
+/* Default button hidden off-screen */
+.service-button {
+  opacity: 0;
+  transform: translateX(1rem); /* matches translate-x-4 */
+  pointer-events: none;
+  transition: all 0.5s cubic-bezier(0.25,0.8,0.25,1);
+}
+
+/* Arrow inside the button */
+.service-button .lucide {
+  transition: transform 0.5s cubic-bezier(0.25,0.8,0.25,1);
+}
+
+/* Arrow moves slightly when button hovered */
+.service-button:hover .lucide {
+  transform: translateX(0.25rem);
+}
+
+/* Expand subtext container smoothly */
+.service-item:hover .service-subtext-container {
+  max-height: 240px; /* same as before */
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Top and bottom border animations */
+.service-item {
+  position: relative;
+}
+
+/* top border */
+.service-item::before,
+.service-item::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  width: 100%;
+  background-color: #2563eb; /* blue-600 */
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 1.2s cubic-bezier(0.25,0.8,0.25,1);
+}
+
+/* top border */
+.service-item::before {
+  top: 0;
+  height: 2px;
+}
+
+/* bottom border */
+.service-item::after {
+  bottom: 0;
+  height: 2px;
+  transform-origin: right;
+}
+
+/* Hover effect */
+.service-item:hover::before,
+.service-item:hover::after {
+  transform: scaleX(1);
+}
+
+/* Title color change on hover */
+.service-item:hover .service-title {
+  color: #2563eb; /* blue-600 */
+}
+
+/* Number color change and scale on hover */
+.service-item:hover .service-number {
+  color: #2563eb; /* blue-600 */
+  transform: scale(1.5); /* expand number */
+  transition: transform 0.6s cubic-bezier(0.25,0.8,0.25,1), color 0.6s ease;
+}
+
+/* Optional: keep smooth transform for focus as well */
+.service-item:focus-within .service-number {
+  color: #2563eb;
+  transform: scale(1.5);
+}
+/* Mobile arrow animation inside the Link */
+.service-subtext-container a + .lucide,
+.service-subtext-container a + svg {
+  transition: transform 0.6s cubic-bezier(0.25,0.8,0.25,1);
+}
+
+/* Move the arrow slightly on hover of the link */
+.service-subtext-container a:hover + svg,
+.service-subtext-container a:focus + svg {
+  transform: translateX(0.25rem); /* same as desktop */
+}
 
 
+/* --- Subtext expansion --- */
+.service-item:focus-within .service-subtext-container {
+  max-height: 240px; /* same as before */
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* --- Title color change --- */
+.service-item:focus-within .service-title {
+  color: #2563eb; /* blue-600 */
+}
+
+/* --- Number color and scale --- */
+.service-item:focus-within .service-number {
+  color: #2563eb;
+  transform: scale(1.5);
+  transition: transform 0.6s cubic-bezier(0.25,0.8,0.25,1), color 0.6s ease;
+}
+
+/* --- Button visibility --- */
+.service-item:focus-within .service-button {
+  opacity: 1;
+  transform: translateX(0);
+  pointer-events: auto;
+}
+
+/* --- Borders (before/after) --- */
+.service-item:focus-within::before,
+.service-item:focus-within::after {
+  transform: scaleX(1);
+}
+
+/* --- Mobile arrow wiggle --- */
+.service-subtext-container a + svg {
+  transition: transform 0.6s cubic-bezier(0.25,0.8,0.25,1);
+}
+.service-subtext-container a:focus + svg,
+.service-subtext-container a:hover + svg {
+  transform: translateX(0.25rem);
+}
+
+
+
+
+/* Optional: large screen thicker border */
+@media (min-width: 1024px) {
+  .service-item::before,
+  .service-item::after {
+    height: 3px;
+  }
+}
 
 
 

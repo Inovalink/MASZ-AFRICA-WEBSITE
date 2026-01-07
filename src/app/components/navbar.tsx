@@ -11,7 +11,6 @@ export const navLinks = [
   { id: '2', label: 'about', path: '/aboutUs' },
   { id: '3', label: 'services', path: '/services' },
   { id: '4', label: 'careers', path: '/careers' },
-  { id: '5', label: 'contact us', path: '/contactUs' },
 ];
 
 function Navbar() {
@@ -95,7 +94,7 @@ function Navbar() {
 
         <div className="nav-list flex items-center">
           <div className="large-screens-navbar hidden lg:flex mr-[50] p-[20] text-default-body">
-            <ul className="large-screen-navbar-list flex gap-6 uppercase text-xs-medium items-center">
+            <ul className="large-screen-navbar-list flex gap-12 uppercase items-center text-md-medium">
               {navLinks.map((list) => (
                 <li key={list.id} className="relative">
                   <Link
