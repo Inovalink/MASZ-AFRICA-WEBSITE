@@ -5,7 +5,7 @@ import Image from 'next/image';
 
 function CoreValueSession() {
   return (
-    <section className="lg:my-[180] lg:mx-[120]">
+    <section className="lg:my-[180] lg:mx-[200]">
       <div className="core-value-section-container">
         {/* Header */}
         <div className="section-header uppercase text-xl-semibold ml-[22px] my-[30px] lg:text-4xl-semibold">
@@ -35,7 +35,8 @@ function CoreValueSession() {
         </AnimationCopy>
 
         {/* Metrics */}
-        <div className="metrics-container my-[50px] lg:flex ">
+        <div className="metrics-container my-[50px] gap-6 mx-[21] lg:flex">
+
           <PerformanceMetrics 
             text="years of combined experience" 
             value="15+" 

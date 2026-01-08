@@ -12,8 +12,8 @@ const PerformanceMetrics: React.FC<PerformanceMetricsProps> = ({
   value,
 }) => {
   return (
-    <div className="metrics-container flex items-center ml-5   bg-surface-card-colored-secondary  justify-between w-[91%] my-[20] px-[20] lg:px-[25] h-[90] lg:h-[95]">
-      <div className="metrics-desription text-primary-default text-sm-medium w-[250] leading-5">
+    <div className="metrics-container flex items-center    bg-surface-card-colored-secondary justify-between lg:flex lg:justify-center lg:gap-22 w-auto lg:w-auto my-[20] px-[20] lg:px-[25] h-[90] lg:h-[95]">
+      <div className="metrics-desription text-primary-default text-sm-medium w-[250] lg:w-[150] leading-5">
         {text}
       </div>
       <div className="metrics-value text-3xl-semibold text-primary-default">{value}</div>

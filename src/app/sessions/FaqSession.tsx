@@ -59,11 +59,11 @@ export default function FaqSession() {
   }
 
   return (
-    <section className="mt-[100px] mx-[21px] lg:mx-[120] lg:">
+    <section className="mt-[100px] mx-[21px] lg:mx-[200] lg:my-[120] lg:">
       <div className="main-faq-section-container lg:flex lg:justify-between">
 
         <div className="faq-left-side-for-large-screens">
-          <Tag text="FAQ" />
+          <Tag text="Frequently asked questions" />
           <div className="faq-title-and-card-for-large-screens lg:flex lg:flex-col lg:justify-between">
 
             <div className="text-xl-semibold my-[30px] leading-6 lg:text-4xl-semibold lg:leading-13 lg:my-[70]">
@@ -72,7 +72,7 @@ export default function FaqSession() {
             </div>
 
               {/* faq-cta-card displayed on mobile */}
-            <div className="hidden lg:block faq-cta-card bg-surface-card-colored-primary lg:w-[530] px-[25] py-[25] my-[100] lg:mt-[250] transition-all duration-300">
+            <div className="hidden lg:block faq-cta-card bg-surface-card-colored-primary lg:w-[530] px-[25] py-[25] my-[100] lg:mt-[] transition-all duration-300">
               <div className="header uppercase text-light text-lg-semibold lg:text-2xl-semibold">
                 Still have a question?
               </div>
@@ -91,7 +91,7 @@ export default function FaqSession() {
 
         </div>
 
-      <div className="mt-[80px] lg:w-[40%]">
+      <div className="mt-[80px] lg:w-[40%] lg:mt-[120]">
         {faqObject.map((item, i) => {
           const isOpen = openCards.has(i)
           return (

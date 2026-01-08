@@ -7,7 +7,7 @@ import AnimationCopy from '../animations/WritingTextAnimation';
 
 function AboutSession() {
   return (
-    <section className="lg:mx-[120] lg:my-[180]">
+    <section className="lg:mx-[200] lg:my-[180]">
       <div className="about-session-container my-[100] lg:flex lg:justify-between lg:items-start lg:gap-[50px]">
 
         {/* Left: Text + Button */}

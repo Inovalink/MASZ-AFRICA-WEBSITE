@@ -81,7 +81,7 @@ function Navbar() {
 
   return (
     <header className="navbar left-0 right-0 z-[100]  w-full h-[90]">
-      <div className="main-nav-container flex justify-between items-center h-full mx-[20] lg:mx-[150]">
+      <div className="main-nav-container flex justify-between items-center h-full mx-[20] lg:mx-[200]">
         <div className="nav-logo">
           <Image
             src="/maszAssets/website-logo.svg"
@@ -94,7 +94,7 @@ function Navbar() {
 
         <div className="nav-list flex items-center">
           <div className="large-screens-navbar hidden lg:flex mr-[50] p-[20] text-default-body">
-            <ul className="large-screen-navbar-list flex gap-12 uppercase items-center text-md-medium">
+            <ul className="large-screen-navbar-list flex gap-8 uppercase items-center text-md-medium">
               {navLinks.map((list) => (
                 <li key={list.id} className="relative">
                   <Link
@@ -104,7 +104,7 @@ function Navbar() {
                       relative inline-block px-1 py-1 font-medium text-default-body
                       before:content-[''] before:absolute before:left-0 before:top-[-10px] before:h-[4px] before:w-0 before:bg-blue-500 before:transition-all before:duration-300
                       after:content-[''] after:absolute after:left-0 after:bottom-[-10px] after:h-[4px] after:w-0 after:bg-blue-500 after:transition-all after:duration-300
-                      hover:before:w-full hover:after:w-full
+                      hover:before:w-full hover:after:w-full 
                       ${activeLink === list.label ? 'before:w-full after:w-full' : ''}
           `}
                   >

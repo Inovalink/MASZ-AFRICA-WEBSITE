@@ -35,7 +35,7 @@ function ServiceSession() {
   ];
 
   return (
-    <section className="lg:mx-[120]">
+    <section className="lg:mx-[200]">
       <div className="services-section-container my-[100]">
         <Tag text="services" className="ml-[22]" />
 

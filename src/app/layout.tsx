@@ -3,6 +3,8 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Navbar from "./components/navbar";
 import LenisProvider from "./providers/LenisProvider";
+import CallToAction from "./sessions/CallToAction";
+import Footer from "./components/footer";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -33,6 +35,8 @@ export default function RootLayout({
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <Navbar />
         <LenisProvider>{children}</LenisProvider>
+         <CallToAction/>
+      <Footer/>
       </body>
     </html>
   );

@@ -96,8 +96,8 @@ function TestimonialSession() {
   }, [isPaused, scrollingItems.length]);
 
   return (
-    <section className="h-screen bg-[#f3f3f3] py-24 mt-[100] relative ">
-      <div className="testimonial-session-main-container lg:mx-[120]">
+    <section className="h-screen bg-[#f3f3f3] py-24 mt-[100]  relative ">
+      <div className="testimonial-session-main-container lg:mx-[200]">
         <div className="testimonial-session-content">
           <Tag text="testimonial" className="uppercase ml-5" />
           <div className="testimonial-session-header uppercase text-xl font-semibold my-6 leading-6 ml-5 lg:text-4xl-semibold lg:leading-15">
@@ -111,6 +111,8 @@ function TestimonialSession() {
             adapt, and our trustworthy <br /> approach.
           </div>
 
+          <div className="scroll ">
+            
           {/* Scroll container */}
           <div
             ref={containerRef}
@@ -164,6 +166,8 @@ function TestimonialSession() {
             {/* Right fade/vanishing point */}
             <div className="pointer-events-none absolute right-0 top-0 h-full w-24 bg-linear-to-l from-[#f3f3f3] to-transparent" />
           </div>
+          </div>
+
         </div>
       </div>
     </section>

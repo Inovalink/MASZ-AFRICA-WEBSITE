@@ -225,3 +225,185 @@ export default function FaqSession() {
     </section>
   )
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+import Image from 'next/image';
+import Tag from '../components/tag';
+import React from 'react';
+import AnimateCopy from '../animations/WritingTextAnimation';
+import PerformanceMetrics from '../components/PerformanceMetrics';
+
+function AboutUsPage() {
+  return (
+    <section className="lg:mt-[130]">
+      <div className="about-main-content">
+        <div className="main-about-hero-content-container">
+          <div className="about-hero-text text-center lg:text-left lg:mx-[200]">
+            <Tag text="about us" className="my-[40]" />
+            <div className="about-hero-section header text-xl-semibold lg:text-4xl-semibold">
+              WE ARE <span className="text-primary-default">MASZ-AFRICA</span>
+            </div>
+            <div className="about-hero-header-subtext uppercase text-xs-medium mb-[20] lg:mb-[50] lg:text-xl-semibold lg:text-default-body">
+              General mining and procurement services limited
+            </div>
+          </div>
+          <div className="about-hero-image-container relative bg-green-400 h-[600] lg:h-screen">
+            <Image
+              src="/aboutAssets/Image-1.jpg"
+              alt="about-hero-section-image"
+              fill
+              priority
+              className="object-cover"
+            />
+          </div>
+
+          <div className="our-story-session mx-[21] my-[100] lg:my-[100]  lg:mx-[200] ">
+            <Tag text="our story" className="mb-[100] lg:my-[50]" />
+
+            <AnimateCopy>
+              <div className="our-story-text text-lg-medium lg:text-2xl-medium lg:leading-8 lg:tracking-tight lg:mt-[80]">
+                MASZ-AFRICA General Mining and Services Limited is a Ghana-based
+                private limited liability company that provides high-quality
+                mining consumables, engineering support, and procurement
+                solutions to mining and mineral processing industries across
+                Africa. Established in September 2025 by a multidisciplinary
+                team with more than 15 years of combined experience in
+                metallurgy, engineering, finance, supply chain management, and
+                business improvement, the company was created to address the
+                lack of dependable, responsive, and technically knowledgeable
+                supply partners within the African mining sector. From the
+                beginning, MASZ-Africa has focused on quality, reliability, and
+                client satisfaction. Through strong partnerships with globally
+                recognized manufacturers and original equipment suppliers, the
+                company delivers world-class products supported by solid
+                technical expertise and consistent on-time delivery. With a
+                growing presence across West Africa, MASZ-Africa aims to become
+                a continental leader in mining supply, logistics, and technical
+                services. The company is committed to empowering mining
+                operations with reliable supplies, innovative solutions, and
+                smooth service delivery that keeps production running
+                efficiently.
+              </div>
+            </AnimateCopy>
+
+            {/* Metrics */}
+            <div className="metrics-container my-[50px] lg:gap-8 lg:flex">
+              <PerformanceMetrics
+                text="years of combined experience"
+                value="15+"
+              />
+              <PerformanceMetrics
+                text="clients who rely on our consistent delivery and expertise."
+                value="5+"
+              />
+              <PerformanceMetrics
+                text="client satisfaction built on trust, transparency, and performance."
+                value="99%"
+              />
+              <PerformanceMetrics
+                text="on-time delivery, driven by efficiency and dependable logistics."
+                value="98%"
+              />
+            </div>
+          </div>
+        </div>
+
+        <div className="mission-and-vision-statement-session">
+          <div className="vision-mission-intro-image-container relative lg:h-screen w-full h-[600] bg-red-400">
+            <Image
+              src="/aboutAssets/Image-4.jpg"
+              alt=""
+              fill
+              priority
+              className="object-cover object-top"
+            />
+
+            {/* Dark overlay */}
+            <div className="absolute inset-0 bg-black/50" />
+
+            {/* Progressive blur overlay - Fixed at bottom with height */}
+
+            <div
+              className="absolute bottom-0 left-0 w-full h-[250px] lg:h-[400]"
+              style={{
+                maskImage:
+                  'linear-gradient(to top, black 50%, transparent 80%)',
+                WebkitMaskImage:
+                  'linear-gradient(to top, black 50%, transparent 80%)',
+                backdropFilter: 'blur(60px)',
+                WebkitBackdropFilter: 'blur(60px)',
+              }}
+            />
+
+            <div className="vision-mission-intro-image text-light absolute inset-0 flex items-end justify-center pb-15">
+              <div className="text-container mx-[21] lg:items-center">
+                <div className="text-header uppercase  text-xl-semibold lg:flex lg:text-4xl-semibold lg:items-center lg:justify-center">
+                  <p className="lg:mr-3">Defining the</p>
+                  <p>future we stand for</p>
+                </div>
+                <div className="subtext text-sm-regular py-[10] lg:text-lg-regular lg:w-[990] lg:flex lg:items-center lg:justify-center lg:text-center">
+                  Our guiding principles define how we operate today and the
+                  impact we aim to make tomorrow. They guide our work, shape our
+                  decisions, and keep us aligned with the needs of a
+                  fast-evolving mining sector. Every step we take reflects our
+                  commitment to progress and long-term value.
+                </div>
+              </div>
+            </div>
+            
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+export default AboutUsPage;

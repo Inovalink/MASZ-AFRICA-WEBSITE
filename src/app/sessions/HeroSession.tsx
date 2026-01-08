@@ -8,7 +8,7 @@ import { MoveRight } from 'lucide-react';
 function HeroSession() {
   return (
     <div className="hero-session-container mt-[50] h-screen">
-      <div className="hero-message lg:flex lg:items-center  lg:justify-between lg:mx-[150] lg:my-[80]">
+      <div className="hero-message lg:flex lg:items-center  lg:justify-between lg:mx-[200] lg:my-[80]">
         <div className="hero-logo flex items-center justify-center mt-[40] lg:mt-0">
           <Image
             src="/maszAssets/logotype.svg"
@@ -65,7 +65,7 @@ function HeroSession() {
 
           <div className="hero-image-text-info absolute z-20 text-light font-bold lg:flex lg:items-center lg:justify-between lg:w-full  lg:top-[100] lg:text">
             <div className="hero-image-info-header flex items-center flex-col justify-center w-[430] lg:w-[790] ">
-              <p className="uppercase text-xl-semibold text-center py-[20] lg:p-0 lg:text-4xl-semibold lg:text-left lg:w-[] lg:ml-[120] lg:leading-13 lg: lg:">
+              <p className="uppercase text-xl-semibold text-center py-[20] lg:p-0 lg:text-4xl-semibold lg:text-left lg:w-[] lg:ml-[200] lg:leading-13 lg: lg:">
                 Empowering the global mining industry through
               </p>
               <Image
@@ -77,7 +77,7 @@ function HeroSession() {
               />
             </div>
 
-            <div className="hero-image-info-subtext mx-[55] lg:mr-[120] flex items-center justify-center flex-col backdrop-blur-sm p-[25] my-[20] lg:my-0 electric-border lg:w-[650] lg:h-[400]">
+            <div className="hero-image-info-subtext mx-[55] lg:mr-[200] flex items-center justify-center flex-col backdrop-blur-sm p-[25] my-[20] lg:my-0 electric-border lg:w-[650] lg:h-[400]">
               <div className="subtext-header uppercase text-xl-semibold my-[10] lg:text-4xl-semibold">
                 innovation
               </div>
