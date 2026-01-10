@@ -1,11 +1,123 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import ParallaxSection from '../animations/ImageParallax';
 import Tag from '../components/tag';
 import AnimationCopy from '../animations/WritingTextAnimation';
 import PerformanceMetrics from '../components/PerformanceMetrics';
 import TiltCard from '../animations/TiltCard';
+import CoreValueCard from '../components/MainCoreValuesCard';
+import { IconAwardFilled } from '@tabler/icons-react';
+import { text } from 'stream/consumers';
+
+type CoreValue = {
+  id: number;
+  number: string;
+  title: string;
+  description: string;
+  image: string;
+};
+
+const coreValues = [
+  {
+    number: 1,
+    title: 'Innovation',
+    description:
+      'We constantly strive for new ideas and solutions to improve our services.',
+  },
+  {
+    number: 2,
+    title: 'Integrity',
+    description:
+      'We act ethically, transparently, and always keep our promises.',
+  },
+  {
+    number: 3,
+    title: 'Excellence',
+    description:
+      'We deliver quality and performance above expectations in everything we do.',
+  },
+  {
+    number: 4,
+    title: 'Customer Partnership',
+    description:
+      'We build strong relationships with clients through trust and collaboration.',
+  },
+  {
+    number: 5,
+    title: 'Safety & Sustainability',
+    description:
+      'We prioritize safety and environmental responsibility in all operations.',
+  },
+];
+
+const valueCards: CoreValue[] = [
+  {
+    id: 1,
+    number: '01',
+    title: 'Innovation',
+    image: '/aboutAssets/M-1.webp',
+    description:
+      'We are driven by a culture of creativity, curiosity, and continuous improvement. By embracing new ideas, modern technologies, and unconventional thinking, we consistently challenge the status quo to design smarter, more efficient, and future-ready solutions. Our approach to innovation enables us to adapt quickly to change, solve complex problems, and create long-term value for our clients and partners.',
+  },
+  {
+    id: 2,
+    number: '02',
+    title: 'Integrity',
+    image: '/aboutAssets/M-2.webp',
+    description:
+      'Integrity is the foundation of everything we do. We operate with honesty, transparency, and accountability in every interaction, ensuring that our decisions and actions are guided by strong ethical principles. By keeping our commitments and maintaining open communication, we build trust, credibility, and lasting relationships with our clients, partners, and stakeholders.',
+  },
+  {
+    id: 3,
+    number: '03',
+    title: 'Excellence',
+    image: '/aboutAssets/M-3.webp',
+    description:
+      'We pursue excellence through discipline, expertise, and an unwavering commitment to quality. Every project we undertake is approached with attention to detail, continuous evaluation, and a desire to exceed expectations. By combining technical competence with professionalism, we deliver outcomes that are reliable, impactful, and aligned with the highest industry standards.',
+  },
+  {
+    id: 4,
+    number: '04',
+    title: 'Customer Partnership',
+    image: '/aboutAssets/M-4.webp',
+    description:
+      'We believe that true success is built through strong, collaborative partnerships. By deeply understanding our clients’ objectives, challenges, and environments, we tailor solutions that are both practical and strategic. Through trust, open dialogue, and shared goals, we foster long-term relationships that generate sustainable growth and mutual success.',
+  },
+  {
+    id: 5,
+    number: '05',
+    title: 'Safety & Sustainability',
+    image: '/aboutAssets/M-4.webp',
+    description:
+      'Safety and sustainability are integral to our operations and decision-making processes. We prioritize the well-being of our people while actively minimizing environmental impact through responsible and efficient practices. By promoting safe working environments and sustainable resource management, we contribute to long-term environmental, social, and economic resilience.',
+  },
+];
+
+const achievements = [
+  {
+    id: 1,
+    title:
+      'Founded in 2025 and operational across Ghana, west-Africa and Globally.',
+  },
+  {
+    id: 1,
+    title:
+      'Expanded into technical maintenance and engineering advisory services',
+  },
+  {
+    id: 1,
+    title: '5+ Major clients served with repeated contracts.',
+  },
+  {
+    id: 1,
+    title: 'Established strategic alliances with international manufacturers.',
+  },
+  {
+    id: 1,
+    title: '5+ Major clients served with repeated contracts.',
+  },
+];
 
 function AboutUSPage() {
   return (
@@ -29,11 +141,12 @@ function AboutUSPage() {
 
           {/* PARALLAX IMAGE */}
           <ParallaxSection
-            imageSrc="/aboutAssets/Image-6.jpg"
+            imageSrc="/aboutAssets/Image-6.webp"
             ShowText={false}
           />
         </div>
 
+        {/* conpany-description-section */}
         <div className="company-description-content lg:my-[100]">
           <div className="desctiption-text mx-[21] lg:mx-[200] ">
             <Tag text="our story" className="my-[40]" />
@@ -42,23 +155,25 @@ function AboutUSPage() {
                 MASZ-AFRICA Ltd is a Ghana-based private limited liability
                 company that provides high-quality mining consumables,
                 engineering support, and procurement solutions to mining and
-                mineral processing industries across Africa. Established in
-                September 2025 by a multidisciplinary team with more than 15
-                years of combined experience in metallurgy, engineering,
-                finance, supply chain management, and business improvement, the
-                company was created to address the lack of dependable,
-                responsive, and technically knowledgeable supply partners within
-                the African mining sector. From the beginning, MASZ-Africa has
-                focused on quality, reliability, and client satisfaction.
-                Through strong partnerships with globally recognized
-                manufacturers and original equipment suppliers, the company
-                delivers world-class products supported by solid technical
-                expertise and consistent on-time delivery. With a growing
-                presence across West Africa, MASZ-Africa aims to become a
-                continental leader in mining supply, logistics, and technical
-                services. The company is committed to empowering mining
-                operations with reliable supplies, innovative solutions, and
-                smooth service delivery that keeps production running
+                mineral processing industries across Africa. <br />
+                <br />
+                Established in September 2025 by a multidisciplinary team with
+                more than 15 years of combined experience in metallurgy,
+                engineering, finance, supply chain management, and business
+                improvement, the company was created to address the lack of
+                dependable, responsive, and technically knowledgeable supply
+                partners within the African mining sector.From the beginning,
+                MASZ-Africa has focused on quality, reliability, and client
+                satisfaction. Through strong partnerships with globally
+                recognized manufacturers and original equipment suppliers, the
+                company delivers world-class products supported by solid
+                technical expertise and consistent on-time delivery. <br />
+                <br />
+                With a growing presence across West Africa, MASZ-Africa aims to
+                become a continental leader in mining supply, logistics, and
+                technical services. The company is committed to empowering
+                mining operations with reliable supplies, innovative solutions,
+                and smooth service delivery that keeps production running
                 efficiently.
               </div>
             </AnimationCopy>
@@ -83,28 +198,30 @@ function AboutUSPage() {
           </div>
         </div>
 
+        {/* vision-mission-hero-section */}
         <div className="vision-mission-section-container">
           <div className="vision-mission-parallax-section">
             <ParallaxSection
-              imageSrc="/aboutAssets/image-4.jpg"
+              imageSrc="/aboutAssets/image-4.webp"
               title="DEFINING THE FUTURE WE STAND FOR"
               subtitle="Our guiding principles define how we operate today—and the impact we aim to make tomorrow. They guide our work, shape our decisions, and keep us aligned with the needs of a fast-evolving mining sector. Every step we take reflects our commitment to progress and long-term value."
             />
           </div>
         </div>
 
-        <div className="vision-mission-statement mx-[21] lg:mx-[200] lg:my-[150] ">
+        {/* vision-statement-section */}
+        <div className="vision-mission-statement lg:mx-[200] lg:my-[150] ">
           <div className="vision-statement lg:flex lg:justify-between ">
-            <div className="text">
-              <Tag text="our vision" />
+            <div className="text mx-[21]">
+              <Tag text="our vision" className="my-[80] lg:my-0" />
               <AnimationCopy>
-                <div className="main-text lg:text-3xl-semibold lg:leading-10 tracking-tight text-default-body lg:my-[50] lg:w-[650]">
+                <div className="main-text text-xl-semibold lg:text-3xl-semibold lg:leading-10 tracking-tight text-default-body lg:my-[50] lg:w-[650]">
                   To deliver trusted mining consumables and technical solutions
                   that enhance productivity, reliability, and sustainability
                   across Africa’s mining value chain.
                 </div>
               </AnimationCopy>
-              <div className="subtext lg:w-[650] text-default-body lg:text-xl-medium lg:leading-6 my-[18] lg:bg-surface-card-colored-primary">
+              <div className="subtext text-sm-medium lg:w-[650] text-default-body lg:text-xl-medium lg:leading-6 my-[40] lg:bg-surface-card-colored-primary">
                 As a trusted global partner, MASZ-AFRICA supplies quality mining
                 products backed by technical expertise. We focus on improving
                 productivity and ensuring uninterrupted operations. Our team
@@ -116,30 +233,32 @@ function AboutUSPage() {
             </div>
             <div className="image-container relative w-full lg:w-1/2 h-[520px]">
               <TiltCard
-                imageSrc="/aboutAssets/Image-3.jpg"
+                imageSrc="/aboutAssets/Image-7.webp"
                 title="Vision Image"
               />
             </div>
           </div>
         </div>
-        <div className="mission-statement mx-[21] lg:mx-[200] lg:my-[250]">
-          <div className="mission-statement lg:flex lg:justify-between ">
-            <div className="image-container relative w-full lg:w-1/2 h-[520px]">
+
+        {/* mission-statement */}
+        <div className="mission-statement lg:mx-[200]  lg:my-[250]">
+          <div className="mission-statement lg:flex lg:justify-between lg:flex-row">
+            <div className="hidden lg:block image-container relative w-full lg:w-1/2 h-[520px]">
               <TiltCard
-                imageSrc="/aboutAssets/Image-3.jpg"
+                imageSrc="/aboutAssets/Image-13.webp"
                 title="mision Image"
               />
             </div>
-            <div className="text">
-              <Tag text="our mission" />
+            <div className="text mx-[21]">
+              <Tag text="our mission" className="mb-[60] lg:mb-0" />
               <AnimationCopy>
-                <div className="main-text lg:text-3xl-semibold lg:leading-10 tracking-tight text-default-body lg:my-[50] lg:w-[650]">
+                <div className="main-text text-xl-semibold lg:text-3xl-semibold lg:leading-10 tracking-tight text-default-body lg:my-[50] lg:w-[650]">
                   To become Africa’s most trusted and efficient mining
                   procurement and service brand, connecting global manufacturing
                   quality with local operational realities.
                 </div>
               </AnimationCopy>
-              <div className="subtext lg:w-[650] text-default-body lg:text-xl-medium lg:leading-6 my-[18] lg:bg-surface-card-colored-primary">
+              <div className="subtext text-sm-medium lg:w-[650] text-default-body lg:text-xl-medium lg:leading-6  my-[40] lg:my-[18] lg:bg-surface-card-colored-primary">
                 MASZ-AFRICA aims to be Africa’s most trusted and efficient
                 mining procurement and service brand. We connect global
                 manufacturing quality with the practical needs of local mining
@@ -150,10 +269,95 @@ function AboutUSPage() {
                 empower mining operations
               </div>
             </div>
+            <div className="lg:hidden image-container relative w-full lg:w-1/2 h-[520px]">
+              <TiltCard
+                imageSrc="/aboutAssets/Image-13.webp"
+                title="mision Image"
+              />
+            </div>
           </div>
         </div>
 
-        <div className="core-values-section bg-[#f3f3f3] h-screen"></div>
+        {/* Core Values section */}
+        <div className="core-values-section bg-[#f3f3f3]  my-[100] lg:pt-[50]">
+          <div className="core-value-section-content-wrapper  mx-[21] lg:mx-[200]">
+            <Tag text="Our core values" className="my-[60]" />
+            <div className="core-values-text-wrapper">
+              <div className="section-header uppercase text-xl-semibold lg:text-4xl-semibold">
+                <span className="text-primary-default">The heart </span>of our
+                work
+              </div>
+              <div className="subtext text-sm-medium lg:text-md-medium my-[20] lg:w-[700]">
+                Our core values guide how we operate, shaping our decisions,
+                relationships, and the standard we deliver every day, ensuring
+                we remain consistent, trustworthy, and committed to excellence
+                across all our operations.
+              </div>
+            </div>
+            <div className="core-value-core-content-wrapper lg:pb-[200] lg:pt-[80]">
+              <div className="flex flex-col lg:flex-row gap-4 lg:gap- ">
+                {valueCards.map((card) => (
+                  <CoreValueCard key={card.id} card={card} />
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* key-achievements-section */}
+        <div className="key-achievements-section ">
+          <div className="main-section-content mx-[21] lg:mx-[200] lg:py-[100] lg:flex">
+            <div className="left-side ">
+              <Tag text="key achievements" />
+
+              {/* header and section texts */}
+              <div className="section-text my-[40] lg:my-[80]">
+                <div className="header uppercase text-xl-semibold lg:text-4xl-semibold flex flex-col gap-0 lg:mb-[20]">
+                  <p>checkout our key</p>
+                  <div className="header-breaks-wrapped flex gap-1 -mt-2 lg:-mt-5 lg:gap-3">
+                    <p className="text-primary-default">achievements</p>
+                    {'  '}
+                    <span>and </span>
+                    <span>milestone</span>
+                  </div>
+                </div>
+                <div className="subtext text-sm-regular text-default-body lg:text-lg-medium lg:w-[820]">
+                  Every milestone we’ve reached is a result of hard work, strong
+                  partnerships, and a genuine commitment to supporting our
+                  clients’ operations. These achievements represent the trust
+                  we’ve earned and our ongoing mission to keep Africa’s mining
+                  industry moving forward.
+                </div>
+              </div>
+
+              {/* achievements card section */}
+
+              <div className="achievement-cards flex flex-col gap-4 lg:gap-8">
+                {achievements.map((card) => (
+                  <div
+                    key={card.id}
+                    className="card border-default-card-stroke text-sm-regular lg:text-lg-regular
+                    flex items-center gap-4 lg:gap-16
+                    lg:w-[650px] p-[20px] lg:p-[30px]"
+                  >
+                    <div className="icon bg-surface-card-colored-secondary rounded-full p-[10px] lg:p-[15px]">
+                      <IconAwardFilled className="text-primary-default w-[25px] h-[25px] lg:w-[35px] lg:h-[35px]" />
+                    </div>
+
+                    <div className="text text-default-body">{card.title}</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="right-side  lg:w-full lg:mx-[40] h-full">
+              <TiltCard
+                imageSrc="/aboutAssets/Image-12.webp"
+                title="key achievements"
+              />
+            </div>
+          </div>
+        </div>
       </div>
     </section>
   );

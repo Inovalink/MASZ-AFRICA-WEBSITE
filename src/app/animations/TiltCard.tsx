@@ -120,10 +120,10 @@ export default function TiltCard({ imageSrc, title, bottomText, className = '' }
       ref={cardRef}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
-      className={`relative h-[520px] overflow-hidden cursor-pointer ${className}`}
+      className={`relative h-[400]  lg:h-[520px] overflow-hidden cursor-pointer ${className}`}
       style={{ transformStyle: 'preserve-3d' }}
     >
-      <div ref={innerRef} className="absolute inset-0 w-full h-full" style={{ transformStyle: 'preserve-3d' }}>
+      <div ref={innerRef} className="absolute inset-0  w-full h-full" style={{ transformStyle: 'preserve-3d' }}>
         <Image
           src={imageSrc}
           alt={title}
