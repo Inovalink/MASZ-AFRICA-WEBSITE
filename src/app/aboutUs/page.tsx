@@ -9,6 +9,10 @@ import TiltCard from '../animations/TiltCard';
 import CoreValueCard from '../components/MainCoreValuesCard';
 import { IconAwardFilled } from '@tabler/icons-react';
 import { text } from 'stream/consumers';
+import Dummy from '../dummy';
+import Image from 'next/image';
+import TeamMemberCardSection from '../components/TeamMemberSection';
+import TeamMembersSection from '../components/TeamMemberSection';
 
 type CoreValue = {
   id: number;
@@ -101,22 +105,98 @@ const achievements = [
       'Founded in 2025 and operational across Ghana, west-Africa and Globally.',
   },
   {
-    id: 1,
+    id: 2,
     title:
       'Expanded into technical maintenance and engineering advisory services',
   },
   {
-    id: 1,
+    id: 3,
     title: '5+ Major clients served with repeated contracts.',
   },
   {
-    id: 1,
+    id: 4,
     title: 'Established strategic alliances with international manufacturers.',
   },
   {
-    id: 1,
+    id: 5,
     title: '5+ Major clients served with repeated contracts.',
   },
+];
+
+const teamMemberDetails = [
+  {
+  id: 1,
+  description: `Samuel Okwabeng is the Chief Executive Officer of MASZ-AFRICA, where he leads 
+  the company’s strategic vision and drives operational excellence across all its services.
+  With extensive experience in procurement, supply chain management, engineering, and business operations,
+  <br /><br />
+  Samuel has transformed MASZ-AFRICA into a trusted partner for clients seeking quality, efficiency, and innovation.
+  Under his guidance, MASZ-AFRICA has significantly expanded its reach across Africa and internationally, 
+  strengthened its service delivery, and earned a reputation for integrity, reliability, and client satisfaction.
+  <br /><br />
+  Beyond his corporate role, Samuel is passionate about driving innovation, empowering talent, and supporting 
+  Africa’s industrial and economic development.`,
+  image: '/aboutAssets/TEAM-1.jpg',
+},
+  {
+  id: 2,
+  description: `Samuel Okwabeng is the Chief Executive Officer of MASZ-AFRICA, where he leads 
+  the company’s strategic vision and drives operational excellence across all its services.
+  With extensive experience in procurement, supply chain management, engineering, and business operations,
+  <br /><br />
+  Samuel has transformed MASZ-AFRICA into a trusted partner for clients seeking quality, efficiency, and innovation.
+  Under his guidance, MASZ-AFRICA has significantly expanded its reach across Africa and internationally, 
+  strengthened its service delivery, and earned a reputation for integrity, reliability, and client satisfaction.
+  <br /><br />
+  Beyond his corporate role, Samuel is passionate about driving innovation, empowering talent, and supporting 
+  Africa’s industrial and economic development.`,
+  image: '/aboutAssets/TEAM-1.jpg',
+},
+  {
+  id: 3,
+  description: `Samuel Okwabeng is the Chief Executive Officer of MASZ-AFRICA, where he leads 
+  the company’s strategic vision and drives operational excellence across all its services.
+  With extensive experience in procurement, supply chain management, engineering, and business operations,
+  <br /><br />
+  Samuel has transformed MASZ-AFRICA into a trusted partner for clients seeking quality, efficiency, and innovation.
+  Under his guidance, MASZ-AFRICA has significantly expanded its reach across Africa and internationally, 
+  strengthened its service delivery, and earned a reputation for integrity, reliability, and client satisfaction.
+  <br /><br />
+  Beyond his corporate role, Samuel is passionate about driving innovation, empowering talent, and supporting 
+  Africa’s industrial and economic development.`,
+  image: '/aboutAssets/TEAM-1.jpg',
+},
+  {
+  id: 4,
+  description: `Samuel Okwabeng is the Chief Executive Officer of MASZ-AFRICA, where he leads 
+  the company’s strategic vision and drives operational excellence across all its services.
+  With extensive experience in procurement, supply chain management, engineering, and business operations,
+  <br /><br />
+  Samuel has transformed MASZ-AFRICA into a trusted partner for clients seeking quality, efficiency, and innovation.
+  Under his guidance, MASZ-AFRICA has significantly expanded its reach across Africa and internationally, 
+  strengthened its service delivery, and earned a reputation for integrity, reliability, and client satisfaction.
+  <br /><br />
+  Beyond his corporate role, Samuel is passionate about driving innovation, empowering talent, and supporting 
+  Africa’s industrial and economic development.`,
+  image: '/aboutAssets/TEAM-1.jpg',
+},
+  {
+  id: 5,
+  description: `Samuel Okwabeng is the Chief Executive Officer of MASZ-AFRICA, where he leads 
+  the company’s strategic vision and drives operational excellence across all its services.
+  With extensive experience in procurement, supply chain management, engineering, and business operations,
+  <br /><br />
+  Samuel has transformed MASZ-AFRICA into a trusted partner for clients seeking quality, efficiency, and innovation.
+  Under his guidance, MASZ-AFRICA has significantly expanded its reach across Africa and internationally, 
+  strengthened its service delivery, and earned a reputation for integrity, reliability, and client satisfaction.
+  <br /><br />
+  Beyond his corporate role, Samuel is passionate about driving innovation, empowering talent, and supporting 
+  Africa’s industrial and economic development.`,
+  image: '/aboutAssets/TEAM-1.jpg',
+},
+
+
+ ,
 ];
 
 function AboutUSPage() {
@@ -306,22 +386,24 @@ function AboutUSPage() {
 
         {/* key-achievements-section */}
         <div className="key-achievements-section ">
-          <div className="main-section-content mx-[21] lg:mx-[200] lg:py-[100] lg:flex">
+          <div className="main-section-content mx-[21] lg:ml-[200] lg:pb-[100] lg:flex ">
             <div className="left-side ">
               <Tag text="key achievements" />
 
               {/* header and section texts */}
-              <div className="section-text my-[40] lg:my-[80]">
-                <div className="header uppercase text-xl-semibold lg:text-4xl-semibold flex flex-col gap-0 lg:mb-[20]">
-                  <p>checkout our key</p>
-                  <div className="header-breaks-wrapped flex gap-1 -mt-2 lg:-mt-5 lg:gap-3">
-                    <p className="text-primary-default">achievements</p>
-                    {'  '}
-                    <span>and </span>
-                    <span>milestone</span>
-                  </div>
+              <div className="section-text my-[40] lg:my-[80] ">
+                <div className="header uppercase text-xl-semibold lg:text-4xl-semibold flex flex-col lg:flex-row gap-0 lg:mb-[20]">
+                  <p>checkout our</p>
+                  <span className="lg:ml-[12] text-primary-default">
+                    key achievements
+                  </span>
+                  {/* <div className="header-breaks-wrapped flex gap-1 -mt-2 lg:-mt-5 lg:gap-3">
+                    <p className="text-primary-default">key achievements</p>
+                    <span>AND</span>
+                    <span className="text-primary-default">milsestone</span>
+                  </div> */}
                 </div>
-                <div className="subtext text-sm-regular text-default-body lg:text-lg-medium lg:w-[820]">
+                <div className="subtext text-sm-regular text-default-body lg:text-lg-medium lg:w-[940]">
                   Every milestone we’ve reached is a result of hard work, strong
                   partnerships, and a genuine commitment to supporting our
                   clients’ operations. These achievements represent the trust
@@ -332,31 +414,66 @@ function AboutUSPage() {
 
               {/* achievements card section */}
 
-              <div className="achievement-cards flex flex-col gap-4 lg:gap-8">
+              <div className="achievement-cards flex flex-col lg:flex-row gap-4 lg:flex-wrap lg:gap-8">
                 {achievements.map((card) => (
                   <div
                     key={card.id}
-                    className="card border-default-card-stroke text-sm-regular lg:text-lg-regular
-                    flex items-center gap-4 lg:gap-16
-                    lg:w-[650px] p-[20px] lg:p-[30px]"
+                    tabIndex={0} // 🔹 makes div focusable on mobile
+                    className="achievements-card group bg-white border-default-card-stroke text-sm-regular lg:text-lg-regular flex items-center gap-4 lg:gap-16 cursor-pointer lg:w-[750px] p-[20px] lg:p-[30px] 
+                    transition-all duration-500 ease-in-out
+                  hover:bg-[#016BF2] hover:scale-105
+                  focus-within:bg-[#016BF2] focus-within:scale-105"
                   >
-                    <div className="icon bg-surface-card-colored-secondary rounded-full p-[10px] lg:p-[15px]">
-                      <IconAwardFilled className="text-primary-default w-[25px] h-[25px] lg:w-[35px] lg:h-[35px]" />
+                    <div
+                      className="icon bg-surface-card-colored-secondary rounded-full p-[10px] lg:p-[15px] transition-all duration-500 ease-in-out
+                      group-hover:bg-white group-focus-within:bg-white"
+                    >
+                      <IconAwardFilled
+                        className="text-primary-default w-[25px] h-[25px] lg:w-[35px] lg:h-[35px] transition-all duration-500 ease-in-out
+                                  group-hover:text-default-primary group-focus-within:text-default-primary"
+                      />
                     </div>
 
-                    <div className="text text-default-body">{card.title}</div>
+                    <div
+                      className="text-[#777777] transition-all duration-500 ease-in-out
+                      group-hover:text-white group-focus-within:text-white"
+                    >
+                      {card.title}
+                    </div>
                   </div>
                 ))}
               </div>
             </div>
 
-            <div className="right-side  lg:w-full lg:mx-[40] h-full">
+            {/* <div className="right-side mt-[20] lg:w-full lg:ml-[120] ">
               <TiltCard
-                imageSrc="/aboutAssets/Image-12.webp"
+                imageSrc="/aboutAssets/Image-17.jpg"
                 title="key achievements"
+                className="lg:h-full lg:mr-0"
+                enableTilt={false}
+                enableMouse={false}
               />
-            </div>
+            </div> */}
           </div>
+        </div>
+
+        <div className="team-section-header  bg-[#f3f3f3]">
+          <div className="main-info-content lg:mx-[200] lg:py-[100]">
+            <Tag text='team members ' className='lg:my-[50]'/>
+            <div className="text-section">
+              <div className="header uppercase lg:text-4xl-semibold">
+                meet out <span className='text-primary-default'>Team members</span>
+              </div>
+              <div className="subtext lg:w-[700] lg:my-[20]">
+                Our core values guide how we operate, shaping our decisions, relationships, and the standard we deliver every day, ensuring we remain consistent, trustworthy, and committed to excellence across all our operations.
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <div className="Team-members-section">
+          <TeamMembersSection teamMembers={teamMemberDetails}/>
         </div>
       </div>
     </section>

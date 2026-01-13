@@ -1,65 +1,195 @@
 'use client';
-import React, { useEffect, useRef } from 'react';
-import { gsap } from 'gsap';
 
-type CoreValue = {
+import React, { useEffect, useRef } from 'react';
+import Image from 'next/image';
+import { gsap } from 'gsap';
+import { ScrollTrigger } from 'gsap/dist/ScrollTrigger';
+
+gsap.registerPlugin(ScrollTrigger);
+
+type TeamMember = {
   id: number;
-  number: string;
-  title: string;
   description: string;
   image: string;
 };
 
-type CoreValueCardProps = {
-  card: CoreValue;
-};
+const teamMembers: TeamMember[] = [
+  {
+    id: 1,
+    description: `Samuel Okwabeng is the Chief Executive Officer of MASZ-AFRICA,
+      where he leads the company's strategic vision and drives
+      operational excellence across all its services...`,
+    image: '/aboutAssets/Image-5.webp',
+  },
+  {
+    id: 2,
+    description: `Jane Doe ensures operational efficiency and drives strategic initiatives
+      to optimize service delivery across MASZ-AFRICA's operations...`,
+    image: '/aboutAssets/Image-6.webp',
+  },
+  {
+    id: 3,
+    description: `John Smith oversees procurement and supply chain operations,
+      ensuring timely delivery of mining consumables and equipment...`,
+    image: '/aboutAssets/Image-7.webp',
+  },
+  {
+    id: 4,
+    description: `Mary Johnson provides technical expertise and consultancy to
+      optimize mining and engineering solutions...`,
+    image: '/aboutAssets/Image-8.webp',
+  },
+  {
+    id: 5,
+    description: `David Akoto manages procurement, logistics, and ensures
+      timely delivery of equipment across West Africa...`,
+    image: '/aboutAssets/Image-9.webp',
+  },
+];
 
-const CoreValuesCards = () => {
-  const cards = [
+const TeamMembersSection: React.FC = () => {
+  const sectionRef = useRef<HTMLDivElement | null>(null);
+  const cardsRef = useRef<(HTMLDivElement | null)[]>([]);
+  const indicatorsRef = useRef<(HTMLDivElement | null)[]>([]);
+
+  useEffect(() => {
+    if (!sectionRef.current) return;
+
+    const ctx = gsap.context(() => {
+      const cards = cardsRef.current.filter(
+        (el): el is HTMLDivElement => el !== null
+      );
+      const indicators = indicatorsRef.current.filter(
+        (el): el is HTMLDivElement => el !== null
+      );
+
+      const vw = typeof window !== 'undefined' ? window.innerWidth : 0;
+
+      // INITIAL STATE: all offscreen except first card
+      cards.forEach((card, i) => {
+        gsap.set(card, {
+          left: '50%',
+          xPercent: -50,
+          x: i === 0 ? 0 : vw,
+          opacity: i === 0 ? 1 : 0,
+        });
+      });
+
+      // INDICATORS
+      indicators.forEach((dot, i) => {
+        gsap.set(dot, { scale: i === 0 ? 1.4 : 1, opacity: i === 0 ? 1 : 0.4 });
+      });
+
+      // TIMELINE: smooth magnet card scroll
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: 'top top',
+          end: `+=${teamMembers.length * window.innerHeight}`,
+          scrub: 0.6,
+          pin: true,
+          anticipatePin: 1,
+        },
+      });
+
+     cards.forEach((card, index) => {
+  const enterDuration = 0.8;
+  const exitDuration = 0.8;
+
+  // 🔹 FIRST CARD: already visible, no enter animation
+  if (index === 0) {
+    tl.to(
+      indicators,
+      {
+        scale: (i) => (i === 0 ? 1.4 : 1),
+        opacity: (i) => (i === 0 ? 1 : 0.4),
+        duration: 0.3,
+      },
+      0
+    );
+    return;
+  }
+
+  // 🔹 ENTER current card
+  tl.fromTo(
+    card,
+    { x: vw, opacity: 0 },
+    { x: 0, opacity: 1, duration: enterDuration, ease: 'power3.inOut' }
+  );
+
+  // 🔹 EXIT previous card
+  tl.to(
+    cards[index - 1],
+    { x: -vw, opacity: 0, duration: exitDuration, ease: 'power3.inOut' },
+    '<'
+  );
+
+  // 🔹 INDICATORS sync
+  tl.to(
+    indicators,
     {
-      id: 1,
-      number: '01',
-      title: 'Innovation',
-      description:
-        'We constantly push boundaries and embrace new ideas to deliver cutting-edge solutions that transform the way our clients do business.',
-      image:
-        'https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=800&q=80',
+      scale: (i) => (i === index ? 1.4 : 1),
+      opacity: (i) => (i === index ? 1 : 0.4),
+      duration: enterDuration,
+      ease: 'power2.out',
     },
-    {
-      id: 2,
-      number: '02',
-      title: 'Excellence',
-      description:
-        'We are committed to delivering exceptional quality in everything we do, setting the highest standards for ourselves and our work.',
-      image:
-        'https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=800&q=80',
-    },
-    {
-      id: 3,
-      number: '03',
-      title: 'Integrity',
-      description:
-        'We build trust through transparency, honesty, and ethical practices in all our relationships and business dealings.',
-      image:
-        'https://images.unsplash.com/photo-1552664730-d307ca884978?w=800&q=80',
-    },
-    {
-      id: 4,
-      number: '04',
-      title: 'Collaboration',
-      description:
-        'We believe in the power of teamwork and partnership, working together to achieve extraordinary results for our clients.',
-      image:
-        'https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=800&q=80',
-    },
-  ];
+    '<'
+  );
+});
+
+    }, sectionRef);
+
+    return () => ctx.revert();
+  }, []);
 
   return (
-    <div className="min-h-screen bg-gray-900 flex items-center justify-center p-4 lg:p-8">
-      <div className="w-full max-w-7xl">
-        <div className="flex flex-col lg:flex-row gap-4">
-          {cards.map((card) => (
-            <CoreValueCard key={card.id} card={card} />
+    <div
+      ref={sectionRef}
+      className="team-members-section lg:py-[120px] bg-[#f3f3f3] relative overflow-hidden"
+    >
+      <div className="section-main-content">
+        <div className="relative w-full h-[600px]">
+          {/* INDICATORS */}
+          <div className="absolute right-6 top-1/2 -translate-y-1/2 flex flex-col gap-3 z-50">
+            {teamMembers.map((_, index) => (
+              <div
+                key={index}
+                ref={(el) => {
+                  indicatorsRef.current[index] = el;
+                }}
+                className="w-2.5 h-2.5  bg-[#016BF2]"
+              />
+            ))}
+          </div>
+
+          {/* CARDS */}
+          {teamMembers.map((member, index) => (
+            <div
+              key={member.id}
+              ref={(el) => {
+                cardsRef.current[index] = el;
+              }}
+              className="card bg-white w-full max-w-[1200px] h-auto lg:h-[600px] flex flex-col lg:flex-row lg:justify-between gap-10 lg:items-center px-6 lg:px-[40px] py-8 lg:pb-[30px] absolute top-1/2 -translate-y-1/2  "
+            >
+              {/* Left */}
+              <div className="main-section-container lg:h-[400px] lg:w-[500px] flex justify-center items-center">
+                <div className="image-container relative w-full lg:w-[70%] h-64 lg:h-[450px]">
+                  <div className="absolute -bottom-8 -left-7 w-[117%] h-[50%] bg-[#016BF2] z-0"></div>
+                  <Image
+                    src={member.image}
+                    alt="Team member"
+                    fill
+                    priority
+                    className="object-cover relative z-10"
+                  />
+                </div>
+              </div>
+
+              {/* Right */}
+              <div className="main-tech-description text-base lg:text-lg leading-relaxed lg:h-[50%] lg:w-[60%] flex items-center justify-center text-gray-700">
+                {member.description}
+              </div>
+            </div>
           ))}
         </div>
       </div>
@@ -67,240 +197,4 @@ const CoreValuesCards = () => {
   );
 };
 
-const CoreValueCard: React.FC<CoreValueCardProps> = ({ card }) => {
-  const cardRef = useRef<HTMLDivElement | null>(null);
-  const imageRef = useRef<HTMLDivElement | null>(null);
-  const numberRef = useRef<HTMLParagraphElement | null>(null);
-  const titleRef = useRef<HTMLParagraphElement | null>(null);
-  const descriptionRef = useRef<HTMLParagraphElement | null>(null);
-
-  const hoverTl = useRef<gsap.core.Timeline | null>(null);
-
-  const isMobile = useRef(false);
-
-  useEffect(() => {
-    const update = () => {
-      isMobile.current = window.innerWidth < 1024;
-    };
-
-    update(); // set initial value after mount
-    window.addEventListener('resize', update);
-
-    return () => window.removeEventListener('resize', update);
-  }, []);
-
-  useEffect(() => {
-    const cardEl = cardRef.current;
-    if (!cardEl) return;
-
-    const image = imageRef.current;
-    const number = numberRef.current;
-    const title = titleRef.current;
-    const description = descriptionRef.current;
-
-    // ===== Initial state for mobile & desktop =====
-    if (isMobile.current) {
-      // --- MOBILE: vertical stack ---
-
-      gsap.set(number, { x: 40, y: 24 });
-      gsap.set(title, { x: 120, y: 24, rotation: 0 });
-      gsap.set(description, { opacity: 1, x: 200, y: 70 });
-      gsap.set(cardEl, { height: 80, width: '100%' });
-      gsap.set(image, { opacity: 0 });
-    } else {
-      // --- DESKTOP ---
-      gsap.set(title, {
-        rotation: 90,
-        x: 100,
-        y: 150,
-        paddingLeft: 30,
-        paddingRight: 30,
-        paddingTop: 30,
-        paddingBottom: 30,
-      });
-
-      gsap.set(number, {
-        x: 80,
-        y: 40,
-      });
-
-      gsap.set(description, {
-        x: 150,
-        y: 120,
-      });
-
-      gsap.set(cardEl, { height: 550, width: 208 });
-      gsap.set(image, { opacity: 0 });
-    }
-
-    // ===== Desktop hover timeline (ONCE) =====
-    hoverTl.current = gsap.timeline({ paused: true });
-
-    hoverTl.current
-      .to(
-        cardEl,
-        {
-          width: 635,
-          duration: 0.35,
-          ease: 'power3.out',
-          overwrite: 'auto',
-        },
-        0
-      )
-      .to(
-        image,
-        {
-          autoAlpha: 1,
-          duration: 0.35,
-          ease: 'power3.out',
-          overwrite: 'auto',
-        },
-        0
-      )
-      .to(
-        number,
-        {
-          fontSize: '1.875rem',
-          duration: 0.35,
-          ease: 'power3.out',
-          overwrite: 'auto',
-        },
-        0
-      )
-      .to(
-        title,
-        {
-          rotation: 0,
-          x: 81,
-          y: 100,
-          paddingLeft: 0,
-          paddingRight: 0,
-          paddingTop: 0,
-          paddingBottom: 0,
-          fontSize: '1.875rem',
-          fontWeight: 700,
-          duration: 0.35,
-          ease: 'power3.out',
-          overwrite: 'auto',
-        },
-        0
-      )
-      .to(
-        description,
-        {
-          autoAlpha: 1,
-          x: 8,
-          duration: 0.35,
-          delay: 0.05,
-          ease: 'power3.out',
-          overwrite: 'auto',
-        },
-        0
-      );
-
-    // ===== Mobile tap animations (unchanged) =====
-    const mobileExpand = () => {
-      gsap.to(cardEl, {
-        height: 450,
-        duration: 0.5,
-        ease: 'cubic-bezier(0.22,1,0.36,1)',
-      });
-      gsap.to(image, { opacity: 1, duration: 0.5 });
-      gsap.to(title, { x: 42, y: 60, duration: 0.5 });
-      gsap.to(description, { opacity: 1, y: 20, duration: 0.6 });
-    };
-
-    const mobileCollapse = () => {
-      gsap.to(cardEl, {
-        height: 80,
-        duration: 0.5,
-        ease: 'cubic-bezier(0.22,1,0.36,1)',
-      });
-      gsap.to(image, { opacity: 0, duration: 0.5 });
-      gsap.to(title, { x: 100, y: 24, duration: 0.5 });
-      gsap.to(description, { opacity: 0, y: 180, duration: 0.6 });
-    };
-
-    // ===== Event handlers =====
-    const onEnter = () => {
-      if (!isMobile.current && hoverTl.current) hoverTl.current.play();
-    };
-
-    const onLeave = () => {
-      if (!isMobile.current && hoverTl.current) hoverTl.current.reverse();
-    };
-
-    const onFocus = () => {
-      if (isMobile.current) mobileExpand();
-    };
-
-    const onBlur = () => {
-      if (isMobile.current) mobileCollapse();
-    };
-
-    cardEl.addEventListener('mouseenter', onEnter);
-    cardEl.addEventListener('mouseleave', onLeave);
-    cardEl.addEventListener('focus', onFocus);
-    cardEl.addEventListener('blur', onBlur);
-
-    return () => {
-      cardEl.removeEventListener('mouseenter', onEnter);
-      cardEl.removeEventListener('mouseleave', onLeave);
-      cardEl.removeEventListener('focus', onFocus);
-      cardEl.removeEventListener('blur', onBlur);
-      hoverTl.current?.kill();
-    };
-  }, []);
-
-  return (
-    <div
-      ref={cardRef}
-      tabIndex={0}
-      className="relative group cursor-pointer overflow-hidden text-white bg-slate-800 h-20 lg:h-[550px] focus:outline-none"
-      style={{ willChange: 'width, height', transformOrigin: 'left' }}
-    >
-      {/* Image */}
-      <div
-        ref={imageRef}
-        className="absolute inset-0 z-0 opacity-0"
-        style={{ willChange: 'opacity' }}
-      >
-        <img
-          src={card.image}
-          alt={card.title}
-          className="w-full h-full object-cover"
-        />
-        <div className="absolute inset-0 bg-black/25" />
-        <div className="absolute bottom-0 left-0 right-0 h-[55%] bg-gradient-to-t from-black/90 via-black/50 to-transparent" />
-      </div>
-
-      {/* Content */}
-      <div className="relative z-10 h-full">
-        <p
-          ref={numberRef}
-          className="text-xl font-semibold absolute lg:text-3xl"
-        >
-          {card.number}.
-        </p>
-
-        <p
-          ref={titleRef}
-          className="uppercase text-xl font-semibold absolute whitespace-nowrap lg:text-2xl lg:rotate-90 lg:px-[30px] lg:py-[30px]"
-          style={{ transformOrigin: 'left center' }}
-        >
-          {card.title}
-        </p>
-
-        <p
-          ref={descriptionRef}
-          className="text-sm lg:text-lg absolute w-[300px] lg:w-[630px] lg:px-[70px] opacity-0"
-          style={{ top: '230px', transform: 'translateX(-150px)' }}
-        >
-          {card.description}
-        </p>
-      </div>
-    </div>
-  );
-};
-
-export default CoreValuesCards;
+export default TeamMembersSection;

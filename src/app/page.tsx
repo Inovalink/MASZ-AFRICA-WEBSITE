@@ -12,14 +12,13 @@ import Dummy from './dummy'
 function page() {
   return (
     <div>
-      <HeroSession/>
+      {/* <HeroSession/>
       <AboutSession/>
       <ServiceSession/>
       <CoreValueSession/>
       <TestimonialSession/>
-      <FaqSession/>
-
-    
+      <FaqSession/> */}
+    <Dummy/>
   
 
    
