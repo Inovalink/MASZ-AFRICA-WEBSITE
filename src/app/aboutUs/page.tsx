@@ -9,10 +9,9 @@ import TiltCard from '../animations/TiltCard';
 import CoreValueCard from '../components/MainCoreValuesCard';
 import { IconAwardFilled } from '@tabler/icons-react';
 import { text } from 'stream/consumers';
-import Dummy from '../dummy';
 import Image from 'next/image';
-import TeamMemberCardSection from '../components/TeamMemberSection';
-import TeamMembersSection from '../components/TeamMemberSection';
+import Dummy from '../dummy'
+import TeamMembersSection from '../sessions/TeamMembersSection';
 
 type CoreValue = {
   id: number;
@@ -125,8 +124,8 @@ const achievements = [
 
 const teamMemberDetails = [
   {
-  id: 1,
-  description: `Samuel Okwabeng is the Chief Executive Officer of MASZ-AFRICA, where he leads 
+    id: 1,
+    description: `Samuel Okwabeng is the Chief Executive Officer of MASZ-AFRICA, where he leads 
   the company’s strategic vision and drives operational excellence across all its services.
   With extensive experience in procurement, supply chain management, engineering, and business operations,
   <br /><br />
@@ -136,11 +135,11 @@ const teamMemberDetails = [
   <br /><br />
   Beyond his corporate role, Samuel is passionate about driving innovation, empowering talent, and supporting 
   Africa’s industrial and economic development.`,
-  image: '/aboutAssets/TEAM-1.jpg',
-},
+    image: '/aboutAssets/TEAM-1.jpg',
+  },
   {
-  id: 2,
-  description: `Samuel Okwabeng is the Chief Executive Officer of MASZ-AFRICA, where he leads 
+    id: 2,
+    description: `Samuel Okwabeng is the Chief Executive Officer of MASZ-AFRICA, where he leads 
   the company’s strategic vision and drives operational excellence across all its services.
   With extensive experience in procurement, supply chain management, engineering, and business operations,
   <br /><br />
@@ -150,11 +149,11 @@ const teamMemberDetails = [
   <br /><br />
   Beyond his corporate role, Samuel is passionate about driving innovation, empowering talent, and supporting 
   Africa’s industrial and economic development.`,
-  image: '/aboutAssets/TEAM-1.jpg',
-},
+    image: '/aboutAssets/TEAM-1.jpg',
+  },
   {
-  id: 3,
-  description: `Samuel Okwabeng is the Chief Executive Officer of MASZ-AFRICA, where he leads 
+    id: 3,
+    description: `Samuel Okwabeng is the Chief Executive Officer of MASZ-AFRICA, where he leads 
   the company’s strategic vision and drives operational excellence across all its services.
   With extensive experience in procurement, supply chain management, engineering, and business operations,
   <br /><br />
@@ -164,11 +163,11 @@ const teamMemberDetails = [
   <br /><br />
   Beyond his corporate role, Samuel is passionate about driving innovation, empowering talent, and supporting 
   Africa’s industrial and economic development.`,
-  image: '/aboutAssets/TEAM-1.jpg',
-},
+    image: '/aboutAssets/TEAM-1.jpg',
+  },
   {
-  id: 4,
-  description: `Samuel Okwabeng is the Chief Executive Officer of MASZ-AFRICA, where he leads 
+    id: 4,
+    description: `Samuel Okwabeng is the Chief Executive Officer of MASZ-AFRICA, where he leads 
   the company’s strategic vision and drives operational excellence across all its services.
   With extensive experience in procurement, supply chain management, engineering, and business operations,
   <br /><br />
@@ -178,11 +177,11 @@ const teamMemberDetails = [
   <br /><br />
   Beyond his corporate role, Samuel is passionate about driving innovation, empowering talent, and supporting 
   Africa’s industrial and economic development.`,
-  image: '/aboutAssets/TEAM-1.jpg',
-},
+    image: '/aboutAssets/TEAM-1.jpg',
+  },
   {
-  id: 5,
-  description: `Samuel Okwabeng is the Chief Executive Officer of MASZ-AFRICA, where he leads 
+    id: 5,
+    description: `Samuel Okwabeng is the Chief Executive Officer of MASZ-AFRICA, where he leads 
   the company’s strategic vision and drives operational excellence across all its services.
   With extensive experience in procurement, supply chain management, engineering, and business operations,
   <br /><br />
@@ -192,11 +191,10 @@ const teamMemberDetails = [
   <br /><br />
   Beyond his corporate role, Samuel is passionate about driving innovation, empowering talent, and supporting 
   Africa’s industrial and economic development.`,
-  image: '/aboutAssets/TEAM-1.jpg',
-},
+    image: '/aboutAssets/TEAM-1.jpg',
+  },
 
-
- ,
+  ,
 ];
 
 function AboutUSPage() {
@@ -444,37 +442,98 @@ function AboutUSPage() {
                 ))}
               </div>
             </div>
-
-            {/* <div className="right-side mt-[20] lg:w-full lg:ml-[120] ">
-              <TiltCard
-                imageSrc="/aboutAssets/Image-17.jpg"
-                title="key achievements"
-                className="lg:h-full lg:mr-0"
-                enableTilt={false}
-                enableMouse={false}
-              />
-            </div> */}
           </div>
         </div>
 
-        <div className="team-section-header  bg-[#f3f3f3]">
-          <div className="main-info-content lg:mx-[200] lg:py-[100]">
-            <Tag text='team members ' className='lg:my-[50]'/>
-            <div className="text-section">
-              <div className="header uppercase lg:text-4xl-semibold">
-                meet out <span className='text-primary-default'>Team members</span>
+     
+
+        {/* <div className="Team-members-section h-screen bg-[#f3f3f3]">
+          <div className="team-member-section-main-content flex lg:flex-col lg:justify-center lg:items-center gap-40 lg:pt-[100]">
+            <div className="details-section-upper flex lg:justify-center lg:gap-25 lg:mx-[200]">
+              <div className="image-left relative lg:w-[30%] lg:h-[500]">
+                <Image
+                  src="/aboutAssets/TEAM-1.jpg"
+                  alt="Team-1"
+                  fill
+                  priority
+                  className="object-cover object-top"
+                />
               </div>
-              <div className="subtext lg:w-[700] lg:my-[20]">
-                Our core values guide how we operate, shaping our decisions, relationships, and the standard we deliver every day, ensuring we remain consistent, trustworthy, and committed to excellence across all our operations.
+              <div className="details-right lg:w-[50%]">
+                <div className="team-member-name uppercase text-primary-default lg:text-3xl-semibold lg:mb-[20]">
+                  samuel Okwabeng
+                </div>
+                <div className="text-description lg:text-lg-medium text-default-body">
+                  Samuel Okwabeng is the Chief Executive Officer of MASZ-AFRICA,
+                  where he leads the company’s strategic vision and drives
+                  operational excellence across all its services. With extensive
+                  experience in procurement, supply chain management,
+                  engineering, and business operations, Samuel has transformed
+                  MASZ-AFRICA into a trusted partner for clients seeking
+                  quality, efficiency, and innovation.His leadership blends
+                  deep industry knowledge with a forward-thinking approach,
+                  ensuring the company stays ahead in a competitive and dynamic
+                  market. Under his guidance, MASZ-AFRICA has significantly
+                  expanded its reach across Africa and internationally,
+                  strengthened its service delivery, and earned a reputation for
+                  integrity, reliability, and client satisfaction. 
+                  continent.
+                </div>
               </div>
             </div>
-
+            <div className="indicator-section-lower flex items-center justify-center gap-6 w-[20%] h-auto bg-white p-[10] ">
+              <div className="circular-indicators-with-image relative bg-surface-card-colored-primary lg:flex lg:items-center lg:justify-center lg:w-[50] lg:h-[50] rounded-full overflow-hidden">
+                <Image
+                  src="/aboutAssets/TEAM-1.jpg"
+                  alt="Team-1"
+                  fill
+                  priority
+                  className="object-cover object-top"
+                />
+              </div>
+              <div className="circular-indicators-with-image relative bg-surface-card-colored-primary lg:flex lg:items-center lg:justify-center lg:w-[50] lg:h-[50] rounded-full overflow-hidden">
+                <Image
+                  src="/aboutAssets/TEAM-2.jpg"
+                  alt="Team-1"
+                  fill
+                  priority
+                  className="object-cover object-top"
+                />
+              </div>
+              <div className="circular-indicators-with-image relative bg-surface-card-colored-primary lg:flex lg:items-center lg:justify-center lg:w-[50] lg:h-[50] rounded-full overflow-hidden">
+                <Image
+                  src="/aboutAssets/TEAM-3.jpg"
+                  alt="Team-1"
+                  fill
+                  priority
+                  className="object-cover object-top"
+                />
+              </div>
+              <div className="circular-indicators-with-image relative bg-surface-card-colored-primary lg:flex lg:items-center lg:justify-center lg:w-[50] lg:h-[50] rounded-full overflow-hidden">
+                <Image
+                  src="/aboutAssets/TEAM-4.jpg"
+                  alt="Team-1"
+                  fill
+                  priority
+                  className="object-cover object-top"
+                />
+              </div>
+              <div className="circular-indicators-with-image relative bg-surface-card-colored-primary lg:flex lg:items-center lg:justify-center lg:w-[50] lg:h-[50] rounded-full overflow-hidden">
+                <Image
+                  src="/aboutAssets/TEAM-5.jpg"
+                  alt="Team-1"
+                  fill
+                  priority
+                  className="object-cover object-top"
+                />
+              </div>
+            </div>
           </div>
-        </div>
+        </div> */}
 
-        <div className="Team-members-section">
-          <TeamMembersSection teamMembers={teamMemberDetails}/>
-        </div>
+        <TeamMembersSection/>
+
+     
       </div>
     </section>
   );

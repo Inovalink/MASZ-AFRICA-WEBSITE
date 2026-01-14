@@ -9,17 +9,21 @@ import Footer from "./components/footer"
 import CallToAction from './sessions/CallToAction'
 import Dummy from './dummy'
 
+
+
+
+
+
 function page() {
   return (
     <div>
-      {/* <HeroSession/>
+      <HeroSession/>
       <AboutSession/>
       <ServiceSession/>
       <CoreValueSession/>
       <TestimonialSession/>
-      <FaqSession/> */}
-    <Dummy/>
-  
+      <FaqSession/>
+   
 
    
 

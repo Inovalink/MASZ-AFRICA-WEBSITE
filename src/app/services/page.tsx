@@ -1,9 +1,9 @@
 import React from 'react'
 
-function ServicesPage() {
+function page() {
   return (
-    <div>ServicesPage</div>
+    <div>page</div>
   )
 }
 
-export default ServicesPage
+export default page
