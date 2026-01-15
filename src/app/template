@@ -1,0 +1,83 @@
+import React from 'react';
+import Tag from '../components/tag';
+import Link from 'next/link';
+import Image from 'next/image';
+import Button from '../components/button';
+import { MoveRight } from 'lucide-react';
+
+function ServicesCardsSection() {
+  return (
+    <section className="bg-[#f3f3f3]">
+      <div className="main-content h-screen mx-[21px] lg:mx-[200px] flex justify-center items-center">
+        <div className="card-content bg-red-400 w-full lg:w-[70%] lg:h-[550px]">
+          {/* Upper */}
+          <div className="upper-section flex justify-between items-center p-[30px] bg-white">
+            <div className="left-section">
+              <Tag text="product" />
+            </div>
+            <div className="right-section">
+              <Link href="/">Details</Link>
+            </div>
+          </div>
+
+          {/* Lower */}
+          <div className="lower-section w-full lg:h-[458px]">
+            <div className="image-container relative w-full h-full overflow-hidden">
+              {/* Image */}
+              <Image
+                src="/serviceAssets/Image-1.png"
+                alt="Image-1"
+                fill
+                priority
+                className="object-cover"
+              />
+
+              {/* Overlay Text */}
+              <div className="absolute inset-0 flex justify-between items-center p-6 lg:mx-[100]">
+                <div className="text-white lg:text-4xl-semibold">01</div>
+                <div
+                  className=" text-container text-white text-lg-regular  p-[30]  bg-white/10 backdrop-blur-md
+  border border-white/20
+  shadow-lg"
+                >
+                  <div className="header uppercase lg:text-4xl-semibold">
+                    Grinding media
+                  </div>
+                  <div className="subtext lg:max-w-[450] ">
+                    We offer complete gearbox diagnostics, repairs, and
+                    component replacements using OEM parts and experienced
+                    technicians. Our work helps restore equipment reliability
+                    and prevent costly downtime across crushers, mills, and
+                    conveyors.
+                  </div>
+
+                     <Button
+            label="Explore our services"
+            variant="primary"
+            size="large"
+            icon={
+              <>
+                {/* Mobile / default arrow */}
+                <span className="lg:hidden">
+                  <MoveRight size={16} strokeWidth={2} />
+                </span>
+
+                {/* Desktop / large screen thicker arrow */}
+                <span className="hidden lg:inline-block">
+                  <MoveRight size={16} strokeWidth={3} width={50} />
+                </span>
+              </>
+            }
+            className="lg:my-[15]"
+          />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+export default ServicesCardsSection;
