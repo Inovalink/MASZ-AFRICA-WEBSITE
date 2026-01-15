@@ -10,8 +10,9 @@ import CoreValueCard from '../components/MainCoreValuesCard';
 import { IconAwardFilled } from '@tabler/icons-react';
 import { text } from 'stream/consumers';
 import Image from 'next/image';
-import Dummy from '../dummy'
+import Dummy from '../dummy';
 import TeamMembersSection from '../sessions/TeamMembersSection';
+import GallerySection from '../sessions/GallerySection';
 
 type CoreValue = {
   id: number;
@@ -445,8 +446,6 @@ function AboutUSPage() {
           </div>
         </div>
 
-     
-
         {/* <div className="Team-members-section h-screen bg-[#f3f3f3]">
           <div className="team-member-section-main-content flex lg:flex-col lg:justify-center lg:items-center gap-40 lg:pt-[100]">
             <div className="details-section-upper flex lg:justify-center lg:gap-25 lg:mx-[200]">
@@ -531,9 +530,12 @@ function AboutUSPage() {
           </div>
         </div> */}
 
-        <TeamMembersSection/>
+        <TeamMembersSection />
 
-     
+        <div className="gallery-container lg:py-[100]">
+          <GallerySection/>
+        </div>
+        
       </div>
     </section>
   );
