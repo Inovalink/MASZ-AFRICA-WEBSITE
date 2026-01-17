@@ -7,7 +7,11 @@ interface CoreValueCardProps {
   description: string;
 }
 
-const CoreValueCard: React.FC<CoreValueCardProps> = ({ number, title, description }) => {
+const CoreValueCard: React.FC<CoreValueCardProps> = ({
+  number,
+  title,
+  description,
+}) => {
   const cardRef = useRef<HTMLDivElement>(null);
   const [style, setStyle] = useState({ rotateX: 0, rotateY: 0, scale: 1 });
 
@@ -49,7 +53,8 @@ const CoreValueCard: React.FC<CoreValueCardProps> = ({ number, title, descriptio
           {number}.
         </p>
 
-        <p className="
+        <p
+          className="
           uppercase
           lg:text-2xl-semibold
           lg:rotate-90
@@ -64,12 +69,14 @@ const CoreValueCard: React.FC<CoreValueCardProps> = ({ number, title, descriptio
           transition-transform
           duration-500
           ease-[cubic-bezier(0.22,1,0.36,1)]
-        ">
+        "
+        >
           {title}
         </p>
 
         <div className="lg:absolute lg:top-[300px] lg:left-0 lg:right-0 lg:overflow-hidden">
-          <p className="
+          <p
+            className="
             lg:text-lg-regular
             lg:px-[70px]
             lg:w-[540px]
@@ -81,7 +88,8 @@ const CoreValueCard: React.FC<CoreValueCardProps> = ({ number, title, descriptio
             duration-600
             ease-[cubic-bezier(0.22,1,0.36,1)]
             will-change-[opacity,transform]
-          ">
+          "
+          >
             {description}
           </p>
         </div>

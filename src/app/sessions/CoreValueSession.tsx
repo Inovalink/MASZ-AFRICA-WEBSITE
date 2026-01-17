@@ -36,11 +36,7 @@ function CoreValueSession() {
 
         {/* Metrics */}
         <div className="metrics-container my-[50px] gap-6 mx-[21] lg:flex">
-
-          <PerformanceMetrics 
-            text="years of combined experience" 
-            value="15+" 
-          />
+          <PerformanceMetrics text="years of combined experience" value="15+" />
           <PerformanceMetrics
             text="clients who rely on our consistent delivery and expertise."
             value="5+"

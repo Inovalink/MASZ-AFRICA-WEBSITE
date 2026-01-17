@@ -65,65 +65,68 @@ function Footer() {
 
   return (
     <section className="bg-surface-overlay min-h-screen flex flex-col  px-6 lg:px-0 lg:flex ">
-        <div className="main-footer-container lg:flex lg:mx-[240]">
+      <div className="main-footer-container lg:flex lg:mx-[240]">
+        <div className="footer-left-column  w-full text-left text-sm-regular ">
+          {/* Logo */}
+          <div className="footer-logo-container relative w-[380px] h-[150px]  mb-6 lg:w-[600] lg:h-[300]">
+            <Image
+              src="/maszAssets/logo-white.svg"
+              alt="footer logo"
+              fill
+              priority
+              className="object-contain"
+            />
+          </div>
 
-            <div className="footer-left-column  w-full text-left text-sm-regular ">
-                {/* Logo */}
-                <div className="footer-logo-container relative w-[380px] h-[150px]  mb-6 lg:w-[600] lg:h-[300]">
-                <Image
-                    src="/maszAssets/logo-white.svg"
-                    alt="footer logo"
-                    fill
-                    priority
-                    className="object-contain"
-                />
-                </div>
-
-                {/* Subtext */}
-                <p className="footer-subtext text-white text-sm-regular lg:text-md-regular leading-relaxed lg:w-[600]">
-                MASZ-Africa is a trusted mining solutions company dedicated to
-                supporting safe, efficient, and sustainable mining operations across
-                Africa. We provide expert services in mining operations support,
-                equipment supply, technical consultancy, safety solutions, and
-                workforce training. With a strong focus on quality, innovation, and
-                reliability, MASZ-Africa partners with clients to improve performance,
-                reduce operational risks, and drive long-term success.
-                </p>
-            </div>
-
-            {/* footer links */}
-            <div className="footerlinks-plus-subscription lg:flex lg:flex-col lg:justify-between lg:h-[480]">
-                <div className="footer-right-column my-[30] lg:my-[50] lg:w-[600]">
-                <ul className="footer-link text-light text-md-regular lg:text-lg-regular lg:flex lg:justify-between">
-                    {footerLinks.map((item) => (
-                    <li key={item.id} className="my-[10] ">
-                        <Link href={item.path}>{item.title}</Link>
-                    </li>
-                    ))}
-                </ul>
-                </div>
-
-                {/* Email subscription section */}  
-
-                <div className="subscription-session">
-                <div className="upper-text text-light text-sm-regular  lg:w-[400]">
-                    Join our newsletter for more updates about our Company
-                </div>
-                <div className="input-and-button flex items-center my-[20] lg:w-full lg:justify-between">
-                    <div className="input-bar bg-surface-card-primary bg-surface-card-primary h-[60] w-[250] lg:w-[400] text-center flex justify-center mr-[20]">
-                        <input type="text" name="email" placeholder="Enter your email" />
-                    </div>
-                    <div className="subscription-button text-light bg-surface-card-colored-primary flex justify-center text-center w-[120] lg:w-[170] rounded-full py-[20]">
-                        <button>Submit</button>
-                    </div>
-                </div>
-                <div className="lower-text text-light text-sm-regular lg:w-[400]">
-                    By subscribing, you agree to our privacy policy and email
-                    communications
-                </div>
-                </div>
-            </div>
+          {/* Subtext */}
+          <p className="footer-subtext text-white text-sm-regular lg:text-md-regular leading-relaxed lg:w-[600]">
+            MASZ-Africa is a trusted mining solutions company dedicated to
+            supporting safe, efficient, and sustainable mining operations across
+            Africa. We provide expert services in mining operations support,
+            equipment supply, technical consultancy, safety solutions, and
+            workforce training. With a strong focus on quality, innovation, and
+            reliability, MASZ-Africa partners with clients to improve
+            performance, reduce operational risks, and drive long-term success.
+          </p>
         </div>
+
+        {/* footer links */}
+        <div className="footerlinks-plus-subscription lg:flex lg:flex-col lg:justify-between lg:h-[480]">
+          <div className="footer-right-column my-[30] lg:my-[50] lg:w-[600]">
+            <ul className="footer-link text-light text-md-regular lg:text-lg-regular lg:flex lg:justify-between">
+              {footerLinks.map((item) => (
+                <li key={item.id} className="my-[10] ">
+                  <Link href={item.path}>{item.title}</Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Email subscription section */}
+
+          <div className="subscription-session">
+            <div className="upper-text text-light text-sm-regular  lg:w-[400]">
+              Join our newsletter for more updates about our Company
+            </div>
+            <div className="input-and-button flex items-center my-[20] lg:w-full lg:justify-between">
+              <div className="input-bar bg-surface-card-primary bg-surface-card-primary h-[60] w-[250] lg:w-[400] text-center flex justify-center mr-[20]">
+                <input
+                  type="text"
+                  name="email"
+                  placeholder="Enter your email"
+                />
+              </div>
+              <div className="subscription-button text-light bg-surface-card-colored-primary flex justify-center text-center w-[120] lg:w-[170] rounded-full py-[20]">
+                <button>Submit</button>
+              </div>
+            </div>
+            <div className="lower-text text-light text-sm-regular lg:w-[400]">
+              By subscribing, you agree to our privacy policy and email
+              communications
+            </div>
+          </div>
+        </div>
+      </div>
 
       {/* Address details */}
 

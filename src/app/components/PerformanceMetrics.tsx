@@ -16,7 +16,9 @@ const PerformanceMetrics: React.FC<PerformanceMetricsProps> = ({
       <div className="metrics-desription text-primary-default text-sm-medium w-[250] lg:w-[150] leading-5">
         {text}
       </div>
-      <div className="metrics-value text-3xl-semibold text-primary-default">{value}</div>
+      <div className="metrics-value text-3xl-semibold text-primary-default">
+        {value}
+      </div>
     </div>
   );
 };

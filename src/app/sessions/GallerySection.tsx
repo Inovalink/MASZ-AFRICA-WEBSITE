@@ -41,7 +41,6 @@ const GallerySection = () => {
     <section className="relative w-full py-16">
       {/* ===== Header ===== */}
       <div className="px-5 lg:px-20 max-w-7xl lg:mx-[180]">
-
         <div className="mb-6  space-y-5">
           <div className="uppercase text-2xl lg:text-4xl font-semibold">
             <div>Take a walk through</div>
@@ -67,17 +66,22 @@ const GallerySection = () => {
               key={rowIndex}
               className="flex flex-wrap lg:flex-nowrap justify-center gap-4"
             >
-              <ImageBlock images={rowImages.slice(0, 3)} reverse={!isNormalRow} />
-              <ImageBlock images={rowImages.slice(3, 6)} reverse={!isNormalRow} />
+              <ImageBlock
+                images={rowImages.slice(0, 3)}
+                reverse={!isNormalRow}
+              />
+              <ImageBlock
+                images={rowImages.slice(3, 6)}
+                reverse={!isNormalRow}
+              />
             </div>
           );
         })}
       </div>
 
       {/* ===== Bottom Fade Overlay ===== */}
-     {/* ===== Bottom Fade Overlay ===== */}
-<div className="absolute bottom-16 left-0 w-full h-58 lg:h-64 bg-gradient-to-t from-white/100 to-transparent pointer-events-none" />
-
+      {/* ===== Bottom Fade Overlay ===== */}
+      <div className="absolute bottom-16 left-0 w-full h-58 lg:h-64 bg-gradient-to-t from-white/100 to-transparent pointer-events-none" />
     </section>
   );
 };

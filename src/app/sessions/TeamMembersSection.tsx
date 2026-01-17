@@ -11,40 +11,39 @@ gsap.registerPlugin(SplitText, ScrollTrigger);
 const teamMembers = [
   {
     id: 1,
-    name: "Samuel Okwabeng",
-    position: "CEO of MASZ-Africa",
+    name: 'Samuel Okwabeng',
+    position: 'CEO of MASZ-Africa',
     description: `Samuel Okwabeng is the Chief Executive Officer of MASZ-AFRICA, where he leads the company’s strategic vision and drives operational excellence across all its services. With extensive experience in procurement, supply chain management, engineering, and business operations, Samuel has transformed MASZ-AFRICA into a trusted partner for clients seeking quality, efficiency, and innovation. His leadership blends deep industry knowledge with a forward-thinking approach, ensuring the company stays ahead in a competitive and dynamic market. Under his guidance, MASZ-AFRICA has significantly expanded its reach across Africa and internationally, strengthened its service delivery, and earned a reputation for integrity, reliability, and client satisfaction.`,
-    image: "/aboutAssets/TEAM-1.jpg",
+    image: '/aboutAssets/TEAM-1.jpg',
   },
   {
     id: 2,
-    name: "Samuel Okwabeng",
-    position: "CEO of MASZ-Africa",
+    name: 'Samuel Okwabeng',
+    position: 'CEO of MASZ-Africa',
     description: `Samuel Okwabeng is the Chief Executive Officer of MASZ-AFRICA, where he leads the company’s strategic vision and drives operational excellence across all its services. With extensive experience in procurement, supply chain management, engineering, and business operations, Samuel has transformed MASZ-AFRICA into a trusted partner for clients seeking quality, efficiency, and innovation. His leadership blends deep industry knowledge with a forward-thinking approach, ensuring the company stays ahead in a competitive and dynamic market. Under his guidance, MASZ-AFRICA has significantly expanded its reach across Africa and internationally, strengthened its service delivery, and earned a reputation for integrity, reliability, and client satisfaction.`,
-    image: "/aboutAssets/TEAM-2.jpg",
+    image: '/aboutAssets/TEAM-2.jpg',
   },
   {
     id: 3,
-    name: "Samuel Okwabeng",
-    position: "CEO of MASZ-Africa",
+    name: 'Samuel Okwabeng',
+    position: 'CEO of MASZ-Africa',
     description: `Samuel Okwabeng is the Chief Executive Officer of MASZ-AFRICA, where he leads the company’s strategic vision and drives operational excellence across all its services. With extensive experience in procurement, supply chain management, engineering, and business operations, Samuel has transformed MASZ-AFRICA into a trusted partner for clients seeking quality, efficiency, and innovation. His leadership blends deep industry knowledge with a forward-thinking approach, ensuring the company stays ahead in a competitive and dynamic market. Under his guidance, MASZ-AFRICA has significantly expanded its reach across Africa and internationally, strengthened its service delivery, and earned a reputation for integrity, reliability, and client satisfaction.`,
-    image: "/aboutAssets/TEAM-3.jpg",
+    image: '/aboutAssets/TEAM-3.jpg',
   },
   {
     id: 4,
-    name: "Samuel Okwabeng",
-    position: "CEO of MASZ-Africa",
+    name: 'Samuel Okwabeng',
+    position: 'CEO of MASZ-Africa',
     description: `Samuel Okwabeng is the Chief Executive Officer of MASZ-AFRICA, where he leads the company’s strategic vision and drives operational excellence across all its services. With extensive experience in procurement, supply chain management, engineering, and business operations, Samuel has transformed MASZ-AFRICA into a trusted partner for clients seeking quality, efficiency, and innovation. His leadership blends deep industry knowledge with a forward-thinking approach, ensuring the company stays ahead in a competitive and dynamic market. Under his guidance, MASZ-AFRICA has significantly expanded its reach across Africa and internationally, strengthened its service delivery, and earned a reputation for integrity, reliability, and client satisfaction.`,
-    image: "/aboutAssets/TEAM-4.jpg",
+    image: '/aboutAssets/TEAM-4.jpg',
   },
   {
     id: 5,
-    name: "Samuel Okwabeng",
-    position: "CEO of MASZ-Africa",
+    name: 'Samuel Okwabeng',
+    position: 'CEO of MASZ-Africa',
     description: `Samuel Okwabeng is the Chief Executive Officer of MASZ-AFRICA, where he leads the company’s strategic vision and drives operational excellence across all its services. With extensive experience in procurement, supply chain management, engineering, and business operations, Samuel has transformed MASZ-AFRICA into a trusted partner for clients seeking quality, efficiency, and innovation. His leadership blends deep industry knowledge with a forward-thinking approach, ensuring the company stays ahead in a competitive and dynamic market. Under his guidance, MASZ-AFRICA has significantly expanded its reach across Africa and internationally, strengthened its service delivery, and earned a reputation for integrity, reliability, and client satisfaction.`,
-    image: "/aboutAssets/TEAM-5.jpg",
+    image: '/aboutAssets/TEAM-5.jpg',
   },
-  
 ];
 
 export default function TeamMembersAnimated() {
@@ -68,13 +67,15 @@ export default function TeamMembersAnimated() {
     if (isDesktop) {
       // Only use SplitText on desktop
       if (splitRef.current) splitRef.current.revert();
-      splitRef.current = new SplitText(descriptionRef.current, { type: "lines" });
+      splitRef.current = new SplitText(descriptionRef.current, {
+        type: 'lines',
+      });
       const lines = splitRef.current.lines;
 
       // Make lines inline-block to prevent gaps
       lines.forEach((line: HTMLElement) => {
-        line.style.display = "inline-block";
-        line.style.width = "100%";
+        line.style.display = 'inline-block';
+        line.style.width = '100%';
       });
 
       const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
@@ -89,21 +90,21 @@ export default function TeamMembersAnimated() {
         nameRef.current,
         { y: 40, opacity: 0 },
         { y: 0, opacity: 1, duration: 0.7 },
-        "-=0.6"
+        '-=0.6'
       );
 
       tl.fromTo(
         positionRef.current,
         { y: 30, opacity: 0 },
         { y: 0, opacity: 1, duration: 0.6 },
-        "-=0.5"
+        '-=0.5'
       );
 
       tl.fromTo(
         lines,
-        { y: 20, opacity: 0, filter: "blur(2px)" },
-        { y: 0, opacity: 1, filter: "blur(0px)", duration: 0.7, stagger: 0.15 },
-        "-=0.4"
+        { y: 20, opacity: 0, filter: 'blur(2px)' },
+        { y: 0, opacity: 1, filter: 'blur(0px)', duration: 0.7, stagger: 0.15 },
+        '-=0.4'
       );
     } else {
       // Mobile: animate the whole paragraph as one block
@@ -119,21 +120,21 @@ export default function TeamMembersAnimated() {
         nameRef.current,
         { y: 40, opacity: 0 },
         { y: 0, opacity: 1, duration: 0.7 },
-        "-=0.6"
+        '-=0.6'
       );
 
       tl.fromTo(
         positionRef.current,
         { y: 30, opacity: 0 },
         { y: 0, opacity: 1, duration: 0.6 },
-        "-=0.5"
+        '-=0.5'
       );
 
       tl.fromTo(
         descriptionRef.current,
         { y: 20, opacity: 0 },
         { y: 0, opacity: 1, duration: 0.8 },
-        "-=0.5"
+        '-=0.5'
       );
     }
   };
@@ -143,7 +144,7 @@ export default function TeamMembersAnimated() {
 
     const st = ScrollTrigger.create({
       trigger: sectionRef.current,
-      start: "top 80%",
+      start: 'top 80%',
       onEnter: () => animateMember(activeIndex > prevIndex ? 1 : -1),
       onEnterBack: () => animateMember(activeIndex > prevIndex ? 1 : -1),
     });
@@ -163,12 +164,13 @@ export default function TeamMembersAnimated() {
   };
 
   return (
-    <div ref={sectionRef} className="min-h-screen bg-[#f3f3f3] flex items-center justify-center py-16">
+    <div
+      ref={sectionRef}
+      className="min-h-screen bg-[#f3f3f3] flex items-center justify-center py-16"
+    >
       <div className="w-full max-w-6xl flex flex-col gap-10 lg:gap-25">
-
         {/* Upper Section */}
         <div className="flex flex-col lg:flex-row items-center gap-10">
-
           {/* Image */}
           <div className="relative w-full max-w-[390px] lg:max-w-[450px] h-[270px] lg:h-[470px] cursor-pointer flex-shrink-0">
             <div
@@ -186,11 +188,17 @@ export default function TeamMembersAnimated() {
 
           {/* Details */}
           <div className="flex-1  lg:mt-0 lg:text-left">
-            <h2 ref={nameRef} className="uppercase text-blue-600 text-2xl-semibold lg:text-3xl-semibold font-semibold mb-2 mx-[21] lg:mx-0">
+            <h2
+              ref={nameRef}
+              className="uppercase text-blue-600 text-2xl-semibold lg:text-3xl-semibold font-semibold mb-2 mx-[21] lg:mx-0"
+            >
               {activeMember.name}
             </h2>
 
-            <p ref={positionRef} className="text-md font-semibold text-gray-900 mb-6 uppercase mx-[21] lg:mx-0">
+            <p
+              ref={positionRef}
+              className="text-md font-semibold text-gray-900 mb-6 uppercase mx-[21] lg:mx-0"
+            >
               {activeMember.position}
             </p>
 
@@ -212,7 +220,11 @@ export default function TeamMembersAnimated() {
                 key={member.id}
                 onClick={() => handleIndicatorClick(index)}
                 className={`relative rounded-full p-[3px] transition-all duration-300 hover:scale-105 cursor-pointer
-                  ${isActive ? 'ring-2 ring-blue-500' : 'ring-1 ring-transparent'}
+                  ${
+                    isActive
+                      ? 'ring-2 ring-blue-500'
+                      : 'ring-1 ring-transparent'
+                  }
                 `}
               >
                 <div className="relative w-[30px] lg:w-[50] h-[30px] lg:h-[50] rounded-full overflow-hidden">
@@ -227,7 +239,6 @@ export default function TeamMembersAnimated() {
             );
           })}
         </div>
-
       </div>
     </div>
   );

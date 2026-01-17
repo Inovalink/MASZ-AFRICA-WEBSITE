@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import React from 'react';
 
 interface ButtonProps {
@@ -24,19 +25,17 @@ const Button: React.FC<ButtonProps> = ({
   const variantClasses = {
     primary:
       'bg-[#016BF2] text-white hover:bg-blue-600 lg:border-2 lg:bg-transparent',
-    primaryWhite:
-      'button-primary-default-light text-primary-default',
-    secondary:
-      'bg-gray-500 text-white hover:bg-gray-600',
-    outline:
-      'border border-gray-500 text-gray-500 hover:bg-gray-100',
+    primaryWhite: 'button-primary-default-light text-primary-default',
+    secondary: 'bg-gray-500 text-white hover:bg-gray-600',
+    outline: 'border border-gray-500 text-gray-500 hover:bg-gray-100',
   };
 
   const sizeClasses = {
     small: 'px-2 py-1 text-xs',
     medium: 'px-4 py-2 text-sm',
     large: 'px-3 py-2 text-light',
-    extraLarge: 'px-4 py-3 lg:px-6 lg:py-6 text-light w-[160] h-[60] lg:w-[100] lg:h-[100]'
+    extraLarge:
+      'px-4 py-3 lg:px-6 lg:py-6 text-light w-[160] h-[60] lg:w-[100] lg:h-[100]',
   };
 
   return (
@@ -85,7 +84,7 @@ const Button: React.FC<ButtonProps> = ({
       {/* Icon */}
       {icon && (
         <span
-  className="
+          className="
     flex items-center justify-center
     
     lg:text-[#016BF2]
@@ -98,10 +97,9 @@ const Button: React.FC<ButtonProps> = ({
 
     animate-[arrowFloat_1.5s_ease-in-out_infinite]
   "
->
-  {icon}
-</span>
-
+        >
+          {icon}
+        </span>
       )}
     </button>
   );

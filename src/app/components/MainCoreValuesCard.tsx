@@ -14,7 +14,6 @@ type CoreValueCardProps = {
   card: CoreValue;
 };
 
-
 const CoreValueCard: React.FC<CoreValueCardProps> = ({ card }) => {
   const cardRef = useRef<HTMLDivElement | null>(null);
   const imageRef = useRef<HTMLDivElement | null>(null);
@@ -206,7 +205,6 @@ const CoreValueCard: React.FC<CoreValueCardProps> = ({ card }) => {
       tabIndex={0}
       className="relative group cursor-pointer overflow-hidden text-light bg-surface-card-colored-primary h-20 lg:h-[550px] lg:w-52 focus:outline-none"
       style={{ willChange: 'transform, opacity', transformOrigin: 'left' }}
-
     >
       {/* Image */}
       <div

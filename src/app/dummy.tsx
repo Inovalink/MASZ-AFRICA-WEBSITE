@@ -8,43 +8,43 @@ import Image from 'next/image';
 const teamMembers = [
   {
     id: 1,
-    name: "Samuel Okwabeng",
-    position: "CEO of MASZ-Africa",
+    name: 'Samuel Okwabeng',
+    position: 'CEO of MASZ-Africa',
     description:
-      "Samuel Okwabeng is the Chief Executive Officer of MASZ-AFRICA, where he leads the company’s strategic vision and drives operational excellence across all its services. With extensive experience in procurement, supply chain management, engineering, and business operations, Samuel has transformed MASZ-AFRICA into a trusted partner for clients seeking quality, efficiency, and innovation.",
-    image: "/aboutAssets/TEAM-1.jpg",
+      'Samuel Okwabeng is the Chief Executive Officer of MASZ-AFRICA, where he leads the company’s strategic vision and drives operational excellence across all its services. With extensive experience in procurement, supply chain management, engineering, and business operations, Samuel has transformed MASZ-AFRICA into a trusted partner for clients seeking quality, efficiency, and innovation.',
+    image: '/aboutAssets/TEAM-1.jpg',
   },
   {
     id: 2,
-    name: "Team Member Two",
-    position: "Operations Manager",
+    name: 'Team Member Two',
+    position: 'Operations Manager',
     description:
-      "Description for member two goes here. Responsible for daily operations and execution excellence.",
-    image: "/aboutAssets/TEAM-2.jpg",
+      'Description for member two goes here. Responsible for daily operations and execution excellence.',
+    image: '/aboutAssets/TEAM-2.jpg',
   },
   {
     id: 3,
-    name: "Team Member Three",
-    position: "Project Engineer",
+    name: 'Team Member Three',
+    position: 'Project Engineer',
     description:
-      "Description for member three goes here. Oversees engineering projects and technical delivery.",
-    image: "/aboutAssets/TEAM-3.jpg",
+      'Description for member three goes here. Oversees engineering projects and technical delivery.',
+    image: '/aboutAssets/TEAM-3.jpg',
   },
   {
     id: 4,
-    name: "Team Member Four",
-    position: "Procurement Lead",
+    name: 'Team Member Four',
+    position: 'Procurement Lead',
     description:
-      "Description for member four goes here. Handles sourcing and vendor partnerships.",
-    image: "/aboutAssets/TEAM-4.jpg",
+      'Description for member four goes here. Handles sourcing and vendor partnerships.',
+    image: '/aboutAssets/TEAM-4.jpg',
   },
   {
     id: 5,
-    name: "Team Member Five",
-    position: "Technical Advisor",
+    name: 'Team Member Five',
+    position: 'Technical Advisor',
     description:
-      "Description for member five goes here. Provides strategic technical guidance.",
-    image: "/aboutAssets/TEAM-5.jpg",
+      'Description for member five goes here. Provides strategic technical guidance.',
+    image: '/aboutAssets/TEAM-5.jpg',
   },
 ];
 
@@ -57,7 +57,6 @@ export default function TeamMembersTest() {
   return (
     <div className="h-screen bg-[#f3f3f3] flex items-center justify-center">
       <div className="w-full max-w-6xl flex flex-col gap-20">
-
         {/* ---------------- Upper Section ---------------- */}
         <div className="flex items-center gap-16">
           {/* Image */}
@@ -97,7 +96,11 @@ export default function TeamMembersTest() {
                 key={member.id}
                 onClick={() => setActiveIndex(index)}
                 className={`relative rounded-full p-[3px] transition-all duration-300 hover:scale-105
-                  ${isActive ? 'ring-2 ring-blue-500' : 'ring-1 ring-transparent'}
+                  ${
+                    isActive
+                      ? 'ring-2 ring-blue-500'
+                      : 'ring-1 ring-transparent'
+                  }
                 `}
               >
                 <div className="relative w-[50px] h-[50px] rounded-full overflow-hidden">
@@ -112,7 +115,6 @@ export default function TeamMembersTest() {
             );
           })}
         </div>
-
       </div>
     </div>
   );

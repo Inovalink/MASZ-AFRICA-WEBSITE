@@ -112,62 +112,66 @@ function TestimonialSession() {
           </div>
 
           <div className="scroll ">
-            
-          {/* Scroll container */}
-          <div
-            ref={containerRef}
-            className="relative overflow-hidden w-full py-12"
-            onMouseEnter={() => setIsPaused(true)}
-            onMouseLeave={() => setIsPaused(false)}
-          >
+            {/* Scroll container */}
             <div
-              className="flex gap-6 mt-[50]"
-              style={{
-                transform: `translateX(-${offset}px)`,
-                transition: 'transform 0s linear',
-              }}
+              ref={containerRef}
+              className="relative overflow-hidden w-full py-12"
+              onMouseEnter={() => setIsPaused(true)}
+              onMouseLeave={() => setIsPaused(false)}
             >
-              {scrollingItems.map((item, index) => (
-                <div
-                  key={index}
-                  className="bg-surface-card-primary border-default-card-stroke w-[280] lg:w-[320] p-5 flex-shrink-0"
-                >
-                  <div className="relative w-10 h-10 mb-4  overflow-hidden ">
-                    <Image
-                      src={item.logo}
-                      alt=""
-                      fill
-                      className="object-cover"
-                      priority
-                    />
-                  </div>
-                  <p className="text-sm-medium text-default-body lg:my-[40]">{item.subtext}</p>
-                  <div className="flex items-center">
-                    <div className="relative w-10 h-10 mr-3 rounded-full overflow-hidden border border-gray-400">
+              <div
+                className="flex gap-6 mt-[50]"
+                style={{
+                  transform: `translateX(-${offset}px)`,
+                  transition: 'transform 0s linear',
+                }}
+              >
+                {scrollingItems.map((item, index) => (
+                  <div
+                    key={index}
+                    className="bg-surface-card-primary border-default-card-stroke w-[280] lg:w-[320] p-5 flex-shrink-0"
+                  >
+                    <div className="relative w-10 h-10 mb-4  overflow-hidden ">
                       <Image
-                        src={item.picture}
+                        src={item.logo}
                         alt=""
                         fill
                         className="object-cover"
                         priority
                       />
                     </div>
-                    <div>
-                      <div className="text-sm-bold text-default-body">{item.name}</div>
-                      <div className="text-sm-regular text-default-body">{item.position}</div>
+                    <p className="text-sm-medium text-default-body lg:my-[40]">
+                      {item.subtext}
+                    </p>
+                    <div className="flex items-center">
+                      <div className="relative w-10 h-10 mr-3 rounded-full overflow-hidden border border-gray-400">
+                        <Image
+                          src={item.picture}
+                          alt=""
+                          fill
+                          className="object-cover"
+                          priority
+                        />
+                      </div>
+                      <div>
+                        <div className="text-sm-bold text-default-body">
+                          {item.name}
+                        </div>
+                        <div className="text-sm-regular text-default-body">
+                          {item.position}
+                        </div>
+                      </div>
                     </div>
                   </div>
-                </div>
-              ))}
+                ))}
+              </div>
+
+              {/* Left fade/vanishing point */}
+              <div className="pointer-events-none absolute left-0 top-0 h-full w-24 bg-linear-to-r from-[#f3f3f3] to-transparent" />
+              {/* Right fade/vanishing point */}
+              <div className="pointer-events-none absolute right-0 top-0 h-full w-24 bg-linear-to-l from-[#f3f3f3] to-transparent" />
             </div>
-
-            {/* Left fade/vanishing point */}
-            <div className="pointer-events-none absolute left-0 top-0 h-full w-24 bg-linear-to-r from-[#f3f3f3] to-transparent" />
-            {/* Right fade/vanishing point */}
-            <div className="pointer-events-none absolute right-0 top-0 h-full w-24 bg-linear-to-l from-[#f3f3f3] to-transparent" />
           </div>
-          </div>
-
         </div>
       </div>
     </section>

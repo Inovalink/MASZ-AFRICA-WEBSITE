@@ -1,4 +1,4 @@
-'use client'
+'use client';
 import React from 'react';
 import { useRef } from 'react';
 
@@ -7,39 +7,40 @@ interface AutoplayVideoProps {
   classname?: string;
 }
 
-{/* <AutoplayVideo
+{
+  /* <AutoplayVideo
        src= "maszAssets/masz-africa-logo-animation.mp4"
        classname=''
-      /> */}
+      /> */
+}
 
-function AutoplayVideo({ src, classname="" }: AutoplayVideoProps) {
-   
-    const videoRef = useRef<HTMLVideoElement | null>(null);
+function AutoplayVideo({ src, classname = '' }: AutoplayVideoProps) {
+  const videoRef = useRef<HTMLVideoElement | null>(null);
 
-    const handleMouseEnter = () => {
-        const video = videoRef.current;
-        if (!video) return;
+  const handleMouseEnter = () => {
+    const video = videoRef.current;
+    if (!video) return;
 
-        video.currentTime = 0;
-        video.play();
-    };
+    video.currentTime = 0;
+    video.play();
+  };
 
   return (
     <div className={classname}>
-      <video 
-        ref={videoRef} 
-        src={src} 
-        autoPlay 
-        muted 
+      <video
+        ref={videoRef}
+        src={src}
+        autoPlay
+        muted
         playsInline
         controls={false}
-        onMouseEnter={handleMouseEnter} 
+        onMouseEnter={handleMouseEnter}
         onEnded={() => {
-            if (videoRef.current){
-                videoRef.current.pause();
-            }
+          if (videoRef.current) {
+            videoRef.current.pause();
+          }
         }}
-    />
+      />
     </div>
   );
 }

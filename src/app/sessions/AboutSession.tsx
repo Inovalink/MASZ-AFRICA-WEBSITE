@@ -9,7 +9,6 @@ function AboutSession() {
   return (
     <section className="lg:mx-[200] lg:my-[180]">
       <div className="about-session-container my-[100] lg:flex lg:justify-between lg:items-start lg:gap-[50px]">
-
         {/* Left: Text + Button */}
         <div className="session-container lg:w-1/2">
           <Tag text="About us" className="ml-[22]" />
@@ -23,19 +22,20 @@ function AboutSession() {
               company committed to helping mining operations run efficiently,
               reliably, and without interruption. We provide high-quality
               consumables, certified equipment, and practical technical services
-              backed by real hands-on industry experience. Through trusted global
-              sourcing and strong technical understanding, we ensure every product
-              we deliver performs exactly as required in demanding mining
-              environments.
-              <br /><br />
-              Our team works closely with clients to understand their operational
-              needs, recommend the right solutions, and provide support that
-              genuinely improves performance. With a consistent focus on on-time
-              delivery, transparent communication, and dependable field
-              assistance, we help mines reduce downtime and keep production
-              moving. At MASZ-Africa, our goal is simple — supply what works,
-              support what matters, and deliver the level of service every mining
-              operation expects and deserves.
+              backed by real hands-on industry experience. Through trusted
+              global sourcing and strong technical understanding, we ensure
+              every product we deliver performs exactly as required in demanding
+              mining environments.
+              <br />
+              <br />
+              Our team works closely with clients to understand their
+              operational needs, recommend the right solutions, and provide
+              support that genuinely improves performance. With a consistent
+              focus on on-time delivery, transparent communication, and
+              dependable field assistance, we help mines reduce downtime and
+              keep production moving. At MASZ-Africa, our goal is simple —
+              supply what works, support what matters, and deliver the level of
+              service every mining operation expects and deserves.
             </div>
           </AnimationCopy>
 
@@ -71,7 +71,6 @@ function AboutSession() {
             />
           </div>
         </div>
-
       </div>
     </section>
   );

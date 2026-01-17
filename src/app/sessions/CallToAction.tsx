@@ -7,7 +7,6 @@ function CallToAction() {
   return (
     <section>
       <div className="relative h-screen h-[600px] lg:h-screen overflow-hidden">
-
         {/* BACKGROUND IMAGE */}
         <Image
           src="/homeAssets/cta-image-4.png"
@@ -28,7 +27,6 @@ function CallToAction() {
 
         {/* CONTENT */}
         <div className="absolute inset-0 z-10 flex flex-col items-center justify-center text-white text-center px-4 ">
-
           <div className="relative w-[50px] h-[50px]  top-[-40]">
             <Image
               src="/maszAssets/website-logo.svg"
@@ -70,7 +68,6 @@ function CallToAction() {
             />
           </div>
         </div>
-
       </div>
     </section>
   );

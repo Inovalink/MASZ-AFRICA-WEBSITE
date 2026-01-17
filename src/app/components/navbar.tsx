@@ -105,7 +105,11 @@ function Navbar() {
                       before:content-[''] before:absolute before:left-0 before:top-[-10px] before:h-[4px] before:w-0 before:bg-blue-500 before:transition-all before:duration-300
                       after:content-[''] after:absolute after:left-0 after:bottom-[-10px] after:h-[4px] after:w-0 after:bg-blue-500 after:transition-all after:duration-300
                       hover:before:w-full hover:after:w-full 
-                      ${activeLink === list.label ? 'before:w-full after:w-full' : ''}
+                      ${
+                        activeLink === list.label
+                          ? 'before:w-full after:w-full'
+                          : ''
+                      }
           `}
                   >
                     {list.label}

@@ -1,15 +1,16 @@
-'use client';
+'use client'; // Entire AppShell is client-side
 
+import dynamic from 'next/dynamic';
 import Navbar from './components/navbar';
 import LenisProvider from './providers/LenisProvider';
-import CallToAction from './sessions/CallToAction';
 import Footer from './components/footer';
 
-export default function AppShell({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+// Make CallToAction client-only (no SSR)
+const CallToAction = dynamic(() => import('./sessions/CallToAction'), {
+  ssr: false,
+});
+
+export default function AppShell({ children }: { children: React.ReactNode }) {
   return (
     <>
       <Navbar />
