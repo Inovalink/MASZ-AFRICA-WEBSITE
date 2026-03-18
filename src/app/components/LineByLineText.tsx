@@ -38,28 +38,43 @@ export default function LineByLineText({
   const splitRef = useRef<{ split: SplitType; lines: Element[] } | null>(null);
   const [mounted, setMounted] = useState(false);
 
-  // Mark as mounted on the client — avoids SSR hydration mismatch
+  // Mark as ready once mounted AND fonts are loaded
   useEffect(() => {
-    setMounted(true);
+    let cancelled = false;
+    const ready = () => { if (!cancelled) setMounted(true); };
+
+    if (document.fonts?.ready) {
+      document.fonts.ready.then(ready);
+    } else {
+      // Fallback: wait a frame for fonts to settle
+      requestAnimationFrame(ready);
+    }
+    return () => { cancelled = true; };
   }, []);
 
-  // Split text into lines AFTER mount, before paint
+  // Split text into lines AFTER fonts are loaded
   useLayoutEffect(() => {
     if (!mounted) return;
     const el = wrapperRef.current;
     if (!el) return;
 
-    // Make wrapper visible now that we're on the client
-    gsap.set(el, { visibility: 'visible', force3D: true });
+    // Revert any previous split first
+    if (splitRef.current) {
+      splitRef.current.split.revert();
+      splitRef.current = null;
+    }
 
     const split = new SplitType(el as HTMLElement, { types: 'lines' });
     const lines = split.lines;
 
-    if (!lines || lines.length === 0) return;
+    if (!lines || lines.length === 0) {
+      gsap.set(el, { visibility: 'visible' });
+      return;
+    }
 
     splitRef.current = { split, lines: Array.from(lines) };
-    // Set lines to hidden state immediately — prevents any visible jump
     gsap.set(lines, { opacity: 0, y: yFrom, force3D: true });
+    gsap.set(el, { visibility: 'visible' });
 
     return () => {
       split.revert();
