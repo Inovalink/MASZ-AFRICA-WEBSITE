@@ -66,9 +66,8 @@ export default function RelatedServicesCarousel({ currentSlug }: Props) {
       posRef.current = wrap(posRef.current);
       track.scrollLeft = posRef.current;
       const cw = cardWidthRef.current;
-      const td = totalDotsRef.current;
-      if (cw > 0 && td > 0) {
-        setDotIndex(Math.floor(posRef.current / cw) % td);
+      if (cw > 0) {
+        setDotIndex(Math.floor(posRef.current / cw) % base.length);
       }
     };
 
@@ -103,9 +102,8 @@ export default function RelatedServicesCarousel({ currentSlug }: Props) {
     posRef.current = wrap(posRef.current);
     track.scrollLeft = posRef.current;
     const cw = cardWidthRef.current;
-    const td = totalDotsRef.current;
-    if (cw > 0 && td > 0) {
-      setDotIndex(Math.floor(posRef.current / cw) % td);
+    if (cw > 0) {
+      setDotIndex(Math.floor(posRef.current / cw) % base.length);
     }
   };
 
@@ -256,7 +254,7 @@ export default function RelatedServicesCarousel({ currentSlug }: Props) {
         </div>
 
         <div className="flex items-center justify-center gap-[8px] mt-[28px] lg:mt-[36px]">
-          {Array.from({ length: totalDots }).map((_, i) => (
+          {Array.from({ length: base.length }).map((_, i) => (
             <button
               key={i}
               onClick={() => goTo(i)}

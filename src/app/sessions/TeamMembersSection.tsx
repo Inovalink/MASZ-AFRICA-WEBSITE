@@ -226,7 +226,7 @@ export default function TeamMembersAnimated() {
 
             <p
               ref={descriptionRef}
-              className="text-gray-700 text-sm-regular  text-center lg:text-left mx-[5] lg:mx-0 lg:text-md-regular xl:text-lg-regular lg:leading-relaxed   lg:px-0 xl:max-w-full w-full xl:max-w-[700px]"
+              className="text-gray-700 text-sm-regular  text-center lg:text-left mx-[5] lg:mx-0 lg:text-md-regular xl:text-lg-regular lg:leading-relaxed   lg:px-0  w-full xl:max-w-[700px]"
             >
               {activeMember.description}
             </p>
