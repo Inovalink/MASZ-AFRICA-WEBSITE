@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useRef, useLayoutEffect, ReactNode } from 'react';
+import React, { useEffect, useRef, useState, useLayoutEffect, ReactNode } from 'react';
 import SplitType from 'split-type';
 import gsap from 'gsap';
 
@@ -36,14 +36,21 @@ export default function LineByLineText({
 }: LineByLineTextProps) {
   const wrapperRef = useRef<HTMLDivElement | HTMLParagraphElement | HTMLSpanElement>(null);
   const splitRef = useRef<{ split: SplitType; lines: Element[] } | null>(null);
+  const [mounted, setMounted] = useState(false);
 
-  // Split text into lines BEFORE paint to prevent layout shift — useLayoutEffect ensures this happens synchronously
+  // Mark as mounted on the client — avoids SSR hydration mismatch
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  // Split text into lines AFTER mount, before paint
   useLayoutEffect(() => {
+    if (!mounted) return;
     const el = wrapperRef.current;
     if (!el) return;
 
-    // Set initial opacity to prevent flash
-    gsap.set(el, { opacity: 1, force3D: true });
+    // Make wrapper visible now that we're on the client
+    gsap.set(el, { visibility: 'visible', force3D: true });
 
     const split = new SplitType(el as HTMLElement, { types: 'lines' });
     const lines = split.lines;
@@ -58,13 +65,13 @@ export default function LineByLineText({
       split.revert();
       splitRef.current = null;
     };
-  }, [yFrom]);
+  }, [mounted, yFrom]);
 
   // Start line-by-line animation when startAnimation becomes true
   useEffect(() => {
     if (!startAnimation || !splitRef.current) return;
 
-    const { lines, split } = splitRef.current;
+    const { lines } = splitRef.current;
     gsap.to(lines, {
       opacity: 1,
       y: 0,
@@ -74,12 +81,6 @@ export default function LineByLineText({
       delay,
       force3D: true,
       onComplete: () => {
-        // Clear only transform/opacity props — do NOT revert SplitType.
-        // Reverting restores the original DOM and causes the text to reflow
-        // into a different layout (the parent may have a different width by
-        // the time the animation completes), producing the visible jump.
-        // Leaving the split divs in place keeps the text exactly where it
-        // landed. The useLayoutEffect cleanup handles revert on unmount.
         gsap.set(lines, { clearProps: 'transform,opacity' });
         onComplete?.();
       },
@@ -87,11 +88,14 @@ export default function LineByLineText({
   }, [startAnimation, duration, stagger, delay, onComplete]);
 
   return (
-    <Wrapper 
-      ref={wrapperRef as any} 
-      className={className ?? undefined} 
-      style={{ 
+    <Wrapper
+      ref={wrapperRef as any}
+      className={className ?? undefined}
+      style={{
         overflow: 'hidden',
+        // Server renders with visibility:hidden so no unsplit text flashes.
+        // useLayoutEffect sets visibility:visible after SplitType runs.
+        visibility: mounted ? undefined : 'hidden',
         willChange: startAnimation ? 'transform, opacity' : 'auto',
       }}
     >
