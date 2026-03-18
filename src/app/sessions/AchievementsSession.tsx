@@ -64,6 +64,7 @@ function AchievementsSession({ startTextAnimation = false }: AchievementsSession
         {/* Tag */}
         <Tag text="Key Achievements" className="mb-[30px]" />
 
+        <div className="md:flex gap-[50px] md:mb-[80] md:justify-between">
         {/* Header */}
         <div className="section-header uppercase text-xl-semibold lg:text-4xl-semibold mb-[20px]">
           <HeaderLineByLineAnimation
@@ -75,18 +76,18 @@ function AchievementsSession({ startTextAnimation = false }: AchievementsSession
             delay={HEADER_DELAY}
             style={{ overflow: 'hidden' }}
           >
-            Checkout our key{' '}
+            <span className='text-nowrap'>Checkout our key</span>{' '}<br />
             <span className="text-primary-default">achievements and milestones</span>
           </HeaderLineByLineAnimation>
         </div>
 
         {/* Subtext */}
-        <div className="subtext mb-[60px] lg:mb-[80px] lg:max-w-[700px]">
+        <div className="subtext mb-[60px] lg:mb-[0px] max-w-[484px]  ">
           <LineByLineText
             startAnimation={startSubtextAnimation}
             duration={0.13}
             stagger={0.05}
-            className="text-sm-medium lg:text-lg-medium text-default-body"
+            className="text-sm-medium lg:text-xl-medium text-default-body"
           >
             Every milestone we&apos;ve reached is a result of hard work, strong partnerships, 
             and a genuine commitment to supporting our clients&apos; operations. These achievements 
@@ -94,6 +95,7 @@ function AchievementsSession({ startTextAnimation = false }: AchievementsSession
             industry moving forward.
           </LineByLineText>
         </div>
+</div>
 
         {/* Timeline — only initialise ScrollTrigger once the parent ScrollReveal
              has finished animating in, so bounds are calculated on the real layout */}

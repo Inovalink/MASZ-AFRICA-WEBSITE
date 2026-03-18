@@ -196,9 +196,9 @@ export default function ContactPage() {
     <section className="w-full">
       {/* ── FORM + IMAGE SECTION ── */}
       <div className="contact-top-section mx-[24px] xl:mx-[120px] lg:my-[80px]  my-[42px]">
-        <div className="md:flex md:gap-[32px] lg:gap-[60px] xl:gap-[100px] lg:items-start">
+        <div className="md:flex md:gap-[32px] lg:gap-[60px] xl:gap-[100px] md:items-stretch">
           {/* LEFT — image card (desktop only) */}
-          <div className="hidden md:block relative w-1/2 px-[36px] py-[39px]  flex-shrink-0 min-h-[700px] overflow-hidden lg:min-h-[850px]">
+          <div className="hidden md:block relative w-1/2  px-[36px] py-[39px]  flex-shrink-0 overflow-hidden">
             <Image
               src="/contactAssets/Image-1.webp"
               alt="Contact information"
@@ -296,7 +296,7 @@ export default function ContactPage() {
                 delay={0.2}
                 duration={0.3}
                 stagger={0.05}
-                className="text-2xl-semibold lg:text-4xl-semibold leading-[111%] uppercase text-default-heading"
+                className="text-2xl-semibold lg:text-4xl-semibold leading-[111%] uppercase text-white"
               >
                 LET&apos;S GET IN TOUCH
               </LineByLineText>
@@ -476,8 +476,8 @@ export default function ContactPage() {
         </div>
       </div>
 
-      {/* ── MAP + LOCATION SECTION ── */}
-      <ScrollReveal
+     {/* ── MAP + LOCATION SECTION ── */}
+     <ScrollReveal
         direction="up"
         duration={0.4}
         start="top 90%"
@@ -486,90 +486,13 @@ export default function ContactPage() {
         staggerChildren={0.1}
         onRevealNearlyComplete={() => setLocationRevealed(true)}
       >
-        <div className="contact-bottom-section mx-[21px] xl:mx-[120px] my-[100px] lg:my-[180px]">
-          <div className="lg:flex flex flex-col xl:flex-row lg:gap-[20px] lg:items-start">
-            {/* LEFT — "We Are Based In" */}
-            <div className=" my-[30px] order-2 xl:order-1 lg:mb-0  flex-shrink-0">
-            <LineByLineText
-                startAnimation={locationRevealed}
-                delay={0.5}
-                duration={0.35}
-                stagger={0.07}
-                className="text-2xl-regular md:text-3xl-regular lg:w-[676px] lg:text-4xl-regular text-default-heading leading-tight mb-[54px]"              >
-                We Are Based In
-                <br />
-                <span className="text-primary-default">
-                  Western Region,
-                  <br />
-                  Ghana
-                </span>
-              
-              </LineByLineText>
+        <div className="contact-bottom-section relative bg-[#016BF2] overflow-hidden mt-[60px] lg:mt-[100px]">
+          {/* SVG dot pattern background */}
+          <Image src="/contactBg.svg" alt="Background pattern" width={456} height={670} className=" hidden lg:block absolute right-0" />
 
-              <div className="grid xl:grid-cols-2 md:grid-cols-3 grid-cols-1 sm:grid-cols-2  ">
-                {/* Phone numbers */}
-                <div className="flex items-center py-4 gap-[17px]">
-                  <div className="flex-shrink-0 w-[31px] h-[31px] rounded-full bg-[#016BF2] flex items-center justify-center">
-                    <IconPhone size={16} className="text-white" />
-                  </div>
-                  <div className="flex flex-col gap-[2px]">
-                    <LineByLineText
-                      startAnimation={locationRevealed}
-                      delay={0.7}
-                      duration={0.3}
-                      stagger={0.06}
-                      className="text-sm-medium md:text-md-medium lg:text-lg-medium"
-                    >
-                      <Link href="tel:+233244163975" className="hover:text-[#016BF2] hover:underline block">
-                        +233 24 416 3975
-                      </Link>
-                      <Link href="tel:+233540953033" className="hover:text-[#016BF2] hover:underline block">
-                        +233 54 095 3033
-                      </Link>
-                    </LineByLineText>
-                  </div>
-                </div>
-
-                {/* PO Box */}
-                <div className="flex items-center py-4 gap-[17px]">
-                  <div className="flex-shrink-0 w-[31px] h-[31px] rounded-full bg-[#016BF2] flex items-center justify-center">
-                    <IconMail size={16} className="text-white" />
-                  </div>
-                  <LineByLineText
-                    startAnimation={locationRevealed}
-                    delay={0.7}
-                    duration={0.3}
-                    stagger={0.06}
-                    className="text-sm-medium md:text-md-medium lg:text-lg-medium text-default-heading leading-snug"
-                  >
-                    P.O. Box 729, Tarkwa,
-                    <br />
-                    Western Region, Ghana
-                  </LineByLineText>
-                </div>
-
-                {/* Street address */}
-                <div className="flex items-center py-4 gap-[17px]">
-                  <div className="flex-shrink-0 w-[36px] h-[36px] rounded-full bg-[#016BF2] flex items-center justify-center">
-                    <IconMapPin size={16} className="text-white" />
-                  </div>
-                  <LineByLineText
-                    startAnimation={locationRevealed}
-                    delay={0.7}
-                    duration={0.3}
-                    stagger={0.06}
-                    className="text-sm-medium md:text-md-medium lg:text-lg-medium text-default-heading leading-snug"
-                  >
-                    House #17, Breeze Street,
-                    <br />
-                    GT 353-5495, Community 16, Terno
-                  </LineByLineText>
-                </div>
-              </div>
-            </div>
-
-            {/* RIGHT — Google Map embed */}
-            <div className="  order-1 xl:order-2 w-full h-[280px] lg:h-[462px] overflow-hidden border border-[#E0E0E0]">
+          <div className="relative z-10 mx-[24px] xl:mx-[120px] min-[1920px]:mx-[200px] py-[40px] lg:py-[60px]">
+            {/* Mobile/Tablet: map on top (below lg) */}
+            <div className="lg:hidden w-full h-[280px] overflow-hidden mb-[32px]">
               <iframe
                 title="MASZ Africa Head Office"
                 src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3970.7!2d-1.9947!3d5.3054!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNcKwMTgnMTkuNCJOIDHCsDU5JzQxLjAiVw!5e0!3m2!1sen!2sgh!4v1234567890"
@@ -580,9 +503,106 @@ export default function ContactPage() {
                 referrerPolicy="no-referrer-when-downgrade"
               />
             </div>
+
+            <div className="flex flex-col lg:flex-row lg:gap-[40px] xl:gap-[60px] lg:items-stretch">
+              {/* LEFT — heading + cards */}
+              <div className="flex-shrink-0 lg:w-[458px]">
+                <LineByLineText
+                  startAnimation={locationRevealed}
+                  delay={0.5}
+                  duration={0.35}
+                  stagger={0.07}
+                  className="text-2xl-regular text-[#8DBCF9] md:text-3xl-medium lg:text-4xl-medium   leading-tight mb-[32px] lg:mb-[67px]"
+                >
+                  We Are Based In
+                  <br />
+                  <span className="font-medium text-white">
+                    Western Region,
+                    <br />
+                    Ghana
+                  </span>
+                </LineByLineText>
+
+                <div className="flex flex-col gap-[12px] lg:gap-[14px]">
+                  {/* Street address */}
+                  <div className="flex items-center cursor-pointer lg:max-w-[363px] group transition-colors duration-200 ease-in-out hover:bg-white focus:bg-white gap-[14px] bg-[#4693F6] px-[20px] lg:px-[24px] py-[16px] lg:py-[20px]">
+                    <div className="flex-shrink-0 w-[36px] group-hover:bg-[#016BF2] group-focus:bg-[#016BF2] h-[36px] rounded-full bg-white flex items-center justify-center">
+                      <IconMapPin size={16} className="text-[#016BF2] group-hover:text-white group-focus:text-white" />
+                    </div>
+                    <LineByLineText
+                      startAnimation={locationRevealed}
+                      delay={0.7}
+                      duration={0.3}
+                      stagger={0.06}
+                      className="text-sm-medium md:text-md-medium lg:text-lg-medium text-white group-hover:text-[#016BF2] group-focus:text-[#016BF2] leading-snug"
+                    >
+                      House #17, Breeze Street,
+                      <br />
+                      GT 353-5495, Community 16, Terno
+                    </LineByLineText>
+                  </div>
+
+                  {/* PO Box */}
+                  <div className="flex items-center lg:max-w-[363px] group cursor-pointer transition-colors duration-200 ease-in-out hover:bg-white focus:bg-white gap-[14px] bg-[#4693F6] px-[20px] lg:px-[24px] py-[16px] lg:py-[20px]">
+                    <div className="flex-shrink-0 w-[36px] group-hover:bg-[#016BF2] h-[36px] rounded-full bg-white flex items-center justify-center">
+                      <IconMail size={16} className="text-[#016BF2] group-hover:text-white group-focus:text-white" />
+                    </div>
+                    <LineByLineText
+                      startAnimation={locationRevealed}
+                      delay={0.7}
+                      duration={0.3}
+                      stagger={0.06}
+                      className="text-sm-medium md:text-md-medium lg:text-lg-medium text-white group-hover:text-[#016BF2] group-focus:text-[#016BF2] leading-snug"
+                    >
+                      P.O. Box 729, Tarkwa,
+                      <br />
+                      Western Region, Ghana
+                    </LineByLineText>
+                  </div>
+
+                  {/* Phone numbers */}
+                  <div className="flex items-center lg:max-w-[363px] group cursor-pointer transition-colors duration-200 ease-in-out hover:bg-white focus:bg-white gap-[14px] bg-[#4693F6] px-[20px] lg:px-[24px] py-[16px] lg:py-[20px]">
+                    <div className="flex-shrink-0 w-[36px] group-hover:bg-[#016BF2] h-[36px] rounded-full bg-white flex items-center justify-center">
+                      <IconPhone size={16} className="text-[#016BF2] group-hover:text-white group-focus:text-white" />
+                    </div>
+                    <div className="flex flex-col gap-[2px]">
+                      <LineByLineText
+                        startAnimation={locationRevealed}
+                        delay={0.7}
+                        duration={0.3}
+                        stagger={0.06}
+                        className="text-sm-medium text-white flex flex-col md:text-md-medium lg:text-lg-medium"
+                      >
+                        <Link href="tel:+233244163975" className="group-hover:text-[#016BF2] group-focus:text-[#016BF2] hover:underline block">
+                          +233 24 416 3975
+                        </Link>
+                        <br />  
+                        <Link href="tel:+233540953033" className="group-hover:text-[#016BF2] group-focus:text-[#016BF2] hover:underline block">
+                          +233 54 095 3033
+                        </Link>
+                      </LineByLineText>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* RIGHT — Google Map (desktop only, lg+) */}
+              <div className="hidden lg:block flex-1 min-h-[400px] overflow-hidden">
+                <iframe
+                  title="MASZ Africa Head Office"
+                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3970.7!2d-1.9947!3d5.3054!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNcKwMTgnMTkuNCJOIDHCsDU5JzQxLjAiVw!5e0!3m2!1sen!2sgh!4v1234567890"
+                  width="100%"
+                  height="100%"
+                  style={{ border: 0 }}
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                />
+              </div>
+            </div>
           </div>
         </div>
       </ScrollReveal>
     </section>
   );
+
 }

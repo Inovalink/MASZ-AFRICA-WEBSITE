@@ -21,49 +21,31 @@ import Link from "next/link";
 // Animation constants - now used by HeaderLineByLineAnimation component
 const HEADER_LINE_Y = 28;
 const HEADER_STAGGER = 0.07;
-const HEADER_DURATION = 0.3;
-const HEADER_DELAY = 0.1;
+const HEADER_DURATION = 0.1;
+const HEADER_DELAY = 0;
 const CORE_VALUE_BODY_TEXT_DURATION = 0.1;
 const CORE_VALUE_BODY_TEXT_STAGGER = 0.05;
 
-// const CORE_VALUE_BODY_TEXT = (
-//   <>
-//     Our uniqueness comes from blending product authenticity with real technical
-//     intelligence and dependable service delivery. Every item we supply is
-//     verified, traceable, and backed by expert insight tailored to the realities
-//     of mining environments. This combination allows us to offer solutions that
-//     improve efficiency, reduce risk, and keep operations running without
-//     interruption. But we don&apos;t just provide products—we provide peace of
-//     mind. From precision-engineered consumables to end-to-end procurement
-//     support, we anticipate your operational needs and deliver solutions that
-//     empower your team to perform at their best. Our clients trust us not only
-//     for the quality of our supplies but for our commitment to safety,
-//     sustainability, and innovation, ensuring that every decision we make
-//     enhances the value of your operations. With MASZ-Africa, you gain a partner
-//     who is as invested in your success as you are, driving measurable results,
-//     minimizing downtime, and unlocking new levels of operational excellence.
-//   </>
-// );
-
-const CORE_VALUE_BODY_TEXT_1 = (
+const CORE_VALUE_BODY_TEXT = (
   <>
     Our uniqueness comes from blending product authenticity with real technical
     intelligence and dependable service delivery. Every item we supply is
     verified, traceable, and backed by expert insight tailored to the realities
     of mining environments. This combination allows us to offer solutions that
     improve efficiency, reduce risk, and keep operations running without
-    interruption.
+    interruption. But we don&apos;t just provide products—we provide peace of
+    mind. From precision-engineered consumables to end-to-end procurement
+    support, we anticipate your operational needs and deliver solutions that
+    empower your team to perform at their best. Our clients trust us not only
+    for the quality of our supplies but for our commitment to safety,
+    sustainability, and innovation, ensuring that every decision we make
+    enhances the value of your operations. With MASZ-Africa, you gain a partner
+    who is as invested in your success as you are, driving measurable results,
+    minimizing downtime, and unlocking new levels of operational excellence.
   </>
 );
 
-const CORE_VALUE_BODY_TEXT_2 = (
-  <>
-    We prioritize transparency, timely communication, and long-term client
-    value. With each engagement, we reinforce our promise of reliability, giving
-    mining companies the confidence that their supply partner fully understands
-    their challenges.
-  </>
-);
+
 
 interface CoreValueSessionProps {
   startTextAnimation?: boolean;
@@ -97,6 +79,24 @@ function CoreValueSession({
   const [startBodyAnimation, setStartBodyAnimation] = useState(false);
   const [startMetricsAnimation, setStartMetricsAnimation] = useState(false);
   const [startContentPhase, setStartContentPhase] = useState(false);
+  const [imageVisible, setImageVisible] = useState(false);
+  const imageRef = useRef<HTMLDivElement>(null);
+
+  // Animate image in after text animation completes
+  useEffect(() => {
+    if (!imageVisible || !imageRef.current) return;
+    gsap.fromTo(
+      imageRef.current,
+      { opacity: 0, y: 40, force3D: true },
+      {
+        opacity: 1,
+        y: 0,
+        duration: 0.8,
+        ease: "power3.out",
+        force3D: true,
+      }
+    );
+  }, [imageVisible]);
 
   // PERFORMANCE: Memoize callbacks to prevent re-renders
   const handleEmptyShown = useCallback(() => {
@@ -113,8 +113,7 @@ function CoreValueSession({
     idleId: number;
     timeoutId: ReturnType<typeof setTimeout>;
   } | null>(null);
-  const overlayRef1 = useRef<HTMLDivElement>(null);
-  const overlayRef2 = useRef<HTMLDivElement>(null);
+  const overlayRef = useRef<HTMLDivElement>(null);
 
   // Only run AnimationCopy on second scroll down from top (not on first load/first scroll)
   useEffect(() => {
@@ -165,31 +164,13 @@ function CoreValueSession({
           setShowAnimationCopy(true);
           // Smooth fade-in after state update — use GSAP for GPU-accelerated transition
 
-          // requestAnimationFrame(() => {
-          //   const overlay = overlayRef.current;
-          //   if (overlay) {
-          //     gsap.fromTo(
-          //       overlay,
-          //       { opacity: 0, force3D: true },
-          //       { opacity: 1, duration: 0.5, ease: "power2.out", force3D: true }
-          //     );
-          //   }
-          // });
           requestAnimationFrame(() => {
-            const overlay1 = overlayRef1.current;
-            const overlay2 = overlayRef2.current;
-            if (overlay1) {
+            const overlay = overlayRef.current;
+            if (overlay) {
               gsap.fromTo(
-                overlay1,
+                overlay,
                 { opacity: 0, force3D: true },
-                { opacity: 1, duration: 0.5, ease: "power2.out", force3D: true }
-              );
-            }
-            if (overlay2) {
-              gsap.fromTo(
-                overlay2,
-                { opacity: 0, force3D: true },
-                { opacity: 1, duration: 0.5, ease: "power2.out", force3D: true }
+                { opacity: 1, duration: 0.2, ease: "power2.out", force3D: true }
               );
             }
           });
@@ -258,38 +239,68 @@ function CoreValueSession({
         </div>
 
         {/* Description: line-by-line; then static; then AnimationCopy overlay (spacer keeps layout, no jump) */}
-       
-          <div className="flex flex-col  lg:flex-row gap-5 lg:gap-[50px] xl:gap-[100px] mb-[60] lg:mx-[24] xl:mx-[120] min-[1920px]:mx-[200]!  justify-between mx-[25px]">
-            <LineByLineText
-              duration={CORE_VALUE_BODY_TEXT_DURATION}
-              stagger={CORE_VALUE_BODY_TEXT_STAGGER}
-              startAnimation={startBodyAnimation}
-              onComplete={() => {
-                setLineByLineComplete(true);
-                setStartMetricsAnimation(true);
-              }}
-              className="core-value-section-subtext w-full lg:w-1/2  text-lg-medium  lg:text-xl-medium lg:leading-8 lg:tracking-tight text-default-body"
+        {!lineByLineComplete ? (
+          <LineByLineText
+          duration={CORE_VALUE_BODY_TEXT_DURATION}
+          stagger={CORE_VALUE_BODY_TEXT_STAGGER}
+          delay={0}
+            startAnimation={startBodyAnimation}
+            onComplete={() => {
+              setLineByLineComplete(true);
+              setImageVisible(true);
+              setStartMetricsAnimation(true);
+            }}
+            className="core-value-section-subtext lg:mx-[120] min-[1920px]:mx-[200]! text-lg-medium mx-[25px] lg:text-2xl-medium lg:leading-8 lg:tracking-tight text-default-body"
+          >
+            {CORE_VALUE_BODY_TEXT}
+          </LineByLineText>
+        ) : (
+          <div
+            className="relative overflow-hidden"
+            style={{ contain: "layout style paint" }}
+          >
+            {/* Spacer: always in DOM, holds height; hidden when overlay is shown so layout never shifts */}
+            <div
+              className="core-value-section-subtext lg:mx-[120] min-[1920px]:mx-[200]! text-lg-medium mx-[25px] lg:text-2xl-medium lg:leading-8 lg:tracking-tight text-default-body text-[#000000]"
+              style={
+                showAnimationCopy
+                  ? { visibility: "hidden", pointerEvents: "none" }
+                  : undefined
+              }
+              aria-hidden={showAnimationCopy}
             >
-              {CORE_VALUE_BODY_TEXT_1}
-            </LineByLineText>
-            {/* -------------------------2------------------------- */}
-            <LineByLineText
-              duration={CORE_VALUE_BODY_TEXT_DURATION}
-              stagger={CORE_VALUE_BODY_TEXT_STAGGER}
-              startAnimation={startBodyAnimation}
-              onComplete={() => {
-                setLineByLineComplete(true);
-                setStartMetricsAnimation(true);
+              {CORE_VALUE_BODY_TEXT}
+            </div>
+            {/* Pre-render AnimationCopy but keep it completely hidden until ready — prevents mount-time layout shift */}
+            <div
+              ref={overlayRef}
+              className="absolute top-0 left-0 right-0"
+              style={{
+                opacity: 0,
+                visibility: showAnimationCopy ? "visible" : "hidden",
+                pointerEvents: showAnimationCopy ? "auto" : "none",
+                willChange: showAnimationCopy ? "opacity" : "auto",
+                contain: "layout style paint",
+                isolation: "isolate",
               }}
-              className="core-value-section-subtext w-full lg:w-1/2  text-lg-medium  lg:text-xl-medium lg:leading-8 lg:tracking-tight text-default-body"
+              aria-hidden={!showAnimationCopy}
             >
-              {CORE_VALUE_BODY_TEXT_2}
-            </LineByLineText>
+              <AnimationCopy>
+                <div className="core-value-section-subtext lg:mx-[200] text-lg-medium mx-[25px] lg:text-2xl-medium lg:leading-8 lg:tracking-tight">
+                  {CORE_VALUE_BODY_TEXT}
+                </div>
+              </AnimationCopy>
+            </div>
           </div>
-      
-        <div className="lg:mx-[24] xl:mx-[120] min-[1920px]:mx-[200]! bg-[#016BF2]">
+        )}
+
+        <div
+          ref={imageRef}
+          style={{ opacity: 0 }}
+          className="lg:mx-[24] xl:mx-[120] mt-[50] min-[1920px]:mx-[200]! bg-[#016BF2]"
+        >
           {/* Image above metrics */}
-          <div className="relative h-[500px]  overflow-hidden   lg:h-[700px]">
+          <div className="relative h-[500px] overflow-hidden lg:h-[700px]">
             {/* overlay */}
             <div
               className="absolute justify-end left-0 right-0 bottom-[47px] px-[24px] lg:px-[36px] flex flex-row  items-center lg:flex-row gap-5  lg:gap-[50px] lg:items-center lg:justify-between z-10"
@@ -311,9 +322,9 @@ function CoreValueSession({
                   label="Our core values"
                   variant="primaryWhite"
                   size="large"
+                  iconClassName="lg:group-hover/btn:text-[#016BF2]! lg:text-[#016BF2]!"
                   icon={
                     <MoveRight
-                      className="lg:group-hover:text-[#016BF2]"
                       size={20}
                     />
                   }

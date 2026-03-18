@@ -108,17 +108,17 @@ export default function TeamMembersAnimated() {
         "-=0.5"
       );
 
-      tl.fromTo(
-        socialsRef.current,
-        { y: 20, opacity: 0 },
-        { y: 0, opacity: 1, duration: 0.5 },
-        "-=0.4"
-      );
-
+      
       tl.fromTo(
         lines,
         { y: 20, opacity: 0, filter: "blur(2px)" },
         { y: 0, opacity: 1, filter: "blur(0px)", duration: 0.7, stagger: 0.15 },
+        "-=0.4"
+      );
+      tl.fromTo(
+        socialsRef.current,
+        { y: 20, opacity: 0 },
+        { y: 0, opacity: 1, duration: 0.5 },
         "-=0.4"
       );
     } else {
@@ -212,47 +212,47 @@ export default function TeamMembersAnimated() {
           <div className="  flex flex-col  justify-center lg:justify-start lg:items-start items-center  lg:mt-0 lg:text-left">
             <h2
               ref={nameRef}
-              className="uppercase text-blue-600 text-2xl-semibold  lg:text-3xl-semibold font-semibold mb-2 mx-[21] lg:mx-0"
+              className="uppercase text-blue-600 text-2xl-semibold  lg:text-3xl-semibold xl:text-4xl-semibold font-semibold mb-2 mx-[21] lg:mx-0"
             >
               {activeMember.name}
             </h2>
 
             <p
               ref={positionRef}
-              className="text-md font-semibold text-gray-900 mb-6 uppercase mx-[21] lg:mx-0"
+              className="text-md-semibold lg:text-md-semibold font-semibold xl:text-lg-semibold text-gray-900 mb-6 uppercase mx-[21] lg:mx-0"
             >
               {activeMember.position}
             </p>
 
+            <p
+              ref={descriptionRef}
+              className="text-gray-700 text-sm-regular  text-center lg:text-left mx-[5] lg:mx-0 lg:text-md-regular xl:text-lg-regular lg:leading-relaxed   lg:px-0 xl:max-w-full w-full xl:max-w-[700px]"
+            >
+              {activeMember.description}
+            </p>
             {/* Social icons */}
-            <div ref={socialsRef} className="footer-socials flex mb-6 items-center gap-4">
+            <div ref={socialsRef} className="footer-socials flex mt-6 items-center gap-4">
               {/* LinkedIn */}
               <Link href="/">
                 <button className="cursor-pointer hover:border-[#016BF2] hover:border hover:bg-white hover:text-[#016BF2] transition-colors ease-in-out duration-150 bg-[#016BF2] rounded-full p-[8px] text-white">
-                  <Linkedin size={20} fill="currentColor" strokeWidth={0} />
+                  <Linkedin size={14} fill="currentColor" strokeWidth={0} />
                 </button>
               </Link>
 
               {/* Instagram */}
               <Link href="/">
                 <button className="cursor-pointer hover:bg-white hover:text-[#016BF2] hover:border-[#016BF2] hover:border transition-colors ease-in-out duration-150 bg-[#016BF2] rounded-full p-[8px] text-white">
-                  <IconBrandInstagram size={20} />
+                  <IconBrandInstagram size={14} />
                 </button>
               </Link>
 
               {/* Facebook */}
               <Link href="/">
                 <button className="cursor-pointer hover:border-[#016BF2] hover:border hover:bg-white hover:text-[#016BF2] transition-colors ease-in-out duration-150 bg-[#016BF2] rounded-full p-[8px] text-white">
-                  <IconBrandFacebook size={20} fill="currentColor" stroke={0} />
+                  <IconBrandFacebook size={14} fill="currentColor" stroke={0} />
                 </button>
               </Link>
             </div>
-            <p
-              ref={descriptionRef}
-              className="text-gray-700 text-sm-regular  text-center lg:text-left mx-[5] lg:mx-0 lg:text-md-regular lg:leading-relaxed   lg:px-0 lg:max-w-[700px]"
-            >
-              {activeMember.description}
-            </p>
           </div>
         </div>
 

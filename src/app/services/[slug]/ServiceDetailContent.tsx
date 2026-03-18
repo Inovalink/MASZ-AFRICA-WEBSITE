@@ -96,22 +96,9 @@ export default function ServiceDetailContent({
             <div className="description-content mx-[21] lg:mx-[24] xl:mx-[120]  min-[1920px]:mx-[200]! my-[100] lg:my-[150]">
               <Tag text="details" className="mb-[40] lg:mb-[50]" />
               <div className=" lg:flex gap-[50] xl:gap-[100] text-default-body">
-                <AnimationCopy>
-                  <div
-                    dangerouslySetInnerHTML={{
-                      __html: service.description.one || "",
-                    }}
-                    className="description text-md-medium lg:text-xl-medium text-default-body lg:leading-8 lg:tracking-tight"
-                  />
-                </AnimationCopy>
-                <AnimationCopy>
-                  <div
-                    dangerouslySetInnerHTML={{
-                      __html: service.description.two || "",
-                    }}
-                    className="description text-md-medium lg:text-xl-medium text-default-body lg:leading-8 lg:tracking-tight"
-                  />
-                </AnimationCopy>
+              <AnimationCopy>
+                <div dangerouslySetInnerHTML={{ __html: service.description || '' }} className="description text-md-medium lg:text-2xl-medium lg:leading-8 lg:tracking-tight" />
+              </AnimationCopy>
               </div>
             </div>
           </div>

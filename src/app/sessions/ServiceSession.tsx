@@ -2,6 +2,7 @@
 
 import React, { useState, useMemo, memo } from "react";
 import Tag from "../components/tag";
+import Image from "next/image";
 import Link from "next/link";
 import { MoveRight } from "lucide-react";
 import Button from "../components/button";
@@ -16,42 +17,46 @@ const HEADER_DELAY = 0.1;
 const LIST_TITLE_STAGGER = 0.08;
 
 interface ServiceSessionProps {
-  /** When true, header line-by-line runs; on complete, list appears and list titles animate. */
   startTextAnimation?: boolean;
 }
 
-// PERFORMANCE: Memoize service list outside component
 const serviceList = [
   {
     id: 1,
     title: "Grinding media",
     subtext:
       "We offer complete gearbox diagnostics, repairs, and component replacements using OEM parts and experienced technicians. Our work helps restore equipment reliability and prevent costly downtime across crushers, mills, and conveyors.",
+    heroImage: "/serviceAssets/Image-1-3.webp",
+    heroAltText: "Grinding media",
   },
   {
     id: 2,
     title: "Activated Carbon",
     subtext:
       "We offer complete gearbox diagnostics, repairs, and component replacements using OEM parts and experienced technicians. Our work helps restore equipment reliability and prevent costly downtime across crushers, mills, and conveyors.",
+    heroImage: "/serviceAssets/Image-2-1.webp",
+    heroAltText: "Activated carbon",
   },
   {
     id: 3,
     title: "Metal and steel Pipes",
     subtext:
       "We offer complete gearbox diagnostics, repairs, and component replacements using OEM parts and experienced technicians. Our work helps restore equipment reliability and prevent costly downtime across crushers, mills, and conveyors.",
+    heroImage: "/serviceAssets/Image-3-1.webp",
+    heroAltText: "Metal and steel pipes",
   },
   {
     id: 4,
     title: "Gear Box servicing and Heavy Machine Maintenance",
     subtext:
       "We offer complete gearbox diagnostics, repairs, and component replacements using OEM parts and experienced technicians. Our work helps restore equipment reliability and prevent costly downtime across crushers, mills, and conveyors.",
+    heroImage: "/serviceAssets/Image-6-1.webp",
+    heroAltText: "Gear box servicing",
   },
 ] as const;
 
 function ServiceSession({ startTextAnimation = false }: ServiceSessionProps) {
   const [startListAnimation, setStartListAnimation] = useState(false);
-
-  // PERFORMANCE: Memoize service list reference
   const memoizedServiceList = useMemo(() => serviceList, []);
 
   return (
@@ -59,7 +64,7 @@ function ServiceSession({ startTextAnimation = false }: ServiceSessionProps) {
       <div className="services-section-container my-[100]">
         <Tag text="services" className="ml-[22] lg:ml-[0]" />
 
-        <div className="services-section-header flex items-center justify-between text-xl-semibold uppercase  my-[30] lg:mt-[37] lg:mb-[98] lg:text-4xl-semibold">
+        <div className="services-section-header flex items-center justify-between text-xl-semibold uppercase my-[30] lg:mt-[37] lg:mb-[98] lg:text-4xl-semibold">
           <HeaderLineByLineAnimation
             startAnimation={startTextAnimation}
             onComplete={() => setStartListAnimation(true)}
@@ -74,12 +79,11 @@ function ServiceSession({ startTextAnimation = false }: ServiceSessionProps) {
             <span className="text-primary-default">services</span>
           </HeaderLineByLineAnimation>
 
-          {/* CTA button — always expanded (label always visible) */}
-          <Link href="/services" className=" hidden md:block shrink-0 ml-8 mr-[24]">
+          <Link href="/services" className="hidden md:block shrink-0 ml-8 mr-[24]">
             <Button
               label="ALL PRODUCTS & SERVICES"
               variant="primaryWhite"
-              iconClassName="text-primary-default group-hover/btn:text-white! "
+              iconClassName="text-primary-default group-hover/btn:text-white!"
               size="large"
               className="hover:bg-[#0160DA]! hover:text-white! border-primary-default! bg-transparent!"
               alwaysExpanded
@@ -96,16 +100,16 @@ function ServiceSession({ startTextAnimation = false }: ServiceSessionProps) {
             {memoizedServiceList.map((list, index) => (
               <li
                 key={list.id}
-                tabIndex={0} // allows focus for :focus-within
-                className="relative mx-[22px]  flex cursor-pointer border-b border-gray-300 outline-none service-item"
+                tabIndex={0}
+                className="relative mx-[22px] flex cursor-pointer border-b border-gray-300 outline-none service-item"
               >
                 {/* Number */}
                 <p className="pr-[80px] py-[20px] text-lg-semibold lg:text-2xl-semibold text-gray-700 flex items-center justify-center transition-all duration-[600ms] ease-[cubic-bezier(0.25,0.8,0.25,1)] transform-gpu origin-center service-number">
                   {list.id}
                 </p>
 
+                {/* Text content */}
                 <div className="flex-1 relative">
-                  {/* Title - line-by-line animation with stagger per item */}
                   <div className="uppercase pr-[20px] py-[20px] text-lg-semibold lg:text-3xl-semibold text-[#626262] transition-colors duration-[600ms] ease-[cubic-bezier(0.25,0.8,0.25,1)] service-title">
                     <LineByLineText
                       startAnimation={startListAnimation}
@@ -119,27 +123,43 @@ function ServiceSession({ startTextAnimation = false }: ServiceSessionProps) {
                     </LineByLineText>
                   </div>
 
-                  {/* Expandable Content */}
+                  {/* Expandable subtext */}
                   <div className="overflow-hidden max-h-0 opacity-0 translate-y-2 transition-all duration-[1200ms] ease-[cubic-bezier(0.25,0.8,0.25,1)] service-subtext-container">
-                    <div className="list-subtext text-sm-medium pr-[20px] lg:pb-[50] lg:text-xl-medium lg:w-[800] lg:leading-7 lg:tracking-tight">
+                    <div className="list-subtext text-sm-medium pr-[20px] lg:text-xl-medium lg:w-[500] lg:leading-7 lg:tracking-tight">
                       {list.subtext}
                     </div>
-
-                    {/* Mobile "Learn More" link */}
-                    <div className="lg:hidden flex items-center bg-white my-[20px] pr-[20px] lg:my-[40]">
-                      <Link
-                        href="/"
-                        className="uppercase text-sm-medium text-primary-default transition-colors duration-[600ms] ease-[cubic-bezier(0.25,0.8,0.25,1)]"
-                      >
+                    <div className="lg:hidden flex items-center bg-white my-[20px] pr-[20px]">
+                      <Link href="/" className="uppercase text-sm-medium text-primary-default">
                         Learn More
                       </Link>
-
-                      <MoveRight className="ml-2 text-blue-600 transition-transform duration-[600ms] ease-[cubic-bezier(0.25,0.8,0.25,1)]" />
+                      <MoveRight className="ml-2 text-blue-600" />
                     </div>
                   </div>
                 </div>
 
-                {/* Desktop Button */}
+                {/*
+                  Image stack — desktop only.
+                  Default height: 0 → collapsed rows take no extra space.
+                  On hover/focus-within the CSS class drives height to 260px instantly,
+                  then opacity fades in after the row finishes opening (~500ms delay).
+                  overflow: visible so rotated cards are never clipped.
+                */}
+                <div className="service-image-stack hidden xl:block pointer-events-none">
+                  {/* Back card — blue rect, fans left + down */}
+                  <div className="service-image-back absolute w-[224px] h-[256px] rounded-[7px] bg-[#016BF2]" />
+                  {/* Front image — sits on top, tilts the other way */}
+                  <div className="service-image-front absolute w-[224px] h-[256px] rounded-[7px] overflow-hidden">
+                    <Image
+                      className="w-full h-full object-cover"
+                      src={list.heroImage}
+                      alt={list.heroAltText}
+                      height={1080}
+                      width={1920}
+                    />
+                  </div>
+                </div>
+
+                {/* Desktop "Learn More" button */}
                 <Button
                   label="learn more"
                   variant="primary"
@@ -173,5 +193,4 @@ function ServiceSession({ startTextAnimation = false }: ServiceSessionProps) {
   );
 }
 
-// PERFORMANCE: Memoize component to prevent unnecessary re-renders
 export default memo(ServiceSession);

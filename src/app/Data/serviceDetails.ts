@@ -5,10 +5,7 @@ export interface serviceDetails {
   heroTag: string;
   heroTitle: string;
 
-  description: {
-    one: string;
-    two: string;
-  };
+  description:string;
 
   benefitsImage: string;
   benefitsAltText: string;
@@ -34,44 +31,42 @@ export const serviceDetailsTemplate = [
     heroTag: "consumable",
     heroTitle: "grinding media",
 
-    description: {
-      one: `   MASZ-AFRICA supplies high-performance forged and cast steel
-                grinding balls, meticulously engineered to deliver consistent,
-                efficient, and reliable results in even the most demanding
-                milling environments. Our grinding media are
-                precision-manufactured to meet stringent international quality
-                standards, ensuring superior strength, exceptional wear
-                resistance, and an extended service life that minimizes downtime
-                and reduces operational costs. <br />
-                <br />
-                Sourced exclusively from globally accredited production
-                facilities that fully comply with ISO 9001 and ASTM
-                specifications, each batch of grinding media undergoes rigorous,
-                multi-stage quality control. This includes strict hardness
-                testing, dimensional verification, and impact resistance checks,
-                guaranteeing uniform performance, minimal breakage, and
-                consistent results across all milling operations. The result is
-                dependable grinding media that withstand extreme pressures,
-                high-impact loads, and abrasive ore conditions without
-                compromising efficiency. <br />
-                <br />`,
-      two: `At MASZ-AFRICA, we go beyond simply supplying high-quality
-                products. Our specialized technical support and on-site
-                consultation services are designed to optimize your milling
-                process and production outcomes. Our experienced engineers and
-                metallurgists evaluate critical factors, including mill type,
-                ore composition, feed size, grinding conditions, and operational
-                parameters, to recommend the ideal grinding media in terms of
-                composition, size distribution, and hardness profile. <br />
-                <br />
-                By tailoring solutions to your unique process requirements,
-                MASZ-AFRICA ensures maximum throughput, reduced energy
-                consumption, minimized wear on mill liners, and improved overall
-                operational efficiency. Whether you are aiming for higher
-                productivity, lower maintenance costs, or longer media life, our
-                grinding media and expert support deliver measurable results
-                that enhance both performance and profitability.`,
-    },
+    description: `   MASZ-AFRICA supplies high-performance forged and cast steel
+    grinding balls, meticulously engineered to deliver consistent,
+    efficient, and reliable results in even the most demanding
+    milling environments. Our grinding media are
+    precision-manufactured to meet stringent international quality
+    standards, ensuring superior strength, exceptional wear
+    resistance, and an extended service life that minimizes downtime
+    and reduces operational costs. <br />
+    <br />
+    Sourced exclusively from globally accredited production
+    facilities that fully comply with ISO 9001 and ASTM
+    specifications, each batch of grinding media undergoes rigorous,
+    multi-stage quality control. This includes strict hardness
+    testing, dimensional verification, and impact resistance checks,
+    guaranteeing uniform performance, minimal breakage, and
+    consistent results across all milling operations. The result is
+    dependable grinding media that withstand extreme pressures,
+    high-impact loads, and abrasive ore conditions without
+    compromising efficiency. <br />
+    <br />
+    At MASZ-AFRICA, we go beyond simply supplying high-quality
+    products. Our specialized technical support and on-site
+    consultation services are designed to optimize your milling
+    process and production outcomes. Our experienced engineers and
+    metallurgists evaluate critical factors, including mill type,
+    ore composition, feed size, grinding conditions, and operational
+    parameters, to recommend the ideal grinding media in terms of
+    composition, size distribution, and hardness profile. <br />
+    <br />
+    By tailoring solutions to your unique process requirements,
+    MASZ-AFRICA ensures maximum throughput, reduced energy
+    consumption, minimized wear on mill liners, and improved overall
+    operational efficiency. Whether you are aiming for higher
+    productivity, lower maintenance costs, or longer media life, our
+    grinding media and expert support deliver measurable results
+    that enhance both performance and profitability.`,
 
     benefitsImage: "/serviceAssets/Image-16.jpg",
     benefitsAltText: "Grinding media",
@@ -133,7 +128,7 @@ export const serviceDetailsTemplate = [
     heroTag: "consumable",
     heroTitle: "activated carbon",
 
-    description: { one: `  MASZ-AFRICA supplies premium high-adsorption, low-attrition activated carbon 
+    description: `  MASZ-AFRICA supplies premium high-adsorption, low-attrition activated carbon 
     specifically engineered for CIP (Carbon in Pulp) and CIL (Carbon in Leach) gold recovery 
     processes. Our activated carbon is designed to deliver consistent, reliable performance 
     even under demanding, high-throughput gold extraction co   ditions, ensuring maximum recovery 
@@ -144,9 +139,9 @@ export const serviceDetailsTemplate = [
     iodine number, and hardness, guaranteeing uniform performance and full compliance with 
     international standards. This meticulous quality control ensures predictable adsorption 
     capacity, extended service life, and stable recovery rates across all stages of the process, 
-    minimizing downtime, reducing replacement costs, and supporting uninterrupted production.`,
-    
-    two: `Beyond supplying top-quality carbon, MASZ-AFRICA provides comprehensive technical consultation 
+    minimizing downtime, reducing replacement costs, and supporting uninterrupted production.
+    <br/><br/>
+    Beyond supplying top-quality carbon, MASZ-AFRICA provides comprehensive technical consultation 
     covering carbon handling, regeneration, and circuit optimization. Our experienced team evaluates 
     processing conditions—including ore characteristics, mill configurations, pulp chemistry, and 
     recovery targets—to recommend the optimal carbon type, size distribution, regeneration schedule, 
@@ -155,7 +150,7 @@ export const serviceDetailsTemplate = [
     We also focus on process efficiency and sustainability, helping plants reduce carbon loss, 
     lower energy consumption during regeneration, and maintain environmentally responsible operations. 
     By combining premium products with tailored technical support, MASZ-AFRICA ensures that every 
-    operation achieves peak performance, improved recoveries, and long-term operational stability.`},
+    operation achieves peak performance, improved recoveries, and long-term operational stability.`,
 
     benefitsImage: "/serviceAssets/Image-16.jpg",
     benefitsAltText: "Grinding media",
@@ -217,7 +212,7 @@ export const serviceDetailsTemplate = [
     heroTag: "consumable",
     heroTitle: "metal and steel pipes",
 
-    description: {one:` MASZ-AFRICA supplies high-quality carbon steel, stainless steel, and galvanized
+    description: ` MASZ-AFRICA supplies high-quality carbon steel, stainless steel, and galvanized
     pipes engineered to perform reliably in the most demanding mining and industrial environments. 
     Designed to withstand abrasive slurries, high pressures, and corrosive conditions, our pipes 
     provide durable, long-lasting solutions for a wide range of applications including slurry transport, 
@@ -230,13 +225,12 @@ export const serviceDetailsTemplate = [
     certifications. Every batch undergoes comprehensive inspection, including verification of wall thickness, 
     dimensional accuracy, and weld integrity, ensuring consistency, safety, and peak performance even under the 
     harshest conditions.
-    `,
-      two: `
+    <br/><br/>
     MASZ-AFRICA goes beyond supply by providing technical guidance and on-site consultation for pipe selection, 
     corrosion protection, and installation. Our team assists clients in determining the most suitable material, 
     diameter, and thickness based on the specific mining process, fluid properties, and environmental conditions. 
     We also offer custom cutting, fabrication, and pre-assembly services to meet project-specific requirements, 
-    minimizing on-site adjustments and ensuring seamless integration into client systems.`},
+    minimizing on-site adjustments and ensuring seamless integration into client systems.`,
 
     benefitsImage: "/serviceAssets/Image-3-1.webp",
     benefitsAltText: "Metal and Steel Pipes",
@@ -297,7 +291,7 @@ export const serviceDetailsTemplate = [
     heroTag: "service",
     heroTitle: "metal and steel pipes",
 
-    description: {one:` MASZ-AFRICA delivers professional gearbox servicing, diagnostics, and heavy-machine 
+    description: ` MASZ-AFRICA delivers professional gearbox servicing, diagnostics, and heavy-machine 
     maintenance solutions for critical mining equipment, including crushers, grinding mills, conveyors, 
     and material-handling systems. Our services are designed to restore mechanical integrity, enhance 
     efficiency, and extend the operational lifespan of essential machinery operating in extreme mining 
@@ -308,14 +302,13 @@ export const serviceDetailsTemplate = [
     testing tools to identify wear, misalignment, lubrication issues, vibration irregularities, and 
     component fatigue. Using OEM-approved replacement parts and industry-recognized servicing procedures, 
     we repair, rebuild, and recalibrate gearboxes to return equipment to optimal working condition while 
-    minimizing the risk of recurring failures.`,
-      two: `
-   
+    minimizing the risk of recurring failures.
+    <br/><br/>
     MASZ-AFRICA’s mobile maintenance teams are equipped to provide rapid on-site response across active 
     mining locations. This minimizes downtime, reduces production losses, and ensures that critical 
     operations resume quickly and safely. Whether for planned preventative maintenance, predictive 
     diagnostics, or emergency interventions, our approach is structured, precise, and aligned with 
-    international maintenance best practices, ensuring long-term operational continuity.`},
+    international maintenance best practices, ensuring long-term operational continuity.`,
 
     benefitsImage: "/serviceAssets/Image-3-1.webp",
     benefitsAltText: "Metal and Steel Pipes",

@@ -195,7 +195,10 @@ export default function RelatedServicesCarousel({ currentSlug }: Props) {
           </p>
         </div>
 
-        <div className="overflow-hidden">
+        <div className="relative overflow-hidden">
+          {/* Side fade overlays */}
+          <div className="absolute left-0 top-0 bottom-0 w-16 lg:w-24 bg-linear-to-r from-white to-transparent pointer-events-none z-10" />
+          <div className="absolute right-0 top-0 bottom-0 w-16 lg:w-24 bg-linear-to-l from-white to-transparent pointer-events-none z-10" />
           <div
             ref={trackRef}
             className="flex gap-[16px] lg:gap-[32px] overflow-x-scroll
@@ -234,7 +237,7 @@ export default function RelatedServicesCarousel({ currentSlug }: Props) {
                   <p
                     className="text-white text-xs-medium lg:text-sm-medium leading-snug mb-[16px]"
                     style={{ display: "-webkit-box", WebkitLineClamp: 5, WebkitBoxOrient: "vertical", overflow: "hidden" }}
-                    dangerouslySetInnerHTML={{ __html: service.description.one.replace(/<br\s*\/?>/gi, " ") }}
+                    dangerouslySetInnerHTML={{ __html: service.description.replace(/<br\s*\/?>/gi, " ") }}
                   />
                   <Link href={`/services/${service.slug}`} className="flex place-self-end">
                     <Button

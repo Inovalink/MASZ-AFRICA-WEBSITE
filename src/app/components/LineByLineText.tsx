@@ -74,12 +74,13 @@ export default function LineByLineText({
       delay,
       force3D: true,
       onComplete: () => {
-        // Revert SplitType BEFORE calling onComplete — this restores the
-        // natural DOM (no split wrapper divs) so the text reflows cleanly
-        // instead of staying in fixed-width line divs that look distorted.
-        gsap.set(lines, { clearProps: 'all' });
-        split.revert();
-        splitRef.current = null;
+        // Clear only transform/opacity props — do NOT revert SplitType.
+        // Reverting restores the original DOM and causes the text to reflow
+        // into a different layout (the parent may have a different width by
+        // the time the animation completes), producing the visible jump.
+        // Leaving the split divs in place keeps the text exactly where it
+        // landed. The useLayoutEffect cleanup handles revert on unmount.
+        gsap.set(lines, { clearProps: 'transform,opacity' });
         onComplete?.();
       },
     });

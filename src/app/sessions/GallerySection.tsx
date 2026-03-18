@@ -186,8 +186,8 @@ const ImageBlock = ({ images, reverse, startIndex, imageRefs }: BlockProps) => {
     return (
       <div
         ref={(el) => { imageRefs.current[globalIdx] = el; }}
-        className={`w-[120px]   md:w-full lg:w-full overflow-hidden cursor-pointer opacity-0 ${
-          tall ? 'h-[400px] md:h-full lg:h-[520px]' : 'h-[200px] lg:h-[250px]'
+        className={`overflow-hidden cursor-pointer opacity-0 ${
+          tall ? 'w-[120px] md:w-full lg:w-full flex-1 min-w-0 h-[400px] md:h-full lg:h-[520px]' : 'h-[200px] lg:h-[250px]'
         }`}
       >
         <Image
@@ -203,9 +203,9 @@ const ImageBlock = ({ images, reverse, startIndex, imageRefs }: BlockProps) => {
   };
 
   return (
-    <div className={`flex gap-2 lg:gap-4 ${reverse ? 'flex-row-reverse' : ''}`}>
+    <div className={`flex flex-1 min-w-0 gap-2 lg:gap-4 ${reverse ? 'flex-row-reverse' : ''}`}>
       {renderImage(images[0], true, 0)}
-      <div className="flex flex-col justify-between gap-2 lg:gap-4">
+      <div className="flex flex-col flex-1 min-w-0 justify-between gap-2 lg:gap-4">
         {renderImage(images[1], false, 1)}
         {renderImage(images[2], false, 2)}
       </div>

@@ -1184,6 +1184,124 @@ section {
   }
 }
 
+/* Title gets top padding on expand so content is vertically centered against the image */
+@media (min-width: 1024px) {
+  .service-item:hover .service-title,
+  .service-item:focus-within .service-title {
+    padding-top: 40px;
+  }
+
+  .service-item:hover .list-subtext,
+  .service-item:focus-within .list-subtext {
+    padding-bottom: 40px;
+  }
+}
+
+@media (min-width: 1440px) {
+  .service-item:hover .service-title,
+  .service-item:focus-within .service-title {
+    padding-top: 60px;
+  }
+
+  .service-item:hover .list-subtext,
+  .service-item:focus-within .list-subtext {
+    padding-bottom: 60px;
+  }
+}
+
+/* ── Service image stack ─────────────────────────────────────────────────── */
+
+/*
+  Strategy:
+  - Default: width 0, overflow hidden, opacity 0, visibility hidden
+    → zero layout footprint, cards fully invisible and non-interactive
+  - Expanded: width 280px, overflow visible, opacity 1, visibility visible
+    → cards fan out with rotation animations
+  - Cards are position:absolute so they don't affect document flow
+*/
+
+.service-image-stack {
+  position: relative;
+  width: 0;
+  min-width: 0;
+  height: 0;
+  overflow: hidden;
+  opacity: 0;
+  visibility: hidden;
+  flex-shrink: 0;
+  align-self: center;
+  transition:
+    width 0s ease 0s,
+    height 0s ease 0s,
+    opacity 0.1s ease 0s,
+    visibility 0s ease 0.1s;
+}
+
+.service-image-back {
+  position: absolute;
+  z-index: 1;
+  top: 50%;
+  left: 10%;
+  transform: translate(-50%, -50%) rotate(0deg);
+  transition: transform 0.1s ease 0s;
+}
+
+.service-image-front {
+  position: absolute;
+  z-index: 2;
+  top: 50%;
+  left: 10%;
+  transform: translate(-50%, -50%) rotate(0deg);
+  transition: transform 0.1s ease 0s;
+}
+
+/* EXPANDED */
+
+.service-item:hover .service-image-stack,
+.service-item:focus-within .service-image-stack {
+  width: 280px;
+  height: 300px;
+  overflow: visible;
+  opacity: 1;
+  visibility: visible;
+  transition:
+    width 0s ease 0s,
+    height 0s ease 0s,
+    overflow 0s ease 0s,
+    visibility 0s ease 0s,
+    opacity 0.35s cubic-bezier(0.25, 0.8, 0.25, 1) 0.5s;
+}
+
+/* Back card fans — offset kept via translate so center-anchor is preserved */
+.service-item:hover .service-image-back,
+.service-item:focus-within .service-image-back {
+  transform: translate(-50%, -50%) rotate(18.78deg);
+  transition: transform 0.5s cubic-bezier(0.25, 0.8, 0.25, 1) 0.52s;
+}
+
+/* Front image tilts opposite way */
+.service-item:hover .service-image-front,
+.service-item:focus-within .service-image-front {
+  transform: translate(-50%, -50%) rotate(7.19deg);
+  transition: transform 0.5s cubic-bezier(0.25, 0.8, 0.25, 1) 0.56s;
+}
+
+/* ── Service button (desktop) ────────────────────────────────────────────── */
+
+.service-button {
+  opacity: 0;
+  transform: translateX(1rem);
+  pointer-events: none;
+  transition: all 0.5s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.service-item:hover .service-button,
+.service-button:hover {
+  opacity: 1;
+  transform: translateX(0);
+  pointer-events: auto;
+}
+
 
 
 

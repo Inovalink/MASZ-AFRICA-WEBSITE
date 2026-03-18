@@ -608,7 +608,7 @@ function AboutUSPage() {
 
               {/* Text content */}
               <div
-                className="absolute bg-[#FFFFFF05] max-w-[387px] lg:max-w-full  backdrop-blur-[5px] bottom-0 left-0 right-0 pl-[44px] pr-[28px] pb-[30px] pt-[20px] lg:px-[116px] lg:pb-[67px] lg:pt-[52px] flex items-end justify-between"
+                className="absolute bg-[#FFFFFF05] max-w-[387px] lg:max-w-full  backdrop-blur-[5px] bottom-0 left-0 right-0 pl-[24px] pr-[28px] pb-[30px] pt-[20px] xl:px-[120px] min-[1920px]:px-[200]!  lg:pb-[67px] lg:pt-[52px] flex items-end justify-between"
                 style={{ zIndex: 3 }}
               >
                 <div className="max-w-[480px] lg:max-w-[820px]">
@@ -670,8 +670,8 @@ function AboutUSPage() {
             className="vision-mission-statement lg:mx-[24] xl:mx-[120] min-[1920px]:mx-[200]! lg:my-[150] "
             style={{ contain: "layout style paint" }}
           >
-            <div className="vision-statement lg:flex lg:justify-between ">
-              <div className="text mx-[21]">
+            <div className="vision-statement lg:flex lg:justify-between lg:items-stretch">
+              <div className="text mx-[21] h-fit">
                 <Tag text="our vision" className="my-[80] lg:my-0" />
                 <AnimationCopy>
                   <div className="main-text text-xl-semibold md:text-2xl-semibold lg:text-3xl-semibold lg:leading-10 tracking-tight text-default-body lg:my-[50] lg:w-[650]">
@@ -680,7 +680,7 @@ function AboutUSPage() {
                     sustainability across Africa’s mining value chain.
                   </div>
                 </AnimationCopy>
-                <div className="subtext text-sm-medium md:text-md-medium lg:w-[650] text-default-body lg:text-xl-medium lg:leading-6 my-[40] lg:bg-surface-card-colored-primary">
+                <div className="subtext text-sm-medium md:text-md-medium lg:w-[650] text-default-body lg:text-xl-medium lg:leading-6 my-[40]  lg:bg-surface-card-colored-primary">
                   As a trusted global partner, MASZ-AFRICA supplies quality
                   mining products backed by technical expertise. We focus on
                   improving productivity and ensuring uninterrupted operations.
@@ -690,8 +690,9 @@ function AboutUSPage() {
                   global standards with local understanding and responsiveness.
                 </div>
               </div>
-              <div className="image-container relative w-full lg:w-1/2 h-[520px]">
+              <div className="image-container relative w-full lg:w-1/2 lg:h-auto">
                 <TiltCard
+                className="h-[400px] lg:h-full"
                   imageSrc="/aboutAssets/Image-7.webp"
                   title="Vision Image"
                 />
@@ -707,8 +708,9 @@ function AboutUSPage() {
             style={{ contain: "layout style paint" }}
           >
             <div className="mission-statement lg:flex lg:justify-between lg:flex-row">
-              <div className="hidden lg:block image-container relative w-full lg:w-1/2 h-[520px]">
+              <div className="hidden lg:block image-container relative w-full lg:w-1/2">
                 <TiltCard
+                  className="h-[400px] lg:h-full"
                   imageSrc="/aboutAssets/Image-13.webp"
                   title="mision Image"
                 />

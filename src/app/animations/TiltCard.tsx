@@ -132,12 +132,14 @@ export default function TiltCard({
     return () => st.kill();
   }, []);
 
+  const hasCustomHeight = /\bh-/.test(className);
+
   return (
     <div
       ref={cardRef}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
-      className={`relative h-[400] lg:h-[520px] overflow-hidden cursor-pointer ${className}`}
+      className={`relative ${hasCustomHeight ? '' : 'h-[400px] lg:h-[520px]'} overflow-hidden cursor-pointer ${className}`}
       style={{ transformStyle: 'preserve-3d', willChange: 'transform' }}
     >
       <div

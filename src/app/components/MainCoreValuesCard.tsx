@@ -62,10 +62,18 @@ const CoreValueCard: React.FC<CoreValueCardProps> = ({ card }) => {
     if (isMobile.current) {
       // Clear any desktop width override so flex-col can size naturally
       gsap.set(cardEl, { clearProps: 'width', height: M.card.height });
-      gsap.set(number, { x: M.number.x, y: M.number.y, clearProps: 'fontSize' });
-      gsap.set(title,  {
-        rotation: M.title.rotation,
-        x: M.title.x, y: M.title.y,
+      const numW = number?.offsetWidth ?? 30;
+      gsap.set(number, {
+        left: 20, top: '50%',
+        xPercent: 0, yPercent: -50,
+        x: 0, y: 0,
+        clearProps: 'fontSize',
+      });
+      gsap.set(title, {
+        rotation: 0,
+        left: 20 + numW + 8, top: '50%',
+        xPercent: 0, yPercent: -50,
+        x: 0, y: 0,
         fontSize: M.title.fontSize, fontWeight: M.title.fontWeight,
         padding: 0,
       });
@@ -82,10 +90,19 @@ const CoreValueCard: React.FC<CoreValueCardProps> = ({ card }) => {
       gsap.set(allCards, { width: equalWidth });
 
       gsap.set(cardEl, { height: D.card.height, width: equalWidth });
-      gsap.set(number, { x: D.number.x, y: D.number.y, clearProps: 'fontSize' });
-      gsap.set(title,  {
+      gsap.set(number, {
+        left: '50%', top: 30,
+        xPercent: -50, yPercent: 0,
+        x: 0, y: 0, rotation: 0,
+        clearProps: 'fontSize',
+      });
+      const numH = number?.offsetHeight ?? 28;
+      const titleH = title?.offsetHeight ?? 22;
+      gsap.set(title, {
         rotation: D.title.rotation,
-        x: D.title.x, y: D.title.y,
+        left: '50%', top: 30 + numH + 12,
+        xPercent: 0, yPercent: 0,
+        x: titleH / 2, y: 0,
         fontSize: D.title.fontSize, fontWeight: D.title.fontWeight,
         padding: D.title.padding,
       });
@@ -147,9 +164,9 @@ const CoreValueCard: React.FC<CoreValueCardProps> = ({ card }) => {
         .to(cardEl,  { width: EXPANDED_WIDTH,  duration: 0.35, ease: 'power3.out' }, 0)
         .to(siblings,{ width: shrinkWidth,     duration: 0.35, ease: 'power3.out' }, 0)
         .to(image,   { autoAlpha: 1,           duration: 0.35, ease: 'power3.out' }, 0)
-        .to(number,  { x: 30, y: 30, fontSize: '1.875rem',   duration: 0.35, ease: 'power3.out' }, 0)
+        .to(number,  { left: 0, top: 0, xPercent: 0, yPercent: 0, x: 30, y: 30, fontSize: '1.875rem',   duration: 0.35, ease: 'power3.out' }, 0)
         .to(title,   {
-          rotation: 0, x: 90, y:34,
+          rotation: 0, left: 0, top: 0, xPercent: 0, yPercent: 0, x: 90, y: 34,
           fontSize: '1.5rem', fontWeight: 700, padding: 0,
           duration: 0.35, ease: 'power3.out',
         }, 0)
@@ -172,10 +189,11 @@ const CoreValueCard: React.FC<CoreValueCardProps> = ({ card }) => {
         .to(cardEl,  { width: restoreWidth, duration: 0.35, ease: 'power3.in' }, 0)
         .to(siblings,{ width: restoreWidth, duration: 0.35, ease: 'power3.in' }, 0)
         .to(image,   { autoAlpha: 0,                 duration: 0.25, ease: 'power3.in' }, 0)
-        .to(number,  { x: D.number.x, y: D.number.y, fontSize: D.title.fontSize,   duration: 0.35, ease: 'power3.in' }, 0)
+        .to(number,  { left: '50%', top: 30, xPercent: -50, yPercent: 0, x: 0, y: 0, rotation: 0, fontSize: D.title.fontSize,   duration: 0.35, ease: 'power3.in' }, 0)
         .to(title,   {
           rotation: D.title.rotation,
-          x: D.title.x, y: D.title.y,
+          left: '50%', top: 70, xPercent: 0, yPercent: 0,
+          x: (title?.offsetHeight ?? 22) / 2, y: 0,
           fontSize: D.title.fontSize, fontWeight: D.title.fontWeight,
           padding: D.title.padding,
           duration: 0.35, ease: 'power3.in',
@@ -185,21 +203,27 @@ const CoreValueCard: React.FC<CoreValueCardProps> = ({ card }) => {
 
     // ── Mobile expand ───────────────────────────────────────────────────────
     const mobileExpand = () => {
+      const numW = number?.offsetWidth ?? 30;
       hoverTl.current?.kill();
       hoverTl.current = gsap.timeline();
       hoverTl.current
         .to(cardEl, { height: 420, duration: 0.5, ease: 'cubic-bezier(0.22,1,0.36,1)' }, 0)
         .to(image,  { autoAlpha: 1, duration: 0.4 }, 0)
-        .to(desc,   { autoAlpha: 1, y: 200, duration: 0.5, delay: 0.1 }, 0);
+        .to(number, { left: 20, top: 20, xPercent: 0, yPercent: 0, fontSize: '1.375rem', duration: 0.4 }, 0)
+        .to(title,  { left: 20 + numW + 8, top: 23, xPercent: 0, yPercent: 0, fontSize: '1.125rem', duration: 0.4 }, 0)
+        .to(desc,   { autoAlpha: 1, x: 20, y: 0, left: 0, top: 160, duration: 0.5, delay: 0.1 }, 0);
     };
 
     const mobileCollapse = () => {
+      const numW = number?.offsetWidth ?? 30;
       hoverTl.current?.kill();
       hoverTl.current = gsap.timeline();
       hoverTl.current
         .to(cardEl, { height: M.card.height, duration: 0.5, ease: 'cubic-bezier(0.22,1,0.36,1)' }, 0)
         .to(image,  { autoAlpha: 0, duration: 0.3 }, 0)
-        .to(desc,   { autoAlpha: 0, y: M.description.y, duration: 0.3 }, 0);
+        .to(number, { left: 20, top: '50%', xPercent: 0, yPercent: -50, fontSize: '1.375rem', duration: 0.4 }, 0)
+        .to(title,  { left: 20 + numW + 8, top: '50%', xPercent: 0, yPercent: -50, duration: 0.4 }, 0)
+        .to(desc,   { autoAlpha: 0, x: M.description.x, y: M.description.y, left: 0, top: 0, duration: 0.3 }, 0);
     };
 
     const onEnter = () => { if (!isMobile.current) onEnterDesktop(); };
@@ -245,7 +269,7 @@ const CoreValueCard: React.FC<CoreValueCardProps> = ({ card }) => {
         <p
           ref={titleRef}
           className="uppercase font-semibold absolute  whitespace-nowrap"
-          style={{ transformOrigin: 'left center' }}
+          style={{ transformOrigin: 'left top' }}
         >
           {card.title}
         </p>

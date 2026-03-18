@@ -120,11 +120,11 @@ export default function Page() {
       </ScrollReveal>
       <ScrollReveal
         direction="up"
-        duration={0.3}
+        duration={0.15}
         start="top 90%"
         scale
         once
-        staggerChildren={0.1}
+        staggerChildren={0.08}
         onRevealNearlyComplete={onCoreValueReveal}
         className=""
       >
