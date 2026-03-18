@@ -190,6 +190,7 @@ export default function HeroCarousel({ startTextAnimation = false }: HeroCarouse
               />
             ))}
           </div>
+          
         </div>
 
         {/* Bottom dashed line */}
