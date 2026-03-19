@@ -75,29 +75,7 @@ const valueCards: CoreValue[] = [
 
 // achievements data moved to src/app/data/achievements.ts to avoid circular dependency
 
-// const OUR_STORY_TEXT = (
-//   <>
-//     MASZ-AFRICA Ltd is a Ghana-based private limited liability company that
-//     provides high-quality mining consumables, engineering support, and
-//     procurement solutions to mining and mineral processing industries across
-//     Africa. Established in September 2025 by a multidisciplinary team with more
-//     than 15 years of combined experience in metallurgy, engineering, finance,
-//     supply chain management, and business improvement, the company was created
-//     to address the lack of dependable, responsive, and technically knowledgeable
-//     supply partners within the African mining sector.From the beginning,
-//     MASZ-Africa has focused on quality, reliability, and client satisfaction.
-//     Through strong partnerships with globally recognized manufacturers and
-//     original equipment suppliers, the company delivers world-class products
-//     supported by solid technical expertise and consistent on-time delivery. With
-//     a growing presence across West Africa, MASZ-Africa aims to become a
-//     continental leader in mining supply, logistics, and technical services. The
-//     company is committed to empowering mining operations with reliable supplies,
-//     innovative solutions, and smooth service delivery that keeps production
-//     running efficiently.
-//   </>
-// );
-
-const OUR_STORY_TEXT_1 = (
+const OUR_STORY_TEXT = (
   <>
     MASZ-AFRICA Ltd is a Ghana-based private limited liability company that
     provides high-quality mining consumables, engineering support, and
@@ -106,28 +84,50 @@ const OUR_STORY_TEXT_1 = (
     than 15 years of combined experience in metallurgy, engineering, finance,
     supply chain management, and business improvement, the company was created
     to address the lack of dependable, responsive, and technically knowledgeable
-    supply partners within the African mining sector.
-    <br className="hidden lg:block" />
-    <br  />
-    From the beginning, MASZ-Africa has focused on quality, reliability, and
-    client satisfaction.
-  </>
-);
-
-const OUR_STORY_TEXT_2 = (
-  <>
+    supply partners within the African mining sector.From the beginning,
+    MASZ-Africa has focused on quality, reliability, and client satisfaction.
     Through strong partnerships with globally recognized manufacturers and
     original equipment suppliers, the company delivers world-class products
-    supported by solid technical expertise and consistent on-time delivery.
-    <br className="hidden lg:block" />
-    <br  />
-    With a growing presence across West Africa, MASZ-Africa aims to become a
+    supported by solid technical expertise and consistent on-time delivery. With
+    a growing presence across West Africa, MASZ-Africa aims to become a
     continental leader in mining supply, logistics, and technical services. The
     company is committed to empowering mining operations with reliable supplies,
     innovative solutions, and smooth service delivery that keeps production
     running efficiently.
   </>
 );
+
+// const OUR_STORY_TEXT_1 = (
+//   <>
+//     MASZ-AFRICA Ltd is a Ghana-based private limited liability company that
+//     provides high-quality mining consumables, engineering support, and
+//     procurement solutions to mining and mineral processing industries across
+//     Africa. Established in September 2025 by a multidisciplinary team with more
+//     than 15 years of combined experience in metallurgy, engineering, finance,
+//     supply chain management, and business improvement, the company was created
+//     to address the lack of dependable, responsive, and technically knowledgeable
+//     supply partners within the African mining sector.
+//     <br className="hidden lg:block" />
+//     <br  />
+//     From the beginning, MASZ-Africa has focused on quality, reliability, and
+//     client satisfaction.
+//   </>
+// );
+
+// const OUR_STORY_TEXT_2 = (
+//   <>
+//     Through strong partnerships with globally recognized manufacturers and
+//     original equipment suppliers, the company delivers world-class products
+//     supported by solid technical expertise and consistent on-time delivery.
+//     <br className="hidden lg:block" />
+//     <br  />
+//     With a growing presence across West Africa, MASZ-Africa aims to become a
+//     continental leader in mining supply, logistics, and technical services. The
+//     company is committed to empowering mining operations with reliable supplies,
+//     innovative solutions, and smooth service delivery that keeps production
+//     running efficiently.
+//   </>
+// );
 
 const METRICS = [
   { text: "years of combined experience", value: "15+" },
@@ -320,20 +320,11 @@ function OurStorySection({
             delay={0}
             startAnimation={startBodyAnimation}
             onComplete={() => setLineByLineComplete(true)}
-            className="main-text-description lg:w-1/2 text-md-medium   lg:text-xl-medium lg:mt-[10] lg:leading-8 lg:tracking-tight text-[#777777]"
+            className="main-text-description lg:w-full text-md-medium   lg:text-xl-medium lg:mt-[10] lg:leading-8 lg:tracking-tight text-[#777777]"
           >
-            {OUR_STORY_TEXT_1}
+            {OUR_STORY_TEXT}
           </LineByLineText>
-          <LineByLineText
-            duration={0.13}
-            stagger={0.07}
-            delay={0}
-            startAnimation={startBodyAnimation}
-            onComplete={() => setLineByLineComplete(true)}
-            className="main-text-description lg:w-1/2 text-md-medium lg:text-xl-medium lg:mt-[10] lg:leading-8 lg:tracking-tight text-[#777777]"
-          >
-            {OUR_STORY_TEXT_2}
-          </LineByLineText>
+         
         </div>
       ) : (
         <div
@@ -342,7 +333,7 @@ function OurStorySection({
         >
           {/* 1 */}
           <div
-            className="relative lg:w-1/2 overflow-hidden"
+            className="relative lg:w-full overflow-hidden"
             style={{ contain: "layout style paint" }}
           >
             {/* Spacer: always in DOM, holds height; hidden when overlay is shown so layout never shifts */}
@@ -355,7 +346,7 @@ function OurStorySection({
               }
               aria-hidden={showAnimationCopy}
             >
-              {OUR_STORY_TEXT_1}
+              {OUR_STORY_TEXT}
             </div>
             {/* Pre-render AnimationCopy but keep it completely hidden until ready — prevents mount-time layout shift */}
             <div
@@ -372,48 +363,12 @@ function OurStorySection({
             >
               <AnimationCopy>
                 <div className="main-text-description text-[#777777] text-md-medium lg:text-xl-medium lg:mt-[10] lg:leading-8 lg:tracking-tight">
-                  {OUR_STORY_TEXT_1}
+                  {OUR_STORY_TEXT}
                 </div>
               </AnimationCopy>
             </div>
           </div>
-          {/* 2 */}
-          <div
-            className="relative lg:w-1/2 overflow-hidden"
-            style={{ contain: "layout style paint" }}
-          >
-            {/* Spacer: always in DOM, holds height; hidden when overlay is shown so layout never shifts */}
-            <div
-              className="main-text-description text-md-medium lg:text-xl-medium lg:mt-[10] lg:leading-8 lg:tracking-tight text-[#777777]"
-              style={
-                showAnimationCopy
-                  ? { visibility: "hidden", pointerEvents: "none" }
-                  : undefined
-              }
-              aria-hidden={showAnimationCopy}
-            >
-              {OUR_STORY_TEXT_2}
-            </div>
-            {/* Pre-render AnimationCopy but keep it completely hidden until ready — prevents mount-time layout shift */}
-            <div
-              ref={overlayRef2}
-              className="absolute top-0 left-0 right-0"
-              style={{
-                opacity: 0,
-                visibility: "hidden",
-                pointerEvents: "none",
-                contain: "layout style paint",
-                isolation: "isolate",
-              }}
-              aria-hidden={true}
-            >
-              <AnimationCopy>
-                <div className="main-text-description text-md-medium text-[#777777] lg:text-xl-medium lg:mt-[10] lg:leading-8 lg:tracking-tight">
-                  {OUR_STORY_TEXT_2}
-                </div>
-              </AnimationCopy>
-            </div>
-          </div>
+         
         </div>
       )}
       {/* Metrics Cards Animation */}
@@ -494,14 +449,7 @@ function AboutUSPage() {
     useState(false);
   const [missionRevealNearlyComplete, setMissionRevealNearlyComplete] =
     useState(false);
-    const [
-        achievementsRevealNearlyComplete,
-        setAchievementsRevealNearlyComplete,
-      ] = useState(false);
-      const onAchievementsReveal = useCallback(
-        () => setAchievementsRevealNearlyComplete(true),
-        []
-      );
+    // (achievements state removed — AchievementsSession now self-triggers)
 
   // Make TiltCard client-only
   const TiltCard = dynamic(() => import("../animations/TiltCard"), {
@@ -704,7 +652,7 @@ function AboutUSPage() {
         {/* mission-statement */}
         <ScrollReveal direction="up" duration={0.35} start="top 90%" scale once>
           <div
-            className="mission-statement lg:mx-[24] xl:mx-[120] min-[1920px]:mx-[200]!  lg:my-[250]"
+            className="mission-statement lg:mx-[24] xl:mx-[120] min-[1920px]:mx-[200]! mt-[100] lg:my-[250]"
             style={{ contain: "layout style paint" }}
           >
             <div className="mission-statement lg:flex lg:justify-between lg:flex-row">
@@ -772,19 +720,9 @@ function AboutUSPage() {
           </div>
         </ScrollReveal>
 
-       <ScrollReveal
-               direction="up"
-               duration={0.4}
-               start="top 90%"
-               scale
-               once
-               staggerChildren={0.1}
-               onRevealNearlyComplete={onAchievementsReveal}
-             >
-               <MemoAchievementsSession
-                 startTextAnimation={achievementsRevealNearlyComplete}
-               />
-             </ScrollReveal>
+       {/* Achievements — uses pure CSS reveal + IntersectionObserver internally,
+            no ScrollReveal wrapper needed (avoids GSAP transform conflicts with timeline ScrollTrigger) */}
+               <MemoAchievementsSession />
 
         {/* <div className="Team-members-section h-screen bg-[#f3f3f3]">
           <div className="team-member-section-main-content flex lg:flex-col lg:justify-center lg:items-center gap-40 lg:pt-[100]">
@@ -869,6 +807,8 @@ function AboutUSPage() {
             </div>
           </div>
         </div> */}
+
+      
 
         <ScrollReveal direction="up" duration={0.4} start="top 85%" scale once>
           <TeamMembersSection />

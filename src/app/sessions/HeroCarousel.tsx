@@ -56,7 +56,7 @@ function CarouselSlide({
   const item = { title, subtitle, image };
   return (
     <div
-      className="shrink-0 w-[min(85vw,420px)] flex items-center gap-6 mx-4 md:mx-6 cursor-none"
+      className="shrink-0 w-[min(85vw,440px)] flex items-center gap-6 mx-4 md:mx-6 cursor-none"
       onMouseEnter={() => onHoverStart(item)}
       onMouseLeave={onHoverEnd}
     >
@@ -68,11 +68,11 @@ function CarouselSlide({
           delay={0}
           yFrom={14}
           as="div"
-          className="text-white font-bold uppercase tracking-tight text-lg md:text-xl lg:text-2xl"
+          className="text-black font-bold uppercase tracking-tight text-lg md:text-xl lg:text-2xl"
         >
           <>{title}</>
           <br />
-          <span className="text-white/80 font-medium text-sm md:text-base mt-0.5">{subtitle}</span>
+          <span className="text-black/80 font-medium text-sm md:text-base mt-0.5">{subtitle}</span>
         </LineByLineText>
       </div>
       <div className="relative shrink-0 w-[180px] h-[120px] md:w-[220px] md:h-[140px] rounded overflow-hidden bg-white/10">
@@ -164,14 +164,14 @@ export default function HeroCarousel({ startTextAnimation = false }: HeroCarouse
     <>
       <section
         ref={sectionRef}
-        className="relative w-full bg-black py-6 md:py-8 mt-12 md:mt-16 cursor-none"
+        className="relative w-full bg-[#E0E0E0] py-6 md:py-8 mt-12 md:mt-16 cursor-none"
         onMouseMove={onMouseMove}
         onMouseEnter={onSectionEnter}
         onMouseLeave={onSectionLeave}
       >
         {/* Top dashed line */}
         <div
-          className="absolute left-0 right-0 top-0 h-0 border-t-2 border-dashed border-white/60"
+          className="absolute left-0 right-0 top-0 h-0 border-t-2 border-dashed border-black/60"
           aria-hidden
         />
 
@@ -195,7 +195,7 @@ export default function HeroCarousel({ startTextAnimation = false }: HeroCarouse
 
         {/* Bottom dashed line */}
         <div
-          className="absolute left-0 right-0 bottom-0 h-0 border-t-2 border-dashed border-white/60"
+          className="absolute left-0 right-0 bottom-0 h-0 border-t-2 border-dashed border-black/60"
           aria-hidden
         />
       </section>

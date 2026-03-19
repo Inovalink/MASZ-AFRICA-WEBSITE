@@ -1,6 +1,6 @@
 'use client';
 
-import React, { memo, useState } from 'react';
+import React, { memo, useState, useRef, useEffect, useCallback } from 'react';
 import Tag from '../components/tag';
 import AchievementsTimeline, { Achievement } from '../components/AchievementsTimeline';
 import LineByLineText from '../components/LineByLineText';
@@ -49,17 +49,59 @@ const HEADER_DELAY = 0.1;
 // COMPONENT PROPS
 // ============================================
 interface AchievementsSessionProps {
+  /** When provided externally (e.g. from ScrollReveal on home page), controls text animation start.
+   *  When omitted, the section self-triggers via IntersectionObserver + CSS reveal. */
   startTextAnimation?: boolean;
 }
 
 // ============================================
 // MAIN COMPONENT
 // ============================================
-function AchievementsSession({ startTextAnimation = false }: AchievementsSessionProps) {
+function AchievementsSession({ startTextAnimation: externalTrigger }: AchievementsSessionProps) {
   const [startSubtextAnimation, setStartSubtextAnimation] = useState(false);
+  const [isVisible, setIsVisible] = useState(false);
+  const [internalTrigger, setInternalTrigger] = useState(false);
+  const [revealDone, setRevealDone] = useState(false);
+  const sectionRef = useRef<HTMLElement>(null);
+
+  // If no external trigger is provided, self-detect with IntersectionObserver
+  const isSelfManaged = externalTrigger === undefined;
+
+  useEffect(() => {
+    if (!isSelfManaged) return;
+    const el = sectionRef.current;
+    if (!el) return;
+
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+          // 250ms: start text animation while CSS reveal is still transitioning
+          setTimeout(() => setInternalTrigger(true), 250);
+          // 550ms: CSS transition is 500ms, add 50ms buffer then mark reveal done
+          // so the timeline ScrollTrigger sets up with correct (final) positions
+          setTimeout(() => setRevealDone(true), 550);
+          io.disconnect();
+        }
+      },
+      { threshold: 0.08 }
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, [isSelfManaged]);
+
+  // Resolve which trigger to use
+  const startTextAnimation = isSelfManaged ? internalTrigger : (externalTrigger ?? false);
+
+  const onHeaderComplete = useCallback(() => {
+    setStartSubtextAnimation(true);
+  }, []);
 
   return (
-    <section className="achievements-session py-[80px] lg:py-[120px]">
+    <section
+      ref={sectionRef}
+      className={`achievements-session py-[80px] lg:py-[120px]${isSelfManaged ? ` css-reveal${isVisible ? ' css-reveal--visible' : ''}` : ''}`}
+    >
       <div className="achievements-content mx-[21px] lg:mx-[24px] xl:mx-[120px] min-[1920px]:mx-[200]!">
         {/* Tag */}
         <Tag text="Key Achievements" className="mb-[30px]" />
@@ -69,7 +111,7 @@ function AchievementsSession({ startTextAnimation = false }: AchievementsSession
         <div className="section-header uppercase text-xl-semibold lg:text-4xl-semibold mb-[20px]">
           <HeaderLineByLineAnimation
             startAnimation={startTextAnimation}
-            onComplete={() => setStartSubtextAnimation(true)}
+            onComplete={onHeaderComplete}
             lineY={HEADER_LINE_Y}
             duration={HEADER_DURATION}
             stagger={HEADER_STAGGER}
@@ -97,9 +139,10 @@ function AchievementsSession({ startTextAnimation = false }: AchievementsSession
         </div>
 </div>
 
-        {/* Timeline — only initialise ScrollTrigger once the parent ScrollReveal
-             has finished animating in, so bounds are calculated on the real layout */}
-        <AchievementsTimeline achievements={achievements} ready={startTextAnimation} />
+        {/* Timeline — gate on revealDone so ScrollTrigger sets up only after
+             the section is visible and the CSS transition has finished,
+             ensuring correct position calculations */}
+        <AchievementsTimeline achievements={achievements} ready={isSelfManaged ? revealDone : true} />
       </div>
     </section>
   );

@@ -112,38 +112,37 @@ function TestimonialSession() {
     });
   }, [resetKey]);
 
-  // Sequence when section fully enters viewport: tag → title (line by line) → subtext (line by line) → cards (right to left)
+  // Trigger animation sequence when section scrolls into view.
+  // Uses IntersectionObserver (not ScrollTrigger) to avoid Lenis scrollerProxy issues.
   useEffect(() => {
     const section = sectionRef.current;
     const tag = tagRef.current;
     if (!section || !tag) return;
 
-    const st = ScrollTrigger.create({
-      trigger: section,
-      start: "top 80%",
-      onEnter: () => {
-        if (hasAnimatedRef.current) return;
-        hasAnimatedRef.current = true;
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting && !hasAnimatedRef.current) {
+          hasAnimatedRef.current = true;
 
-        gsap.to(tag, {
-          opacity: 1,
-          x: 0,
-          duration: 0.5,
-          ease: "power2.out",
-          force3D: true,
-          onComplete: () => setStartTitleAnimation(true),
-        });
+          gsap.to(tag, {
+            opacity: 1,
+            x: 0,
+            duration: 0.5,
+            ease: "power2.out",
+            force3D: true,
+            onComplete: () => setStartTitleAnimation(true),
+          });
+
+          io.disconnect();
+        }
       },
-      // onLeaveBack: () => {
-      //   setResetKey((k) => k + 1);
-      //   setStartTitleAnimation(false);
-      //   setStartSubtextAnimation(false);
-      //   hasAnimatedRef.current = false;
-      // },
-    });
+      { threshold: 0.1 }
+    );
+    io.observe(section);
 
     return () => {
-      st.kill();
+      io.disconnect();
+      hasAnimatedRef.current = false;
     };
   }, []);
 

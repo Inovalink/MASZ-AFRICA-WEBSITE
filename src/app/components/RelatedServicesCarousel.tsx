@@ -182,21 +182,21 @@ export default function RelatedServicesCarousel({ currentSlug }: Props) {
         <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between mb-[40px] lg:mb-[71px] gap-4">
           <div>
             <Tag text="services" className="mb-[30px] lg:mb-[50px]" />
-            <h2 className="text-2xl-semibold lg:text-4xl-semibold uppercase leading-tight text-default-heading">
+            <h2 className="text-2xl-semibold lg:text-3xl-semibold xl:text-4xl-semibold uppercase leading-tight text-default-heading">
               More <span className="text-primary-default">Products</span> And
               <br />
               <span className="text-primary-default">Services</span>
             </h2>
           </div>
-          <p className="text-sm-medium md:text-md-medium mb-10 lg:text-xl-medium text-[#777777] lg:max-w-full lg:text-right leading-relaxed">
+          <p className="text-sm-medium md:text-md-medium mb-10 lg:mb-0 lg:text-xl-medium text-[#777777] lg:max-w-full lg:text-right leading-relaxed">
             Explore other products and services we are ready to offer
           </p>
         </div>
 
         <div className="relative overflow-hidden">
           {/* Side fade overlays */}
-          <div className="absolute left-0 top-0 bottom-0 w-16 lg:w-24 bg-linear-to-r from-white to-transparent pointer-events-none z-10" />
-          <div className="absolute right-0 top-0 bottom-0 w-16 lg:w-24 bg-linear-to-l from-white to-transparent pointer-events-none z-10" />
+          <div className="absolute left-0 top-0 bottom-0 w-10 md:w-16 lg:w-24 bg-linear-to-r from-white to-transparent pointer-events-none z-10" />
+          <div className="absolute right-0 top-0 bottom-0 w-10 md:w-16 lg:w-24 bg-linear-to-l from-white to-transparent pointer-events-none z-10" />
           <div
             ref={trackRef}
             className="flex gap-[16px] lg:gap-[32px] overflow-x-scroll

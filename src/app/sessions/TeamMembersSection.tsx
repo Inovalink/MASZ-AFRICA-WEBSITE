@@ -161,17 +161,25 @@ export default function TeamMembersAnimated() {
     }
   };
 
+  // Trigger animation when section scrolls into view.
+  // Uses IntersectionObserver instead of ScrollTrigger to avoid
+  // position conflicts with parent ScrollReveal transforms.
   useEffect(() => {
-    if (!sectionRef.current) return;
+    const section = sectionRef.current;
+    if (!section) return;
 
-    const st = ScrollTrigger.create({
-      trigger: sectionRef.current,
-      start: "top 80%",
-      onEnter: () => animateMember(activeIndex > prevIndex ? 1 : -1),
-      onEnterBack: () => animateMember(activeIndex > prevIndex ? 1 : -1),
-    });
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          animateMember(activeIndex > prevIndex ? 1 : -1);
+          io.disconnect();
+        }
+      },
+      { threshold: 0.1 }
+    );
+    io.observe(section);
 
-    return () => st.kill();
+    return () => io.disconnect();
   }, [activeIndex, prevIndex]);
 
   useEffect(() => {

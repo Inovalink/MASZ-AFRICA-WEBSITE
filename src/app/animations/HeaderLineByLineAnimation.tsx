@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useLayoutEffect, useState } from 'react';
 import gsap from 'gsap';
 import SplitType from 'split-type';
 
@@ -29,14 +29,11 @@ export interface HeaderLineByLineAnimationProps {
 
 /**
  * Reusable Header Line-by-Line Animation Component
- * 
- * This component handles the common pattern of:
- * 1. Splitting text into lines using SplitType
- * 2. Hiding lines initially
- * 3. Animating lines when startAnimation is true
- * 4. Calling onComplete when animation finishes
- * 
- * Used in: CoreValueSession, ServiceSession, AboutSession
+ *
+ * - Waits two rAFs before running SplitType so fonts have settled.
+ * - Does NOT use document.fonts.ready (unreliable in production).
+ * - Handles the race where startAnimation=true before the split is ready.
+ * - Safe under React 18 StrictMode (hasAnimatedRef resets on cleanup).
  */
 export default function HeaderLineByLineAnimation({
   startAnimation = false,
@@ -51,33 +48,59 @@ export default function HeaderLineByLineAnimation({
   style,
 }: HeaderLineByLineAnimationProps) {
   const headerTextRef = useRef<HTMLDivElement>(null);
-  const headerSplitRef = useRef<{ split: SplitType; lines: Element[] } | null>(null);
-  const hasStartedRef = useRef(false);
+  const splitRef = useRef<{ split: SplitType; lines: Element[] } | null>(null);
+  const hasAnimatedRef = useRef(false);
 
-  // Split header into lines on mount and hide until animation starts
+  // Phase 1: "ready" after two rAFs so fonts have been applied.
+  const [ready, setReady] = useState(false);
+
   useEffect(() => {
+    let cancelled = false;
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        if (!cancelled) setReady(true);
+      });
+    });
+    return () => {
+      cancelled = true;
+      // Reset so StrictMode double-invoke works correctly
+      setReady(false);
+    };
+  }, []);
+
+  // Phase 2: Split text into lines after fonts have settled.
+  useLayoutEffect(() => {
+    if (!ready) return;
     const el = headerTextRef.current;
     if (!el) return;
 
+    if (splitRef.current) {
+      splitRef.current.split.revert();
+      splitRef.current = null;
+    }
+
     const split = new SplitType(el, { types: 'lines' });
     const lines = split.lines;
+
     if (!lines || lines.length === 0) return;
 
-    headerSplitRef.current = { split, lines: Array.from(lines) };
-    gsap.set(lines, { opacity: 0, y: lineY });
+    splitRef.current = { split, lines: Array.from(lines) };
+    gsap.set(lines, { opacity: 0, y: lineY, force3D: true });
 
     return () => {
       split.revert();
-      headerSplitRef.current = null;
+      splitRef.current = null;
+      // Reset so animation can fire again after StrictMode re-mount
+      hasAnimatedRef.current = false;
     };
-  }, [lineY]);
+  }, [ready, lineY]);
 
-  // When startAnimation fires: animate header line-by-line
+  // Phase 3: Animate when both startAnimation AND split are ready.
   useEffect(() => {
-    if (!startAnimation || hasStartedRef.current || !headerSplitRef.current) return;
-    hasStartedRef.current = true;
+    if (!startAnimation || !ready || hasAnimatedRef.current || !splitRef.current) return;
+    hasAnimatedRef.current = true;
 
-    const { lines } = headerSplitRef.current;
+    const { lines } = splitRef.current;
     gsap.to(lines, {
       opacity: 1,
       y: 0,
@@ -85,11 +108,13 @@ export default function HeaderLineByLineAnimation({
       stagger,
       delay,
       ease: ease as gsap.EaseString,
+      force3D: true,
       onComplete: () => {
+        gsap.set(lines, { clearProps: 'transform,opacity' });
         onComplete?.();
       },
     });
-  }, [startAnimation, duration, stagger, delay, ease, onComplete]);
+  }, [startAnimation, ready, duration, stagger, delay, ease, onComplete]);
 
   return (
     <div ref={headerTextRef} className={className} style={style}>

@@ -1,3 +1,5 @@
+import { BenefitIcons } from "./serviceIcons";
+
 export interface serviceDetails {
   slug: string;
   heroImage: string;
@@ -16,8 +18,13 @@ export interface serviceDetails {
     id: number;
     title: string;
     description: string;
+    icon?: React.ReactNode;
   }[];
 }
+
+
+  
+
 
 export const serviceDetailsTemplate = [
   //GRINDING MEDIA
@@ -84,37 +91,51 @@ export const serviceDetailsTemplate = [
         title: "Optimized grinding efficiency",
         description:
           "Premium forged and cast steel balls ensure uniform size and hardness for consistent milling performance. This improves energy utilization, reduces unnecessary material loss, and enhances overall mill productivity.",
-      },
+          icon: BenefitIcons[1],
+
+        
+        },
       {
         id: 2,
         title: "Increased throughput",
         description:
           "Durable media reduce breakage, allowing higher processing volumes without loss of efficiency. Plants can achieve faster processing cycles while maintaining stable operational output.",
-      },
+      
+        icon: BenefitIcons[2],
+
+        },
       {
         id: 3,
         title: "Enhanced process consistency",
         description:
           "Uniform hardness and composition support predictable grinding outcomes and product quality. This stability simplifies process control and minimizes unexpected variations during production.",
-      },
+        icon: BenefitIcons[3],
+
+        },
       {
         id: 4,
         title: "Reliable performance under intensive conditions",
         description:
           "Designed to maintain structural integrity in high-load and high-impact milling operations. This ensures dependable performance even in demanding industrial environments.",
-      },
+        icon: BenefitIcons[4],
+
+        },
       {
         id: 5,
         title: "Reduced mill wear and downtime",
         description:
           "High-quality media minimize abrasion on liners and components, extending mill life. Reduced maintenance frequency helps lower operating costs and improve plant availability.",
-      },
+        icon: BenefitIcons[5],
+
+        },
       {
         id: 6,
         title: "Reliable performance under intensive conditions",
         description:
           "Designed to maintain structural integrity in high-load and high-impact milling operations. This ensures dependable performance even in demanding industrial environments.",
-      },
+        icon: BenefitIcons[6],
+
+        },
     ],
   },
 
@@ -168,37 +189,49 @@ export const serviceDetailsTemplate = [
         title: "Maximized gold recovery rates",
         description:
           "High-adsorption carbon ensures efficient metal capture in both CIP and CIL processes. This leads to higher extraction efficiency and maximizes overall gold recovery.",
-      },
+        icon: BenefitIcons[1],
+
+        },
       {
         id: 2,
         title: "Enhanced circuit stability",
         description:
           "Reliable adsorption performance maintains consistent processing rates across all CIP and CIL stages. It prevents fluctuations in throughput and ensures smooth, uninterrupted operations.",
-      },
+       icon: BenefitIcons[2],
+
+        },
       {
         id: 3,
         title: "Improved overall cost-effectiveness",
         description:
           "Longer-lasting carbon and efficient recovery help reduce consumable costsand lower maintenance expenses.This drives overall savings and improves operational profitability.",
-      },
+        icon: BenefitIcons[3],
+
+        },
       {
         id: 4,
-        title: "Technical support for maximum impac",
+        title: "Technical support for maximum impact",
         description:
           "MASZ-AFRICA consultancyensures carbon usage is tailoredto ore type, mill design, and recovery targets. Our expert guidance optimizes processes for consistent, high-performance results.",
-      },
+        icon: BenefitIcons[4],
+
+        },
       {
         id: 5,
         title: "Extended carbon service life",
         description:
           "Durable material and proper handling minimize frequent replacements and reduce operational interruptions. This extends service life and enhances plant reliability..",
-      },
+        icon: BenefitIcons[5],
+
+        },
       {
         id: 6,
         title: "Eco-friendly and sustainable operations",
         description:
           "Optimized carbon usage and efficient recovery methods minimize environmental impact while supporting sustainable practices. We focus on reducing waste and promoting responsible mining operations.",
-      },
+        icon: BenefitIcons[6],
+
+        },
     ],
   },
 
@@ -248,37 +281,49 @@ export const serviceDetailsTemplate = [
         title: "Superior durability in harsh environments",
         description:
           "Engineered to withstand abrasive slurries, high pressures, and corrosive mining conditions. Our robust construction ensures pipes maintain structural integrity even under extreme operational stress.",
-      },
+        icon: BenefitIcons[1],
+
+        },
       {
         id: 2,
         title: "Long-term operational stability",
         description:
           "High-performance pipes contribute to predictable system behavior and reduced downtime across projects. This reliability allows operators to focus on productivity rather than frequent maintenance.",
-      },
+        icon: BenefitIcons[2],
+
+        },
       {
         id: 3,
         title: "Enhanced safety and operational compliance",
         description:
           "Pipes and installation procedures adhere to industry best practices, reducing risk to personnel and equipment. Compliance with international safety standards ensures peace of mind for mining and industrial operations.",
-      },
+        icon: BenefitIcons[3],
+
+        },
       {
         id: 4,
         title: "Consistent, long-term performance",
         description:
           "Manufactured to international standards (API, ASTM, ISO) with rigorous wall thickness and weld integrity inspections. Every pipe batch is tested to guarantee uniform quality and dependable performance over time.",
-      },
+       icon: BenefitIcons[4],
+
+        },
       {
         id: 5,
         title: "Reliable supply and on-site integration",
         description:
           "MASZ-AFRICA ensures timely delivery and seamless installation support for uninterrupted operations. Our dedicated logistics and technical teams coordinate with clients for efficient project execution.",
-      },
+        icon: BenefitIcons[5],
+
+        },
       {
         id: 6,
         title: "Customized solutions for unique operational needs",
         description:
           "From specialized diameters to tailored coatings and fittings, MASZ-AFRICA provides solutions designed to match each client’s specific process requirements. This flexibility maximizes efficiency, reduces downtime, and optimizes long-term cost-effectiveness.",
-      },
+        icon: BenefitIcons[6],
+
+        },
     ],
   },
 
@@ -326,38 +371,50 @@ export const serviceDetailsTemplate = [
         title: "Improved mechanical reliability",
         description:
           "Comprehensive diagnostics and precision repairs reduce the risk of unexpected failures. Advanced monitoring and maintenance techniques ensure gearboxes and machinery maintain consistent performance over time.",
-      },
+        icon: BenefitIcons[1],
+
+        },
       {
         id: 2,
         title: "Enhanced safety and compliance",
         description:
           "Maintenance practices align with international standards, reducing risk to personnel and equipment.Regular inspections and standardized procedures prevent accidents and promote a safe working environment.",
-      },
+        icon: BenefitIcons[2],
+
+        },
       {
         id: 3,
         title: "Faster turnaround on repairs",
         description:
           "Efficient on-site servicing and diagnostics restore equipment quickly, avoiding extended production delays. Our mobile teams are strategically deployed to ensure rapid response, keeping critical operations running.",
-      },
+        icon: BenefitIcons[3],
+
+        },
       {
         id: 4,
         title: "Reduced maintenance and repair costs",
         description:
           "Proactive servicing prevents major breakdowns and minimizes costly emergency interventions. Long-term cost savings are achieved through extended equipment lifespan and fewer unplanned stoppages.",
-      },
+        icon: BenefitIcons[4],
+
+        },
       {
         id: 5,
         title: "Optimized operational efficiency",
         description:
           "Properly serviced gearboxes and machinery operate at peak performance, improving throughput and energy utilization. Enhanced machine reliability contributes directly to smoother production processes and higher productivity.",
-      },
+        icon: BenefitIcons[5],
+
+        },
 
       {
         id: 6,
         title: "Tailored maintenance solutions for complex machinery",
         description:
           "MASZ-AFRICA provides customized service plans based on equipment type, operating conditions, and usage patterns. This ensures every machine receives the right level of attention, maximizing uptime and operational value.",
-      },
+        icon: BenefitIcons[6],
+
+        },
     ],
   },
 ];

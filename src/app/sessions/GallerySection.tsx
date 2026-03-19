@@ -1,10 +1,16 @@
 'use client';
 
 import React, { useRef, useEffect, useState, useLayoutEffect } from 'react';
+
+const HEADER_LINE_Y = 24; // Define HEADER_LINE_Y with an appropriate value
+const HEADER_STAGGER = 0.1; // Define HEADER_STAGGER with an appropriate value
+const HEADER_DURATION = 0.5; // Define HEADER_DURATION with an appropriate value
+const HEADER_DELAY = 0.2; // Define HEADER_DELAY with an appropriate value
 import Image from 'next/image';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import LineByLineText from '@/app/components/LineByLineText';
+import HeaderLineByLineAnimation from '../animations/HeaderLineByLineAnimation';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -74,22 +80,68 @@ const GallerySection = () => {
     });
   }, []);
 
+  // Trigger text animation when section scrolls into view.
+  // Uses IntersectionObserver instead of ScrollTrigger to avoid Lenis scrollerProxy issues.
   useEffect(() => {
     const section = sectionRef.current;
     if (!section) return;
 
-    ScrollTrigger.create({
-      trigger: section,
-      start: 'top 85%',
-      once: true,
-      onEnter: () => setStartTextAnimation(true),
-    });
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setStartTextAnimation(true);
+          io.disconnect();
+        }
+      },
+      { threshold: 0.1 }
+    );
+    io.observe(section);
+
+    return () => io.disconnect();
   }, []);
 
   return (
     <section ref={sectionRef} className="relative w-full py-16">
+
+{/* ----------------- */}
+<div className="md:flex  mx-[24] xl:mx-[120]  min-[1920px]:mx-[200]! overflow-hidden gap-[50px] md:mb-[80] md:justify-between">
+        {/* Header */}
+        <div className="section-header uppercase text-xl-semibold lg:text-4xl-semibold mb-[20px]">
+          <HeaderLineByLineAnimation
+            startAnimation={startTextAnimation}
+            lineY={HEADER_LINE_Y}
+            duration={HEADER_DURATION}
+            stagger={HEADER_STAGGER}
+            delay={HEADER_DELAY}
+            style={{ overflow: 'hidden' }}
+          >
+            <span className='text-nowrap'>Take a walk through</span>{' '}<br />
+            <span className="text-primary-default">Our company gallery</span>
+          </HeaderLineByLineAnimation>
+        </div>
+
+        {/* Subtext */}
+        <div className="subtext mb-[60px] lg:mb-[0px] max-w-[484px]  ">
+          <LineByLineText
+            startAnimation={startTextAnimation}
+            duration={0.13}
+            onComplete={handleHeaderComplete}
+
+            delay={0.1}
+            stagger={0.05}
+            className="text-sm-medium lg:text-xl-medium text-default-body"
+          >
+            Take a walk through our company gallery, presenting the people and
+            processes behind our success, reflecting our commitment to quality
+            and integrity, reinforcing the standards we operate by and the
+            impact we strive to create every day.
+          </LineByLineText>
+        </div>
+</div>
+
+
       {/* ===== Header with LineByLineText ===== */}
-      <div className=" mx-[24] xl:mx-[120]  min-[1920px]:mx-[200]! overflow-hidden">
+      {/* <div className=" mx-[24] xl:mx-[120]  min-[1920px]:mx-[200]! overflow-hidden">
         <div className="mb-6 space-y-5">
           <div className="uppercase text-2xl lg:text-4xl font-semibold">
             <LineByLineText
@@ -130,7 +182,7 @@ const GallerySection = () => {
             impact we strive to create every day.
           </LineByLineText>
         </div>
-      </div>
+      </div> */}
 
       {/* ===== Gallery - each image animates individually ===== */}
       <div className="mt-12 md:mx-[24] xl:mx-[120]  min-[1920px]:mx-[200]!   space-y-2 lg:space-y-4">

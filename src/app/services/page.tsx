@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState, useCallback } from "react";
 import Tag from "../components/tag";
 import AnimationCopy from "../animations/WritingTextAnimation";
 import ServicesCardsSection from "../sessions/ServicesCardsSection";
@@ -8,9 +8,12 @@ import ScrollReveal from "../components/ScrollReveal";
 import LineByLineText from "../components/LineByLineText";
 
 export default function Page() {
+  const [startText, setStartText] = useState(false);
+  const onHeroReveal = useCallback(() => setStartText(true), []);
+
   return (
     <section className="">
-      <ScrollReveal direction="up" duration={0.75} start="top 60%" scale>
+      <ScrollReveal direction="up" duration={0.75} start="top 60%" scale once onRevealNearlyComplete={onHeroReveal}>
         <div className="services-main-content mx-[24]  xl:mx-[120]  min-[1920px]:mx-[200]! mt-[80] lg:mt-[150] max-h-[800] pb-[100] lg:pb-0 lg:h-screen ">
           <Tag text="products and Services" />
           <div className="text-content lg:mt-[50]">
@@ -24,8 +27,8 @@ export default function Page() {
             </div>
             {/* <AnimationCopy> */}
             <LineByLineText
-              startAnimation={true}
-              delay={0.5}
+              startAnimation={startText}
+              delay={0.05}
               duration={0.3}
               stagger={0.05}
               className="description text-md-regular  lg:text-2xl-medium text-default-body lg:tracking-tight lg:leading-8"

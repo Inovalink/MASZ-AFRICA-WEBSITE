@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import Tag from "@/app/components/tag";
 import Image from "next/image";
 import AnimationCopy from "@/app/animations/WritingTextAnimation";
@@ -10,11 +10,64 @@ import type { serviceDetails } from "@/app/Data/serviceDetails";
 import LineByLineText from "@/app/components/LineByLineText";
 import RelatedServicesCarousel from "@/app/components/RelatedServicesCarousel";
 
+/** Convert a string containing <br /> or <br> tags into JSX with real line breaks */
+function HtmlBreaks({ text }: { text: string }) {
+  const parts = text.split(/<br\s*\/?>/gi);
+  return (
+    <>
+      {parts.map((part, i) => (
+        <React.Fragment key={i}>
+          {part}
+          {i < parts.length - 1 && <br />}
+        </React.Fragment>
+      ))}
+    </>
+  );
+}
+
 export default function ServiceDetailContent({
   service,
 }: {
   service: serviceDetails;
 }) {
+  const [startHeroText, setStartHeroText] = useState(false);
+  const [startBenefitsText, setStartBenefitsText] = useState(false);
+  const heroTextRef = useRef<HTMLDivElement>(null);
+  const benefitsTextRef = useRef<HTMLDivElement>(null);
+
+  // IntersectionObserver for the hero LineByLineText
+  useEffect(() => {
+    const el = heroTextRef.current;
+    if (!el) return;
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setStartHeroText(true);
+          io.disconnect();
+        }
+      },
+      { threshold: 0.1 }
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
+
+  // IntersectionObserver for the benefits LineByLineText
+  useEffect(() => {
+    const el = benefitsTextRef.current;
+    if (!el) return;
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setStartBenefitsText(true);
+          io.disconnect();
+        }
+      },
+      { threshold: 0.1 }
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
   return (
     <section className="">
       <div className="main-section-content-container">
@@ -36,8 +89,9 @@ export default function ServiceDetailContent({
             </div>
             {/* text */}
             <div>
+            <div ref={heroTextRef}>
               <LineByLineText
-                startAnimation={true}
+                startAnimation={startHeroText}
                 delay={0.5}
                 duration={0.4}
                 stagger={0.05}
@@ -49,7 +103,6 @@ export default function ServiceDetailContent({
                 <span className="text-primary-default">WITHOUT COMPROMISE</span>
               </LineByLineText>
             </div>
-            {/* Image */}
             <div className="image-container relative h-[600] mt-[85px] lg:h-[850] overflow-hidden ">
               <Image
                 src={service.heroImage}
@@ -83,6 +136,7 @@ export default function ServiceDetailContent({
               <span>Brand Identity Animation</span>
             </div>
           </div>
+          </div>
         </ScrollReveal>
 
         <ScrollReveal
@@ -92,12 +146,14 @@ export default function ServiceDetailContent({
           scale
           staggerChildren={0.1}
         >
-          <div className="description lg:h-screen">
+          <div className="description ">
             <div className="description-content mx-[21] lg:mx-[24] xl:mx-[120]  min-[1920px]:mx-[200]! my-[100] lg:my-[150]">
               <Tag text="details" className="mb-[40] lg:mb-[50]" />
               <div className=" lg:flex gap-[50] xl:gap-[100] text-default-body">
               <AnimationCopy>
-                <div dangerouslySetInnerHTML={{ __html: service.description || '' }} className="description text-md-medium lg:text-2xl-medium lg:leading-8 lg:tracking-tight" />
+                <div className="description text-md-medium lg:text-2xl-medium lg:leading-8 lg:tracking-tight">
+                  <HtmlBreaks text={service.description || ''} />
+                </div>
               </AnimationCopy>
               </div>
             </div>
@@ -143,8 +199,9 @@ export default function ServiceDetailContent({
         >
           <div className=" lg:hidden lg:mx-[24]   xl:mx-[120]  min-[1920px]:mx-[200]!">
             <Tag className="mb-[50]" text="benefits" />
+            <div ref={benefitsTextRef}>
             <LineByLineText
-              startAnimation={true}
+              startAnimation={startBenefitsText}
               delay={0.5}
               duration={0.4}
               stagger={0.05}
@@ -155,27 +212,29 @@ export default function ServiceDetailContent({
               <br />
               <span className="text-primary-default">PROFITABILITY</span>
             </LineByLineText>
+            </div>
           </div>
           <div className="benefits flex justify-center lg:justify-start  py-[60]">
             <div className="benefits-main-content flex">
               <div className="left-side    xl:mx-[120]  min-[1920px]:mx-[200]!">
-              <div className="benefits-list grid grid-cols-1 md:grid-cols-2 lg:flex items-stretch justify-center lg:flex-start gap-6 lg:flex-wrap">
+              <div className="benefits-list grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 items-stretch justify-center lg:flex-start gap-6 lg:flex-wrap">
             {service.benefits.map((item, index) => (
               <div
                 key={item.id}
                 className="item-list group relative overflow-hidden bg-white flex flex-col 
-              max-w-[400px] lg:min-h-[350px] items-center justify-center 
+              max-w-[400px] lg:max-w-full  lg:min-h-[350px] items-center  
               lg:gap-10 px-[30px] py-[40px] cursor-pointer"
               >
                 <span className="liquid-bg absolute inset-0 -z-0" />
-                <div className="item-icon relative z-10 bg-surface-card-colored-secondary rounded-full p-[10px] transition-colors duration-500 group-hover:bg-white">
-                  <Square3Stack3DIcon className="h-8 lg:w-auto text-primary-default transition-colors duration-500 group-hover:text-blue-600" />
+                <div className="item-icon relative z-10 bg-[#016BF2] text-white group-hover:text-[#016BF2] p-[10px] transition-colors duration-500 group-hover:bg-white">
+                  {/* <Square3Stack3DIcon className="h-8 lg:w-auto text-primary-default transition-colors duration-500 group-hover:text-blue-600" /> */}
+                  {item.icon}
                 </div>
                 <div className="mt-2 item-text relative z-10 text-center flex flex-col items-center justify-center transition-colors duration-500 group-hover:text-white">
-                  <div className="title capitalize lg:text-xl-medium">
+                  <div className="title  capitalize mb-2 lg:mb-0 lg:min-h-[50] text-md-medium md:text-lg-medium lg:text-xl-medium">
                     {item.title}
                   </div>
-                  <div className="subtext lg:mt-[20px] lg:text-md-regular">
+                  <div className="subtext lg:mt-[20px] text-xs-regular md:text-sm-regular max-w-xs md:max-w-full  lg:text-md-regular">
                     {item.description}
                   </div>
                 </div>

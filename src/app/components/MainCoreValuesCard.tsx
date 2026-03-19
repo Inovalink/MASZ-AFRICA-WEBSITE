@@ -164,13 +164,13 @@ const CoreValueCard: React.FC<CoreValueCardProps> = ({ card }) => {
         .to(cardEl,  { width: EXPANDED_WIDTH,  duration: 0.35, ease: 'power3.out' }, 0)
         .to(siblings,{ width: shrinkWidth,     duration: 0.35, ease: 'power3.out' }, 0)
         .to(image,   { autoAlpha: 1,           duration: 0.35, ease: 'power3.out' }, 0)
-        .to(number,  { left: 0, top: 0, xPercent: 0, yPercent: 0, x: 30, y: 30, fontSize: '1.875rem',   duration: 0.35, ease: 'power3.out' }, 0)
+        .to(number,  { left: 0, top: 0, xPercent: 0, yPercent: 0, x: 60, y: 30, fontSize: '1.875rem',   duration: 0.35, ease: 'power3.out' }, 0)
         .to(title,   {
-          rotation: 0, left: 0, top: 0, xPercent: 0, yPercent: 0, x: 90, y: 34,
+          rotation: 0, left: 0, top: 0, xPercent: 0, yPercent: 0, x: 120, y: 34,
           fontSize: '1.5rem', fontWeight: 700, padding: 0,
           duration: 0.35, ease: 'power3.out',
         }, 0)
-        .to(desc, { autoAlpha: 1, x: 30, y: 90, duration: 0.35, delay: 0.05, ease: 'power3.out' }, 0);
+        .to(desc, { autoAlpha: 1, x: 60, y: 90, duration: 0.35, delay: 0.05,   ease: 'power3.out' }, 0);
     };
 
     // ── Desktop collapse ────────────────────────────────────────────────────
@@ -209,9 +209,9 @@ const CoreValueCard: React.FC<CoreValueCardProps> = ({ card }) => {
       hoverTl.current
         .to(cardEl, { height: 420, duration: 0.5, ease: 'cubic-bezier(0.22,1,0.36,1)' }, 0)
         .to(image,  { autoAlpha: 1, duration: 0.4 }, 0)
-        .to(number, { left: 20, top: 20, xPercent: 0, yPercent: 0, fontSize: '1.375rem', duration: 0.4 }, 0)
-        .to(title,  { left: 20 + numW + 8, top: 23, xPercent: 0, yPercent: 0, fontSize: '1.125rem', duration: 0.4 }, 0)
-        .to(desc,   { autoAlpha: 1, x: 20, y: 0, left: 0, top: 160, duration: 0.5, delay: 0.1 }, 0);
+        .to(number, { left: 40, top: 20, xPercent: 0, yPercent: 0, fontSize: '1.375rem', duration: 0.4 }, 0)
+        .to(title,  { left: 40 + numW + 8, top: 23, xPercent: 0, yPercent: 0, fontSize: '1.125rem', duration: 0.4 }, 0)
+        .to(desc,   { autoAlpha: 1, x: 40, y: 0, left: 0, top: 100, duration: 0.5, delay: 0.1 }, 0);
     };
 
     const mobileCollapse = () => {
@@ -276,7 +276,7 @@ const CoreValueCard: React.FC<CoreValueCardProps> = ({ card }) => {
 
         <p
           ref={descriptionRef}
-          className="absolute text-white text-sm-semibold md:text-md-semibold lg:text-lg-semibold w-full pr-[50px] md:pr-[74px] lg:bottom-[150px]   leading-relaxed"
+          className="absolute text-white text-sm-semibold md:text-md-semibold lg:text-lg-semibold pr-[80px] md:pr-[150px] w-full lg:bottom-[150px]   leading-relaxed"
           // width capped so text wraps nicely inside expanded card
           // style={{ width: '340px', fontSize: '0.875rem', opacity: 0 }}
         >

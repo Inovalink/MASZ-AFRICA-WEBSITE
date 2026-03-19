@@ -47,17 +47,18 @@ const AchievementCard = memo(function AchievementCard({
         }`}
       >
         <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="28"
-          height="30"
-          viewBox="0 0 37 39"
+          width="38"
+          height="38"
+          viewBox="0 0 38 38"
           fill="none"
-          className="lg:w-[37px] lg:h-[39px]"
+          xmlns="http://www.w3.org/2000/svg"
         >
           <path
-            fillRule="evenodd"
-            clipRule="evenodd"
-            d="M22.2695 31.7244C22.5456 31.8247 22.8523 31.7987 23.1074 31.6531L36.2519 24.1411C36.5852 23.9506 37 24.1913 37 24.5752V30.4947C37 30.6742 36.9039 30.8398 36.7481 30.9289L22.8125 38.8916C22.6849 38.9645 22.5317 38.9776 22.3936 38.9274L0.329141 30.9046C0.131541 30.8327 0 30.6449 0 30.4347V24.3396C0 23.9926 0.34479 23.7511 0.670883 23.8697L22.2695 31.7244ZM22.2695 21.446C22.5457 21.5464 22.8523 21.5205 23.1074 21.3747L36.2519 13.8628C36.5852 13.6723 37 13.913 37 14.2969V21.1197C37 21.2992 36.9039 21.4648 36.7481 21.5539L22.7178 29.5713C22.5902 29.6442 22.437 29.6573 22.2988 29.6071L0.329135 21.6184C0.131537 21.5466 0 21.3588 0 21.1485V14.0613C0 13.7143 0.34479 13.4728 0.670883 13.5914L22.2695 21.446ZM36.6709 8.05388C36.8685 8.12574 37 8.31353 37 8.52378V10.8414C37 21.1865 36.9039 11.1865 36.7481 11.2755L22.7178 19.293C22.5902 19.3659 22.437 19.379 22.2988 19.3288L0.329135 11.3401C0.131537 11.2683 0 11.0805 0 10.8702V8.46372C0 8.2843 0.0961375 8.11863 0.251918 8.02961L14.1875 0.0658867C14.3151 -0.00703658 14.4683 -0.0201227 14.6064 0.0301066L36.6709 8.05388Z"
+            d="M11.0822 27.6768V33.2501C11.0822 33.8043 11.3672 34.3109 11.8264 34.5959C12.2856 34.8809 12.8714 34.9126 13.3622 34.6593L18.9831 31.8409L24.6039 34.6593C24.8448 34.7821 25.1132 34.841 25.3834 34.8304C25.6536 34.8197 25.9165 34.7398 26.1469 34.5984C26.3774 34.4569 26.5676 34.2587 26.6995 34.0226C26.8313 33.7865 26.9002 33.5205 26.8997 33.2501V27.6768C24.6356 29.1968 21.9122 30.0834 18.9831 30.0834C16.0539 30.0834 13.3306 29.1968 11.0664 27.6768H11.0822Z"
+            fill="#016BF2"
+          />
+          <path
+            d="M18.9987 28.4998C25.9812 28.4998 31.6654 22.8157 31.6654 15.8332C31.6654 8.85067 25.9812 3.1665 18.9987 3.1665C12.0162 3.1665 6.33203 8.85067 6.33203 15.8332C6.33203 22.8157 12.0162 28.4998 18.9987 28.4998ZM17.2887 13.664L18.9987 10.1965L20.7087 13.664L24.5404 14.2182L21.7695 16.9257L22.4187 20.7415L18.9987 18.9365L15.5787 20.7415L16.2279 16.9257L13.457 14.2182L17.2887 13.664Z"
             fill="#016BF2"
           />
         </svg>
@@ -171,10 +172,9 @@ function AchievementsTimeline({
 
       const mobileCards =
         mobileCardsContainerRef.current?.querySelectorAll("[data-mobile-card]");
-      const desktopCards =
-        desktopCardsContainerRef.current?.querySelectorAll(
-          "[data-desktop-card]"
-        );
+      const desktopCards = desktopCardsContainerRef.current?.querySelectorAll(
+        "[data-desktop-card]"
+      );
 
       mobileCards?.forEach((card) => resizeObserver?.observe(card));
       desktopCards?.forEach((card) => resizeObserver?.observe(card));
@@ -221,7 +221,11 @@ function AchievementsTimeline({
 
   useLayoutEffect(() => {
     if (lineRef.current) {
-      gsap.set(lineRef.current, { scaleY: 0, transformOrigin: "top center", force3D: true });
+      gsap.set(lineRef.current, {
+        scaleY: 0,
+        transformOrigin: "top center",
+        force3D: true,
+      });
     }
 
     dotsRef.current.forEach((dot) => {
@@ -245,7 +249,11 @@ function AchievementsTimeline({
     });
 
     if (mobileLineRef.current) {
-      gsap.set(mobileLineRef.current, { scaleY: 0, transformOrigin: "top center", force3D: true });
+      gsap.set(mobileLineRef.current, {
+        scaleY: 0,
+        transformOrigin: "top center",
+        force3D: true,
+      });
     }
 
     mobileDotsRef.current.forEach((dot) => {
@@ -256,7 +264,11 @@ function AchievementsTimeline({
     });
     mobileConnectorsRef.current.forEach((connector) => {
       if (connector) {
-        gsap.set(connector, { scaleX: 0, transformOrigin: "left center", force3D: true });
+        gsap.set(connector, {
+          scaleX: 0,
+          transformOrigin: "left center",
+          force3D: true,
+        });
       }
     });
   }, [achievements.length]);
@@ -297,7 +309,8 @@ function AchievementsTimeline({
       });
 
       if (line) tl.to(line, { scaleY: 1, duration: 1, ease: "none" }, 0);
-      if (mobileLine) tl.to(mobileLine, { scaleY: 1, duration: 1, ease: "none" }, 0);
+      if (mobileLine)
+        tl.to(mobileLine, { scaleY: 1, duration: 1, ease: "none" }, 0);
 
       achievements.forEach((_, index) => {
         const progress = totalItems > 1 ? (index / (totalItems - 1)) * 0.95 : 0;
@@ -307,24 +320,47 @@ function AchievementsTimeline({
         const connector = connectorsRef.current[index];
 
         if (connector)
-          tl.to(connector, { scaleX: 1, duration: 0.05, ease: "power2.out" }, progress);
+          tl.to(
+            connector,
+            { scaleX: 1, duration: 0.05, ease: "power2.out" },
+            progress
+          );
         if (dot)
-          tl.to(dot, { scale: 1, duration: 0.05, ease: "back.out(2)" }, progress + 0.03);
+          tl.to(
+            dot,
+            { scale: 1, duration: 0.05, ease: "back.out(2)" },
+            progress + 0.03
+          );
         if (card)
-          tl.to(card, { opacity: 1, x: 0, duration: 0.1, ease: "power2.out" }, progress + 0.05);
+          tl.to(
+            card,
+            { opacity: 1, x: 0, duration: 0.1, ease: "power2.out" },
+            progress + 0.05
+          );
 
         const mobileDot = mobileDotsRef.current[index];
         const mobileCard = mobileCardsRef.current[index];
         const mobileConnector = mobileConnectorsRef.current[index];
 
         if (mobileConnector)
-          tl.to(mobileConnector, { scaleX: 1, duration: 0.05, ease: "power2.out" }, progress);
+          tl.to(
+            mobileConnector,
+            { scaleX: 1, duration: 0.05, ease: "power2.out" },
+            progress
+          );
         if (mobileDot)
-          tl.to(mobileDot, { scale: 1, duration: 0.05, ease: "back.out(2)" }, progress + 0.03);
+          tl.to(
+            mobileDot,
+            { scale: 1, duration: 0.05, ease: "back.out(2)" },
+            progress + 0.03
+          );
         if (mobileCard)
-          tl.to(mobileCard, { opacity: 1, x: 0, duration: 0.1, ease: "power2.out" }, progress + 0.05);
+          tl.to(
+            mobileCard,
+            { opacity: 1, x: 0, duration: 0.1, ease: "power2.out" },
+            progress + 0.05
+          );
       });
-
     }, container);
 
     const t1 = setTimeout(() => {
@@ -350,7 +386,10 @@ function AchievementsTimeline({
           <div ref={lineRef} className="absolute inset-0 bg-[#016BF2]" />
         </div>
 
-        <div ref={desktopCardsContainerRef} className="flex flex-col gap-[200px]">
+        <div
+          ref={desktopCardsContainerRef}
+          className="flex flex-col gap-[200px]"
+        >
           {achievements.map((achievement, index) => {
             const isLeft = index % 2 === 0;
             const isActive = index === activeIndex;
@@ -359,24 +398,35 @@ function AchievementsTimeline({
               <div
                 key={achievement.id}
                 data-desktop-card
-                ref={(el) => { rowRefs.current[index] = el; }}
+                ref={(el) => {
+                  rowRefs.current[index] = el;
+                }}
                 className="relative grid grid-cols-2 gap-0"
               >
                 {isLeft && (
                   <>
                     <div className="relative flex items-center">
                       <div
-                        ref={(el) => { cardsRef.current[index] = el; }}
+                        ref={(el) => {
+                          cardsRef.current[index] = el;
+                        }}
                         className="w-full mr-2.5 pr-[50px]"
                       >
-                        <AchievementCard isActive={isActive} achievement={achievement} />
+                        <AchievementCard
+                          isActive={isActive}
+                          achievement={achievement}
+                        />
                       </div>
                       <div
-                        ref={(el) => { connectorsRef.current[index] = el; }}
+                        ref={(el) => {
+                          connectorsRef.current[index] = el;
+                        }}
                         className="absolute right-0 top-1/2 -translate-y-1/2 w-[50px] h-[2px] bg-[#016BF2] origin-left"
                       />
                       <div
-                        ref={(el) => { dotsRef.current[index] = el; }}
+                        ref={(el) => {
+                          dotsRef.current[index] = el;
+                        }}
                         className="absolute right-[44px] top-1/2 -translate-y-1/2 w-2 h-2 bg-[#016BF2] rounded-full z-10"
                       />
                     </div>
@@ -389,18 +439,27 @@ function AchievementsTimeline({
                     <div className="relative" />
                     <div className="relative flex items-center">
                       <div
-                        ref={(el) => { connectorsRef.current[index] = el; }}
+                        ref={(el) => {
+                          connectorsRef.current[index] = el;
+                        }}
                         className="absolute left-0 top-1/2 -translate-y-1/2 w-[50px] h-[2px] bg-[#016BF2] origin-right"
                       />
                       <div
-                        ref={(el) => { dotsRef.current[index] = el; }}
+                        ref={(el) => {
+                          dotsRef.current[index] = el;
+                        }}
                         className="absolute left-[44px] top-1/2 -translate-y-1/2 w-2 h-2 bg-[#016BF2] rounded-full z-10"
                       />
                       <div
-                        ref={(el) => { cardsRef.current[index] = el; }}
+                        ref={(el) => {
+                          cardsRef.current[index] = el;
+                        }}
                         className="w-full ml-2.5 pl-[50px]"
                       >
-                        <AchievementCard isActive={isActive} achievement={achievement} />
+                        <AchievementCard
+                          isActive={isActive}
+                          achievement={achievement}
+                        />
                       </div>
                     </div>
                   </>
@@ -432,18 +491,27 @@ function AchievementsTimeline({
                 className="relative flex items-center pl-[50px]"
               >
                 <div
-                  ref={(el) => { mobileConnectorsRef.current[index] = el; }}
+                  ref={(el) => {
+                    mobileConnectorsRef.current[index] = el;
+                  }}
                   className="absolute left-[14px] top-1/2 -translate-y-1/2 w-[30px] h-[2px] bg-[#016BF2] origin-left"
                 />
                 <div
-                  ref={(el) => { mobileDotsRef.current[index] = el; }}
+                  ref={(el) => {
+                    mobileDotsRef.current[index] = el;
+                  }}
                   className="absolute left-[38px] top-1/2 -translate-y-1/2 w-2 h-2 bg-[#016BF2] rounded-full z-10"
                 />
                 <div
-                  ref={(el) => { mobileCardsRef.current[index] = el; }}
+                  ref={(el) => {
+                    mobileCardsRef.current[index] = el;
+                  }}
                   className="w-full"
                 >
-                  <AchievementCard isActive={isActive} achievement={achievement} />
+                  <AchievementCard
+                    isActive={isActive}
+                    achievement={achievement}
+                  />
                 </div>
               </div>
             );

@@ -35,14 +35,7 @@ export default function Page() {
     useState(false);
   const [coreValueRevealNearlyComplete, setCoreValueRevealNearlyComplete] =
     useState(false);
-  const [
-    achievementsRevealNearlyComplete,
-    setAchievementsRevealNearlyComplete,
-  ] = useState(false);
-  const onAchievementsReveal = useCallback(
-    () => setAchievementsRevealNearlyComplete(true),
-    []
-  );
+  // (achievements state removed — AchievementsSession now self-triggers via IntersectionObserver + CSS reveal)
 
   /**
    * PERFORMANCE OPTIMIZATION: useCallback for stable function references
@@ -132,27 +125,23 @@ export default function Page() {
           startTextAnimation={coreValueRevealNearlyComplete}
         />
       </ScrollReveal>
-      <ScrollReveal
-        direction="up"
-        duration={0.4}
-        start="top 90%"
-        scale
-        once
-        staggerChildren={0.1}
-        onRevealNearlyComplete={onAchievementsReveal}
-      >
-        <MemoAchievementsSession
-          startTextAnimation={achievementsRevealNearlyComplete}
-        />
-      </ScrollReveal>
-      <MemoTestimonialSession />
+      {/* Achievements — self-triggers via IntersectionObserver + CSS reveal, no ScrollReveal wrapper */}
+      <MemoAchievementsSession />
       <ScrollReveal
         direction="up"
         duration={0.4}
         start="top 80%"
         scale
         once
-        staggerChildren={0.1}
+      >
+        <MemoTestimonialSession />
+      </ScrollReveal>
+      <ScrollReveal
+        direction="up"
+        duration={0.4}
+        start="top 80%"
+        scale
+        once
       >
         <MemoAnimatedImagesSection />
       </ScrollReveal>

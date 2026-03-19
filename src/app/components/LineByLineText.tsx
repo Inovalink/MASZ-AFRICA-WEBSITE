@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useRef, useState, useLayoutEffect, ReactNode } from 'react';
+import React, { useEffect, useRef, useLayoutEffect, ReactNode } from 'react';
 import SplitType from 'split-type';
 import gsap from 'gsap';
 
@@ -36,51 +36,29 @@ export default function LineByLineText({
 }: LineByLineTextProps) {
   const wrapperRef = useRef<HTMLDivElement | HTMLParagraphElement | HTMLSpanElement>(null);
   const splitRef = useRef<{ split: SplitType; lines: Element[] } | null>(null);
-  const [mounted, setMounted] = useState(false);
 
-  // Mark as ready once mounted AND fonts are loaded
-  useEffect(() => {
-    let cancelled = false;
-    const ready = () => { if (!cancelled) setMounted(true); };
-
-    if (document.fonts?.ready) {
-      document.fonts.ready.then(ready);
-    } else {
-      // Fallback: wait a frame for fonts to settle
-      requestAnimationFrame(ready);
-    }
-    return () => { cancelled = true; };
-  }, []);
-
-  // Split text into lines AFTER fonts are loaded
+  // Split text into lines BEFORE paint to prevent layout shift — useLayoutEffect ensures this happens synchronously
   useLayoutEffect(() => {
-    if (!mounted) return;
     const el = wrapperRef.current;
     if (!el) return;
 
-    // Revert any previous split first
-    if (splitRef.current) {
-      splitRef.current.split.revert();
-      splitRef.current = null;
-    }
+    // Set initial opacity to prevent flash
+    gsap.set(el, { opacity: 1, force3D: true });
 
     const split = new SplitType(el as HTMLElement, { types: 'lines' });
     const lines = split.lines;
 
-    if (!lines || lines.length === 0) {
-      gsap.set(el, { visibility: 'visible' });
-      return;
-    }
+    if (!lines || lines.length === 0) return;
 
     splitRef.current = { split, lines: Array.from(lines) };
+    // Set lines to hidden state immediately — prevents any visible jump
     gsap.set(lines, { opacity: 0, y: yFrom, force3D: true });
-    gsap.set(el, { visibility: 'visible' });
 
     return () => {
       split.revert();
       splitRef.current = null;
     };
-  }, [mounted, yFrom]);
+  }, [yFrom]);
 
   // Start line-by-line animation when startAnimation becomes true
   useEffect(() => {
@@ -96,21 +74,18 @@ export default function LineByLineText({
       delay,
       force3D: true,
       onComplete: () => {
-        gsap.set(lines, { clearProps: 'transform,opacity' });
         onComplete?.();
       },
     });
   }, [startAnimation, duration, stagger, delay, onComplete]);
 
   return (
-    <Wrapper
-      ref={wrapperRef as any}
-      className={className ?? undefined}
-      style={{
+    <Wrapper 
+      ref={wrapperRef as any} 
+      className={className ?? undefined} 
+      style={{ 
         overflow: 'hidden',
-        // Server renders with visibility:hidden so no unsplit text flashes.
-        // useLayoutEffect sets visibility:visible after SplitType runs.
-        visibility: mounted ? undefined : 'hidden',
+        contain: 'layout style paint',
         willChange: startAnimation ? 'transform, opacity' : 'auto',
       }}
     >

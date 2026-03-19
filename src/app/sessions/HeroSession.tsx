@@ -70,7 +70,7 @@ function HeroSession({ startTextAnimation = false }: HeroSessionProps) {
                   </span>
                 </>
               }
-              className="ml-[22] my-[35]"
+              className=" my-[35]"
             />
           </div>
         </div>
