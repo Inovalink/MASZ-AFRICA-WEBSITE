@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useRef, useLayoutEffect, ReactNode } from 'react';
+import React, { useEffect, useRef, useState, useLayoutEffect, ReactNode } from 'react';
 import SplitType from 'split-type';
 import gsap from 'gsap';
 
@@ -36,31 +36,78 @@ export default function LineByLineText({
 }: LineByLineTextProps) {
   const wrapperRef = useRef<HTMLDivElement | HTMLParagraphElement | HTMLSpanElement>(null);
   const splitRef = useRef<{ split: SplitType; lines: Element[] } | null>(null);
+  const [fontsReady, setFontsReady] = useState(false);
 
-  // Split text into lines BEFORE paint to prevent layout shift — useLayoutEffect ensures this happens synchronously
+  // Wait for fonts to load before splitting.
+  // In production, web fonts load async — SplitType measures line breaks using
+  // font metrics, so splitting before fonts load creates wrong line breaks.
+  // Uses document.fonts.ready with a hard 3s timeout fallback so text always
+  // appears even if fonts fail to load.
+  useEffect(() => {
+    let cancelled = false;
+
+    const markReady = () => {
+      if (!cancelled) setFontsReady(true);
+    };
+
+    // Race: fonts.ready vs 3s timeout (whichever comes first)
+    const timeoutId = setTimeout(markReady, 3000);
+
+    if (document.fonts?.ready) {
+      document.fonts.ready.then(() => {
+        // Extra rAF after fonts.ready to ensure browser has reflowed with new metrics
+        requestAnimationFrame(() => {
+          requestAnimationFrame(markReady);
+        });
+      });
+    } else {
+      // No font loading API — use two rAFs as fallback
+      requestAnimationFrame(() => {
+        requestAnimationFrame(markReady);
+      });
+    }
+
+    return () => {
+      cancelled = true;
+      clearTimeout(timeoutId);
+      setFontsReady(false);
+    };
+  }, []);
+
+  // Split text into lines AFTER fonts have loaded
   useLayoutEffect(() => {
+    if (!fontsReady) return;
     const el = wrapperRef.current;
     if (!el) return;
 
-    // Set initial opacity to prevent flash
-    gsap.set(el, { opacity: 1, force3D: true });
+    // Revert any previous split (StrictMode double-invoke safety)
+    if (splitRef.current) {
+      splitRef.current.split.revert();
+      splitRef.current = null;
+    }
 
     const split = new SplitType(el as HTMLElement, { types: 'lines' });
     const lines = split.lines;
 
-    if (!lines || lines.length === 0) return;
+    if (!lines || lines.length === 0) {
+      gsap.set(el, { visibility: 'visible' });
+      return;
+    }
 
     splitRef.current = { split, lines: Array.from(lines) };
-    // Set lines to hidden state immediately — prevents any visible jump
     gsap.set(lines, { opacity: 0, y: yFrom, force3D: true });
+    gsap.set(el, { visibility: 'visible' });
 
     return () => {
       split.revert();
       splitRef.current = null;
     };
-  }, [yFrom]);
+  }, [fontsReady, yFrom]);
 
-  // Start line-by-line animation when startAnimation becomes true
+  // Start line-by-line animation when startAnimation becomes true.
+  // Also depends on fontsReady so if startAnimation was already true
+  // before fonts loaded (e.g. hover mount), the animation fires once
+  // the split is populated.
   useEffect(() => {
     if (!startAnimation || !splitRef.current) return;
 
@@ -74,23 +121,24 @@ export default function LineByLineText({
       delay,
       force3D: true,
       onComplete: () => {
-        // Revert SplitType BEFORE calling onComplete — this restores the
-        // natural DOM (no split wrapper divs) so the text reflows cleanly
-        // instead of staying in fixed-width line divs that look distorted.
+        // Revert SplitType — restores natural DOM so text reflows cleanly
         gsap.set(lines, { clearProps: 'all' });
         split.revert();
         splitRef.current = null;
         onComplete?.();
       },
     });
-  }, [startAnimation, duration, stagger, delay, onComplete]);
+  }, [startAnimation, fontsReady, duration, stagger, delay, onComplete]);
 
   return (
-    <Wrapper 
-      ref={wrapperRef as any} 
-      className={className ?? undefined} 
-      style={{ 
+    <Wrapper
+      ref={wrapperRef as any}
+      className={className ?? undefined}
+      style={{
         overflow: 'hidden',
+        // Hidden until fonts are loaded and SplitType has run —
+        // prevents unsplit text from flashing with wrong line breaks.
+        visibility: fontsReady ? undefined : 'hidden',
         willChange: startAnimation ? 'transform, opacity' : 'auto',
       }}
     >
