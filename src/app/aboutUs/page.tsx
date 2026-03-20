@@ -27,7 +27,7 @@ import { div } from "three/src/nodes/TSL.js";
 import AchievementsSession from "../sessions/AchievementsSession";
 import { achievements } from "../Data/achievements";
 import Lottie from "lottie-react";
-import fullLoaderAnimation from "../../public/aboutAssets/fullLoader.json";
+
 import AutoplayVideo from "../components/AutoplayVideo";
 
 gsap.registerPlugin(ScrollTrigger);
