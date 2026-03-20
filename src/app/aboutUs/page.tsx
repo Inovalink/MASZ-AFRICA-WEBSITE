@@ -317,7 +317,6 @@ function OurStorySection({
     <div
       ref={sectionRef}
       className="desctiption-text mx-[21] lg:mx-[24] xl:mx-[120] min-[1920px]:mx-[200]!"
-      style={{ contain: "layout style paint" }}
     >
       <div className="flex flex-col lg:flex-row gap-[40px] lg:gap-[80px] items-start lg:items-center">
         <div className="lg:w-1/2 ">
@@ -330,7 +329,6 @@ function OurStorySection({
           {!lineByLineComplete ? (
             <div
               className="flex flex-col  relative"
-              style={{ contain: "layout style paint" }}
             >
               <LineByLineText
                 duration={0.13}
@@ -346,12 +344,10 @@ function OurStorySection({
           ) : (
             <div
               className="flex flex-col  relative"
-              style={{ contain: "layout style paint" }}
             >
               {/* Text with AnimationCopy overlay */}
               <div
                 className="relative  overflow-hidden"
-                style={{ contain: "layout style paint" }}
               >
                 <div
                   className="main-text-description text-md-medium lg:text-xl-medium lg:mt-[10] lg:leading-8 lg:tracking-tight text-[#777777]"
