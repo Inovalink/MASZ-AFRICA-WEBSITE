@@ -23,6 +23,10 @@ export interface LineByLineTextProps {
   as?: 'div' | 'p' | 'span';
   /** If true, keep SplitType wrappers after animation completes (useful for hover text that stays mounted). */
   keepSplit?: boolean;
+  /** If true, defer SplitType splitting until startAnimation becomes true.
+   *  Use for text inside ScrollReveal where the element is off-screen at mount
+   *  and font metrics may not be accurate until it's visible. */
+  deferSplit?: boolean;
 }
 
 export default function LineByLineText({
@@ -36,6 +40,7 @@ export default function LineByLineText({
   yFrom = 28,
   as: Wrapper = 'div',
   keepSplit = false,
+  deferSplit = false,
 }: LineByLineTextProps) {
   const wrapperRef = useRef<HTMLDivElement | HTMLParagraphElement | HTMLSpanElement>(null);
   const splitRef = useRef<{ split: SplitType; lines: Element[] } | null>(null);
@@ -77,9 +82,13 @@ export default function LineByLineText({
     };
   }, []);
 
-  // Split text into lines AFTER fonts have loaded
+  // Split text into lines AFTER fonts have loaded.
+  // When deferSplit is true, also wait for startAnimation so the element is
+  // on-screen and font metrics are accurate.
+  const readyToSplit = fontsReady && (!deferSplit || startAnimation);
+
   useLayoutEffect(() => {
-    if (!fontsReady) return;
+    if (!readyToSplit) return;
     const el = wrapperRef.current;
     if (!el) return;
 
@@ -98,6 +107,16 @@ export default function LineByLineText({
     }
 
     splitRef.current = { split, lines: Array.from(lines) };
+
+    // Force line divs to full width — SplitType sets inline pixel widths based
+    // on measured content, which can be slightly off in production (subpixel
+    // rendering, fractional container widths). Full-width divs prevent distortion.
+    lines.forEach((line) => {
+      const el = line as HTMLElement;
+      el.style.width = '100%';
+      el.style.display = 'block';
+    });
+
     gsap.set(lines, { opacity: 0, y: yFrom, force3D: true });
     gsap.set(el, { visibility: 'visible' });
 
@@ -105,7 +124,7 @@ export default function LineByLineText({
       split.revert();
       splitRef.current = null;
     };
-  }, [fontsReady, yFrom]);
+  }, [readyToSplit, yFrom]);
 
   // Start line-by-line animation when startAnimation becomes true.
   // Also depends on fontsReady so if startAnimation was already true
@@ -134,7 +153,7 @@ export default function LineByLineText({
         onComplete?.();
       },
     });
-  }, [startAnimation, fontsReady, duration, stagger, delay, onComplete]);
+  }, [startAnimation, readyToSplit, duration, stagger, delay, onComplete]);
 
   return (
     <Wrapper
@@ -144,7 +163,7 @@ export default function LineByLineText({
         overflow: 'hidden',
         // Hidden until fonts are loaded and SplitType has run —
         // prevents unsplit text from flashing with wrong line breaks.
-        visibility: fontsReady ? undefined : 'hidden',
+        visibility: readyToSplit ? undefined : 'hidden',
         willChange: startAnimation ? 'transform, opacity' : 'auto',
       }}
     >

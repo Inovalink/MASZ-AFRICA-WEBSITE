@@ -335,6 +335,7 @@ function OurStorySection({
                 stagger={0.07}
                 delay={0}
                 startAnimation={startBodyAnimation}
+                deferSplit
                 onComplete={() => setLineByLineComplete(true)}
                 className="main-text-description  text-md-medium lg:text-xl-medium lg:mt-[10] lg:leading-8 lg:tracking-tight text-[#777777]"
               >
