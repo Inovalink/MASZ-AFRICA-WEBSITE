@@ -552,12 +552,11 @@ function AboutUSPage() {
           </div>
         </ScrollReveal>
 
-        {/* conpany-description-section */}
+        {/* conpany-description-section — no scale to prevent SplitType measuring at wrong width */}
         <ScrollReveal
           direction="up"
           duration={0.4}
           start="top 90%"
-          scale
           once
           onRevealNearlyComplete={() => setOurStoryRevealNearlyComplete(true)}
         >
