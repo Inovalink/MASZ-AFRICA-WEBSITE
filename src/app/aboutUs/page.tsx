@@ -13,12 +13,22 @@ import ParallaxAnimation from "../animations/ParallaxAnimation";
 import AnimatedCardsContainer from "../animations/AnimatedCardsContainer";
 import dynamic from "next/dynamic";
 import Image from "next/image";
-import { useState, useRef, useEffect, useLayoutEffect, memo, useCallback } from "react";
+import {
+  useState,
+  useRef,
+  useEffect,
+  useLayoutEffect,
+  memo,
+  useCallback,
+} from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/dist/ScrollTrigger";
 import { div } from "three/src/nodes/TSL.js";
 import AchievementsSession from "../sessions/AchievementsSession";
 import { achievements } from "../Data/achievements";
+import Lottie from "lottie-react";
+import fullLoaderAnimation from "../../public/aboutAssets/fullLoader.json";
+import AutoplayVideo from "../components/AutoplayVideo";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -75,7 +85,7 @@ const valueCards: CoreValue[] = [
 
 // achievements data moved to src/app/data/achievements.ts to avoid circular dependency
 
-const OUR_STORY_TEXT = (
+const  OUR_STORY_TEXT = (
   <>
     MASZ-AFRICA Ltd is a Ghana-based private limited liability company that
     provides high-quality mining consumables, engineering support, and
@@ -147,7 +157,6 @@ const METRICS = [
 
 const MemoAchievementsSession = memo(AchievementsSession);
 
-
 function OurStorySection({
   startTextAnimation = false,
 }: {
@@ -157,6 +166,7 @@ function OurStorySection({
   const [showAnimationCopy, setShowAnimationCopy] = useState(false);
   const [startBodyAnimation, setStartBodyAnimation] = useState(false);
   const [startMetricsAnimation, setStartMetricsAnimation] = useState(false);
+  const [lottieData, setLottieData] = useState<any>(null);
   const sectionRef = useRef<HTMLDivElement>(null);
   const overlayRef1 = useRef<HTMLDivElement>(null);
   const overlayRef2 = useRef<HTMLDivElement>(null);
@@ -167,7 +177,14 @@ function OurStorySection({
     timeoutId: ReturnType<typeof setTimeout>;
   } | null>(null);
 
-  // ✅ FIX 1: useLayoutEffect now uses overlayRef1 and overlayRef2
+  // Load lottie animation data
+  useEffect(() => {
+    fetch("/aboutAssets/fullLoader.json")
+      .then((res) => res.json())
+      .then(setLottieData)
+      .catch(() => {});
+  }, []);
+
   useLayoutEffect(() => {
     const section = sectionRef.current;
     if (!section) return;
@@ -185,7 +202,6 @@ function OurStorySection({
     });
   }, []);
 
-  // Handle hash navigation with Lenis
   useEffect(() => {
     const hash = window.location.hash;
     if (hash === "#core-values") {
@@ -202,20 +218,17 @@ function OurStorySection({
     }
   }, []);
 
-  // Start body animation when scroll reveal triggers
   useEffect(() => {
     if (startTextAnimation) {
       setStartBodyAnimation(true);
     }
   }, [startTextAnimation]);
 
-  // When body line-by-line completes, start metrics animation
   useEffect(() => {
     if (!lineByLineComplete) return;
     setStartMetricsAnimation(true);
   }, [lineByLineComplete]);
 
-  // Only run AnimationCopy on second scroll down from top
   useEffect(() => {
     const section = sectionRef.current;
     if (!section) return;
@@ -247,7 +260,6 @@ function OurStorySection({
         hasReturnedToTopRef.current = true;
       }
 
-      // ✅ FIX 2: runCopy now fades in both overlayRef1 and overlayRef2
       if (justLeftTop && hasReturnedToTopRef.current && !showAnimationCopy) {
         clearPending();
         const runCopy = () => {
@@ -307,76 +319,108 @@ function OurStorySection({
       className="desctiption-text mx-[21] lg:mx-[24] xl:mx-[120] min-[1920px]:mx-[200]!"
       style={{ contain: "layout style paint" }}
     >
-      <Tag text="our story" className="my-[40]" />
-      {/* Phase 1: line-by-line; Phase 2: static text; Phase 3: AnimationCopy overlay (spacer keeps layout, no jump) */}
-      {!lineByLineComplete ? (
-        <div
-          className="flex flex-col lg:flex-row  gap-8  lg:gap-[50px] relative"
-          style={{ contain: "layout style paint" }}
-        >
-          <LineByLineText
-            duration={0.13}
-            stagger={0.07}
-            delay={0}
-            startAnimation={startBodyAnimation}
-            onComplete={() => setLineByLineComplete(true)}
-            className="main-text-description lg:w-full text-md-medium   lg:text-xl-medium lg:mt-[10] lg:leading-8 lg:tracking-tight text-[#777777]"
-          >
-            {OUR_STORY_TEXT}
-          </LineByLineText>
-         
-        </div>
-      ) : (
-        <div
-          className="flex flex-col lg:flex-row gap-8  lg:gap-[50px] relative"
-          style={{ contain: "layout style paint" }}
-        >
-          {/* 1 */}
-          <div
-            className="relative lg:w-full overflow-hidden"
-            style={{ contain: "layout style paint" }}
-          >
-            {/* Spacer: always in DOM, holds height; hidden when overlay is shown so layout never shifts */}
+      <div className="flex flex-col lg:flex-row gap-[40px] lg:gap-[80px] items-start lg:items-center">
+        <div className="lg:w-1/2 ">
+          {/* Tag + Lottie: flex row on desktop */}
+          <div className=" my-[40]">
+            <Tag text="our story" />
+          </div>
+
+          {/* Text + Lottie: flex row — text left, lottie right on desktop */}
+          {!lineByLineComplete ? (
             <div
-              className="main-text-description text-md-medium lg:text-xl-medium lg:mt-[10] lg:leading-8 lg:tracking-tight text-[#777777]"
-              style={
-                showAnimationCopy
-                  ? { visibility: "hidden", pointerEvents: "none" }
-                  : undefined
-              }
-              aria-hidden={showAnimationCopy}
+              className="flex flex-col  relative"
+              style={{ contain: "layout style paint" }}
             >
-              {OUR_STORY_TEXT}
+              <LineByLineText
+                duration={0.13}
+                stagger={0.07}
+                delay={0}
+                startAnimation={startBodyAnimation}
+                onComplete={() => setLineByLineComplete(true)}
+                className="main-text-description  text-md-medium lg:text-xl-medium lg:mt-[10] lg:leading-8 lg:tracking-tight text-[#777777]"
+              >
+                {OUR_STORY_TEXT}
+              </LineByLineText>
             </div>
-            {/* Pre-render AnimationCopy but keep it completely hidden until ready — prevents mount-time layout shift */}
+          ) : (
             <div
-              ref={overlayRef1}
-              className="absolute top-0 left-0 right-0"
-              style={{
-                opacity: 0,
-                visibility: "hidden",
-                pointerEvents: "none",
-                contain: "layout style paint",
-                isolation: "isolate",
-              }}
-              aria-hidden={true}
+              className="flex flex-col  relative"
+              style={{ contain: "layout style paint" }}
             >
-              <AnimationCopy>
-                <div className="main-text-description text-[#777777] text-md-medium lg:text-xl-medium lg:mt-[10] lg:leading-8 lg:tracking-tight">
+              {/* Text with AnimationCopy overlay */}
+              <div
+                className="relative  overflow-hidden"
+                style={{ contain: "layout style paint" }}
+              >
+                <div
+                  className="main-text-description text-md-medium lg:text-xl-medium lg:mt-[10] lg:leading-8 lg:tracking-tight text-[#777777]"
+                  style={
+                    showAnimationCopy
+                      ? { visibility: "hidden", pointerEvents: "none" }
+                      : undefined
+                  }
+                  aria-hidden={showAnimationCopy}
+                >
                   {OUR_STORY_TEXT}
                 </div>
-              </AnimationCopy>
+                <div
+                  ref={overlayRef1}
+                  className="absolute top-0 left-0 right-0"
+                  style={{
+                    opacity: 0,
+                    visibility: "hidden",
+                    pointerEvents: "none",
+                    contain: "layout style paint",
+                    isolation: "isolate",
+                  }}
+                  aria-hidden={true}
+                >
+                  <AnimationCopy>
+                    <div className="main-text-description text-[#777777] text-md-medium lg:text-xl-medium lg:mt-[10] lg:leading-8 lg:tracking-tight">
+                      {OUR_STORY_TEXT}
+                    </div>
+                  </AnimationCopy>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+        {/* Lottie — visible on desktop beside text */}
+        {lottieData && (
+          <div className="hidden lg:flex bg-white lg:w-1/2 items-center justify-center">
+            <div className="w-[280px] h-[205px]">
+              <Lottie
+                animationData={lottieData}
+                loop
+                autoplay
+                style={{ width: "100%", height: "100%" }}
+              />
             </div>
           </div>
-         
-        </div>
-      )}
+        )}
+
+        {/* Lottie — visible on mobile below text */}
+        {lottieData && (
+          <div className="lg:hidden flex w-full items-center justify-center">
+            <div className="w-[200px] h-[147px]">
+              <Lottie
+                animationData={lottieData}
+                loop
+                autoplay
+                style={{ width: "100%", height: "100%" }}
+              />
+            </div>
+          </div>
+        )}
+      </div>
+
       {/* Metrics Cards Animation */}
       <MetricsCardAnimation
         cardClassName=""
         metrics={METRICS}
-        startAnimation={startMetricsAnimation}        
-        className="my-[50px]  bg-[#016BF2]! lg:gap-4! py-[31px] px-[36px] gap-4! flex flex-col md:grid md:grid-cols-2 xl:grid-cols-4 mt-[50]"
+        startAnimation={startMetricsAnimation}
+        className="my-[50px] bg-[#016BF2]! lg:gap-4! py-[31px] px-[36px] gap-4! flex flex-col md:grid md:grid-cols-2 xl:grid-cols-4 mt-[50]"
       />
     </div>
   );
@@ -449,7 +493,7 @@ function AboutUSPage() {
     useState(false);
   const [missionRevealNearlyComplete, setMissionRevealNearlyComplete] =
     useState(false);
-    // (achievements state removed — AchievementsSession now self-triggers)
+  // (achievements state removed — AchievementsSession now self-triggers)
 
   // Make TiltCard client-only
   const TiltCard = dynamic(() => import("../animations/TiltCard"), {
@@ -482,13 +526,13 @@ function AboutUSPage() {
 
             {/* TOP TEXT */}
             <div className="about-page-hero-text-container flex flex-col  items-start  mx-6  lg:mx-[24] xl:mx-[120px] min-[1920px]:mx-[200]! my-[40px] lg:my-[40px]">
-              <div className="page-header text-xl-semibold uppercase lg:text-4xl-bold">
+              <div className="page-header text-xl-semibold md:text-2xl-semibold uppercase lg:text-4xl-bold">
                 We are{" "}
                 <span className="subtext text-primary-default">
                   Masz-Africa
                 </span>
               </div>
-              <div className=" text-xs-medium text-default-body lg:text-2xl-medium">
+              <div className=" text-xs-medium text-default-body md:text-xl-medium lg:text-2xl-medium">
                 General Mining & procurement services limited
               </div>
             </div>
@@ -498,11 +542,8 @@ function AboutUSPage() {
               style={{ contain: "layout style paint", willChange: "transform" }}
               className="lg:mx-6 mx-6 xl:mx-[120] min-[1920px]:mx-[200]!"
             >
-              <ParallaxAnimation
-                imageSrc="/aboutAssets/Image-18.webp"
-                imageAlt="About us hero image"
-                height="lg"
-              />
+                     <AutoplayVideo src="/videos/Masz Brand Identity About.mp4" fullWidth={false} />
+
             </div>
             <div className="flex justify-between text-[13.4px] px-2 leading-[140%] text-[#777777] mx-6 mt-4.5 lg:mx-6 xl:mx-[120] min-[1920px]:mx-[200]!">
               <span>Concept 1.0</span>
@@ -552,8 +593,6 @@ function AboutUSPage() {
                 height="lg"
               />
 
-            
-
               {/* Text content */}
               <div
                 className="absolute bg-[#FFFFFF05] max-w-[387px] lg:max-w-full  backdrop-blur-[5px] bottom-0 left-0 right-0 pl-[24px] pr-[28px] pb-[30px] pt-[20px] xl:px-[120px] min-[1920px]:px-[200]!  lg:pb-[67px] lg:pt-[52px] flex items-end justify-between"
@@ -564,7 +603,7 @@ function AboutUSPage() {
                   <div className="mb-[13px] lg:mb-[32px]">
                     <div className="inline-flex items-center justify-center w-[42px] h-[38px] lg:w-[95px] lg:h-[85px] bg-[#016BF2]">
                       <svg
-                      className="w-[19px] h-[22px] lg:w-[42px] lg:h-[48px]" 
+                        className="w-[19px] h-[22px] lg:w-[42px] lg:h-[48px]"
                         xmlns="http://www.w3.org/2000/svg"
                         width="42"
                         height="48"
@@ -640,7 +679,7 @@ function AboutUSPage() {
               </div>
               <div className="image-container relative w-full lg:w-1/2 lg:h-auto">
                 <TiltCard
-                className="h-[400px] lg:h-full"
+                  className="h-[400px] lg:h-full"
                   imageSrc="/aboutAssets/Image-7.webp"
                   title="Vision Image"
                 />
@@ -720,9 +759,9 @@ function AboutUSPage() {
           </div>
         </ScrollReveal>
 
-       {/* Achievements — uses pure CSS reveal + IntersectionObserver internally,
+        {/* Achievements — uses pure CSS reveal + IntersectionObserver internally,
             no ScrollReveal wrapper needed (avoids GSAP transform conflicts with timeline ScrollTrigger) */}
-               <MemoAchievementsSession />
+        <MemoAchievementsSession />
 
         {/* <div className="Team-members-section h-screen bg-[#f3f3f3]">
           <div className="team-member-section-main-content flex lg:flex-col lg:justify-center lg:items-center gap-40 lg:pt-[100]">
@@ -807,8 +846,6 @@ function AboutUSPage() {
             </div>
           </div>
         </div> */}
-
-      
 
         <ScrollReveal direction="up" duration={0.4} start="top 85%" scale once>
           <TeamMembersSection />

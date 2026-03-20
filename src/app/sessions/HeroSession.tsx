@@ -70,7 +70,7 @@ function HeroSession({ startTextAnimation = false }: HeroSessionProps) {
                   </span>
                 </>
               }
-              className=" my-[35]"
+              className=" mx-6 lg:mx-0 my-[35]"
             />
           </div>
         </div>
@@ -164,7 +164,7 @@ function HeroSession({ startTextAnimation = false }: HeroSessionProps) {
 
       {/* Full viewport hero video */}
       <div className="hero-video-wrapper mx-[21px] lg:mx-[24] xl:mx-[120px] min-[1920px]:mx-[200]!">
-        <AutoplayVideo src="/videos/homePageVid.mp4" fullWidth={false} />
+        <AutoplayVideo src="/videos/Masz Brand Identity compressed 1080p 2.mp4" fullWidth={false} />
       </div>
     </div>
   );

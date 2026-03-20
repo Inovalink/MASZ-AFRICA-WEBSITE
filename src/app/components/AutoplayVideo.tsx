@@ -74,7 +74,7 @@ function AutoplayVideo({ src, classname = '', fullWidth = true }: AutoplayVideoP
   return (
     <div
       ref={containerRef}
-      className={`relative h-[300px] lg:max-h-[840px] lg:h-full bg-[#0d0d0d] overflow-hidden flex items-center justify-center ${
+      className={`relative h-full lg:max-h-[840px] lg:h-full bg-[#0d0d0d] overflow-hidden flex items-center justify-center ${
         fullWidth ? 'w-screen' : 'w-full'
       } ${classname}`}
     >
