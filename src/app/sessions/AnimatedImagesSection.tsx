@@ -55,6 +55,7 @@ function GalleryImage({ src, alt, index, title, subtext }: GalleryImageProps) {
               <LineByLineText
                 key="hover-text"
                 startAnimation={true}
+                keepSplit={true}
                 className="text-sm lg:text-base font-medium capitalize tracking-wide text-white whitespace-pre-line"
                 duration={0.5}
                 stagger={0.08}

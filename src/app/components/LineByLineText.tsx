@@ -21,6 +21,8 @@ export interface LineByLineTextProps {
   yFrom?: number;
   /** Wrapper element. */
   as?: 'div' | 'p' | 'span';
+  /** If true, keep SplitType wrappers after animation completes (useful for hover text that stays mounted). */
+  keepSplit?: boolean;
 }
 
 export default function LineByLineText({
@@ -33,6 +35,7 @@ export default function LineByLineText({
   delay = 0.1,
   yFrom = 28,
   as: Wrapper = 'div',
+  keepSplit = false,
 }: LineByLineTextProps) {
   const wrapperRef = useRef<HTMLDivElement | HTMLParagraphElement | HTMLSpanElement>(null);
   const splitRef = useRef<{ split: SplitType; lines: Element[] } | null>(null);
@@ -121,10 +124,13 @@ export default function LineByLineText({
       delay,
       force3D: true,
       onComplete: () => {
-        // Revert SplitType — restores natural DOM so text reflows cleanly
-        gsap.set(lines, { clearProps: 'all' });
-        split.revert();
-        splitRef.current = null;
+        // Revert SplitType — restores natural DOM so text reflows cleanly.
+        // Skip revert if keepSplit is true (e.g. hover text that stays mounted).
+        if (!keepSplit) {
+          gsap.set(lines, { clearProps: 'all' });
+          split.revert();
+          splitRef.current = null;
+        }
         onComplete?.();
       },
     });
