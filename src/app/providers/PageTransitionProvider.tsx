@@ -197,7 +197,7 @@ export default function PageTransitionProvider({
             className="absolute inset-0 flex items-center justify-center z-10 pointer-events-none"
             style={{ opacity: 0 }}
           >
-            <div className="w-[220px] lg:w-[300px]">
+            <div className="w-[80px] md:w-[140px] lg:w-[300px]">
               <Lottie
                 animationData={lottieData}
                 loop={true}
