@@ -23,6 +23,7 @@ interface ServiceSessionProps {
 const serviceList = [
   {
     id: 1,
+    slug: "grinding-media",
     title: "Grinding media",
     subtext:
       "We offer complete gearbox diagnostics, repairs, and component replacements using OEM parts and experienced technicians. Our work helps restore equipment reliability and prevent costly downtime across crushers, mills, and conveyors.",
@@ -31,6 +32,7 @@ const serviceList = [
   },
   {
     id: 2,
+    slug: "activated-carbon",
     title: "Activated Carbon",
     subtext:
       "We offer complete gearbox diagnostics, repairs, and component replacements using OEM parts and experienced technicians. Our work helps restore equipment reliability and prevent costly downtime across crushers, mills, and conveyors.",
@@ -39,6 +41,7 @@ const serviceList = [
   },
   {
     id: 3,
+    slug: "metal-and-steel-pipes",
     title: "Metal and steel Pipes",
     subtext:
       "We offer complete gearbox diagnostics, repairs, and component replacements using OEM parts and experienced technicians. Our work helps restore equipment reliability and prevent costly downtime across crushers, mills, and conveyors.",
@@ -47,6 +50,7 @@ const serviceList = [
   },
   {
     id: 4,
+    slug: "gear-box-servicing-and-heavy-equipment-maintenance",
     title: "Gear Box servicing and Heavy Machine Maintenance",
     subtext:
       "We offer complete gearbox diagnostics, repairs, and component replacements using OEM parts and experienced technicians. Our work helps restore equipment reliability and prevent costly downtime across crushers, mills, and conveyors.",
@@ -79,7 +83,10 @@ function ServiceSession({ startTextAnimation = false }: ServiceSessionProps) {
             <span className="text-primary-default">services</span>
           </HeaderLineByLineAnimation>
 
-          <Link href="/services" className="hidden md:block shrink-0 ml-8 mr-[24]">
+          <Link
+            href="/services"
+            className="hidden md:block shrink-0 ml-8 mr-[24]"
+          >
             <Button
               label="ALL PRODUCTS & SERVICES"
               variant="primaryWhite"
@@ -129,7 +136,10 @@ function ServiceSession({ startTextAnimation = false }: ServiceSessionProps) {
                       {list.subtext}
                     </div>
                     <div className="lg:hidden flex items-center bg-white my-[20px] pr-[20px]">
-                      <Link href="/" className="uppercase text-sm-medium text-primary-default">
+                      <Link
+                        href={`/services/${list.slug}`}
+                        className="uppercase text-sm-medium text-primary-default"
+                      >
                         Learn More
                       </Link>
                       <MoveRight className="ml-2 text-blue-600" />
@@ -160,33 +170,28 @@ function ServiceSession({ startTextAnimation = false }: ServiceSessionProps) {
                 </div>
 
                 {/* Desktop "Learn More" button */}
-                <Button
-                  label="learn more"
-                  variant="primary"
-                  size="large"
-                  icon={
-                    <>
-                      <span className="lg:hidden">
-                        <MoveRight size={16} strokeWidth={2} />
-                      </span>
-                      <span className="hidden lg:inline-block">
-                        <MoveRight size={16} strokeWidth={3} />
-                      </span>
-                    </>
-                  }
-                  className="hidden lg:flex absolute right-0 inset-y-0 my-auto service-button"
-                />
+                {/* Desktop "Learn More" button */}
+{/* Desktop "Learn More" button */}
+<Button
+  href={`/services/${list.slug}`}
+  label="learn more"
+  variant="primary"
+  size="large"
+  className="hidden lg:flex absolute right-0 inset-y-0 my-auto service-button"
+  icon={<MoveRight size={16} strokeWidth={3} />}
+/>
               </li>
             ))}
           </ul>
- <Link href="/services">
-          <Button
-            label="Explore our services"
-            variant="primary"
-            size="large"
-            icon={<MoveRight size={16} />}
-            className="ml-[22] my-[35] lg:my-[100]"
-          /></Link>
+          <Link href="/services">
+            <Button
+              label="Explore our services"
+              variant="primary"
+              size="large"
+              icon={<MoveRight size={16} />}
+              className="ml-[22] my-[35] lg:my-[100]"
+            />
+          </Link>
         </AnimatedListContainer>
       </div>
     </section>

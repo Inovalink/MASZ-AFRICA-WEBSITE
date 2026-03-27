@@ -189,17 +189,54 @@ export default function ContactPage() {
     message: "",
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
+  const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error' | 'validation'>('idle');
   const [submitMessage, setSubmitMessage] = useState('');
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
+
+  const validateForm = (): boolean => {
+    const errors: Record<string, string> = {};
+
+    if (!formData.fullName.trim()) {
+      errors.fullName = 'Full name is required.';
+    } else if (formData.fullName.trim().length < 2) {
+      errors.fullName = 'Name must be at least 2 characters.';
+    }
+
+    if (!formData.email.trim()) {
+      errors.email = 'Email address is required.';
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email.trim())) {
+      errors.email = 'Please enter a valid email address.';
+    }
+
+    if (formData.phone && !/^[\d\s()\-]{6,20}$/.test(formData.phone.trim())) {
+      errors.phone = 'Please enter a valid phone number.';
+    }
+
+    if (!formData.message.trim()) {
+      errors.message = 'Message is required.';
+    } else if (formData.message.trim().length < 10) {
+      errors.message = 'Message must be at least 10 characters.';
+    }
+
+    setFieldErrors(errors);
+
+    if (Object.keys(errors).length > 0) {
+      setSubmitStatus('validation');
+      setSubmitMessage('Please fix the highlighted fields.');
+      return false;
+    }
+
+    return true;
+  };
 
   const handleSubmit = async () => {
-    if (!formData.fullName || !formData.email || !formData.message) {
-      setSubmitStatus('error');
-      setSubmitMessage('Please fill in your name, email, and message.');
-      return;
-    }
-    setIsSubmitting(true);
     setSubmitStatus('idle');
+    setSubmitMessage('');
+    setFieldErrors({});
+
+    if (!validateForm()) return;
+
+    setIsSubmitting(true);
     try {
       const phone = formData.phone ? `${selectedCountry?.dialCode ?? ''}${formData.phone}` : undefined;
       const res = await fetch(`${API_URL}/api/contact`, {
@@ -217,7 +254,7 @@ export default function ContactPage() {
       const json = await res.json();
       if (!res.ok) throw new Error(json.error?.message ?? 'Submission failed');
       setSubmitStatus('success');
-      setSubmitMessage(json.message ?? "Thank you! We'll get back to you within 24–48 hours.");
+      setSubmitMessage(json.message ?? "Thank you! We'll get back to you within 24\u201348 hours.");
       setFormData({ fullName: '', email: '', phone: '', subject: '', message: '' });
     } catch (err: unknown) {
       setSubmitStatus('error');
@@ -354,23 +391,29 @@ export default function ContactPage() {
 
             {/* Full Name */}
             <div className="input-group mb-[26px]">
-              <div className="flex items-center gap-2 border border-[#E0E0E0] px-[14px] lg:px-[22px] py-[12px] lg:py-[17px]">
+              <div className="flex items-center gap-2 border px-[14px] lg:px-[22px] py-[12px] lg:py-[17px] transition-colors duration-200"
+                  style={{ borderColor: fieldErrors.fullName ? '#EF4444' : '#E0E0E0' }}>
                 <IconUser size={18} className="text-[#777777] flex-shrink-0" />
                 <input
                   type="text"
                   placeholder="Full Name*"
                   value={formData.fullName}
-                  onChange={(e) =>
-                    setFormData({ ...formData, fullName: e.target.value })
-                  }
+                  onChange={(e) => {
+                    setFormData({ ...formData, fullName: e.target.value });
+                    if (fieldErrors.fullName) setFieldErrors((prev) => { const { fullName, ...rest } = prev; return rest; });
+                  }}
                   className="w-full text-sm-medium md:text-md-medium  lg:text-lg-medium text-default-body placeholder-[#CBCBCB] outline-none bg-transparent"
                 />
               </div>
+              {fieldErrors.fullName && (
+                <p className="text-[#EF4444] text-[12px] mt-[6px] ml-[2px]">{fieldErrors.fullName}</p>
+              )}
             </div>
             <div className="flex gap-[15px] flex-col xl:flex-row mb-[26px]">
               {/* Email */}
               <div className="input-group  flex-1">
-                <div className="flex items-center gap-2 border border-[#E0E0E0] px-[14px] lg:px-[22px] py-[12px] lg:py-[17px]">
+                <div className="flex items-center gap-2 border px-[14px] lg:px-[22px] py-[12px] lg:py-[17px] transition-colors duration-200"
+                    style={{ borderColor: fieldErrors.email ? '#EF4444' : '#E0E0E0' }}>
                   <IconMail
                     size={18}
                     className="text-[#777777] flex-shrink-0"
@@ -379,17 +422,22 @@ export default function ContactPage() {
                     type="email"
                     placeholder="Email*"
                     value={formData.email}
-                    onChange={(e) =>
-                      setFormData({ ...formData, email: e.target.value })
-                    }
+                    onChange={(e) => {
+                      setFormData({ ...formData, email: e.target.value });
+                      if (fieldErrors.email) setFieldErrors((prev) => { const { email, ...rest } = prev; return rest; });
+                    }}
                     className=" w-full text-sm-medium md:text-md-medium  lg:text-lg-medium text-default-body placeholder-[#CBCBCB] outline-none bg-transparent"
                   />
                 </div>
+                {fieldErrors.email && (
+                  <p className="text-[#EF4444] text-[12px] mt-[6px] ml-[2px]">{fieldErrors.email}</p>
+                )}
               </div>
 
               {/* Phone — with country code */}
               <div className="input-group flex-1">
-                <div className="flex items-center border py-[12px] lg:py-[17px] border-[#E0E0E0] overflow-visible relative">
+                <div className="flex items-center border py-[12px] lg:py-[17px] overflow-visible relative transition-colors duration-200"
+                    style={{ borderColor: fieldErrors.phone ? '#EF4444' : '#E0E0E0' }}>
                   <CountryCodeDropdown
                     value={selectedCountry}
                     onChange={setSelectedCountry}
@@ -398,12 +446,16 @@ export default function ContactPage() {
                     type="tel"
                     placeholder="Phone Number"
                     value={formData.phone}
-                    onChange={(e) =>
-                      setFormData({ ...formData, phone: e.target.value })
-                    }
+                    onChange={(e) => {
+                      setFormData({ ...formData, phone: e.target.value });
+                      if (fieldErrors.phone) setFieldErrors((prev) => { const { phone, ...rest } = prev; return rest; });
+                    }}
                     className="flex-1 pr-[12px] w-full text-sm-medium md:text-md-medium lg:text-lg-medium text-default-body placeholder-[#CBCBCB] outline-none bg-transparent"
                   />
                 </div>
+                {fieldErrors.phone && (
+                  <p className="text-[#EF4444] text-[12px] mt-[6px] ml-[2px]">{fieldErrors.phone}</p>
+                )}
               </div>
             </div>
 
@@ -480,15 +532,17 @@ export default function ContactPage() {
 
             {/* Message */}
             <div className="input-group  mb-[17px]">
-              <div className="border border-[#D5D7DA] px-[14px] py-[10px] ">
+              <div className="border px-[14px] py-[10px] transition-colors duration-200"
+                  style={{ borderColor: fieldErrors.message ? '#EF4444' : '#D5D7DA' }}>
                 <textarea
                   placeholder="Type your message..."
                   maxLength={300}
                   rows={5}
                   value={formData.message}
-                  onChange={(e) =>
-                    setFormData({ ...formData, message: e.target.value })
-                  }
+                  onChange={(e) => {
+                    setFormData({ ...formData, message: e.target.value });
+                    if (fieldErrors.message) setFieldErrors((prev) => { const { message, ...rest } = prev; return rest; });
+                  }}
                   className="w-full text-sm-medium md:text-md-medium lg:text-lg-medium text-default-body placeholder-[#CBCBCB] outline-none bg-transparent resize-none"
                 />
                 {/* Character hint bottom right */}
@@ -498,14 +552,10 @@ export default function ContactPage() {
                   </span>
                 </div>
               </div>
+              {fieldErrors.message && (
+                <p className="text-[#EF4444] text-[12px] mt-[6px] ml-[2px]">{fieldErrors.message}</p>
+              )}
             </div>
-
-            {/* Status message */}
-            {submitStatus !== 'idle' && (
-              <div className={`mb-[14px] px-[14px] py-[12px] text-sm-medium ${submitStatus === 'success' ? 'bg-green-50 text-green-700 border border-green-200' : 'bg-red-50 text-red-700 border border-red-200'}`}>
-                {submitMessage}
-              </div>
-            )}
 
             {/* Submit button */}
             <button
@@ -515,6 +565,23 @@ export default function ContactPage() {
             >
               {isSubmitting ? 'SENDING...' : 'SEND MESSAGE'}
             </button>
+
+            {/* Subtle status text below button */}
+            {submitStatus === 'success' && (
+              <p className="mt-[12px] text-[13px] text-[#059669] text-center">
+                ✓ {submitMessage}
+              </p>
+            )}
+            {submitStatus === 'error' && (
+              <p className="mt-[12px] text-[13px] text-[#DC2626] text-center">
+                {submitMessage}
+              </p>
+            )}
+            {submitStatus === 'validation' && (
+              <p className="mt-[12px] text-[13px] text-[#DC2626] text-center">
+                Please fix the errors above and try again.
+              </p>
+            )}
           </div>
         </div>
       </div>

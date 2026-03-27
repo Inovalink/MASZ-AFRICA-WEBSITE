@@ -182,6 +182,8 @@ const audioStreamRef = useRef<MediaStream | null>(null);
 const voiceLevelRef = useRef(0);
 const [voiceScale, setVoiceScale] = useState(1);
 const animFrameRef = useRef<number>(0);
+const ring1Ref = useRef<HTMLDivElement>(null);
+const ring2Ref = useRef<HTMLDivElement>(null);
 
 const startAudioAnalysis = useCallback(async () => {
   try {
@@ -229,6 +231,30 @@ const stopAudioAnalysis = useCallback(() => {
   audioStreamRef.current = null;
   setVoiceScale(1);
 }, []);
+
+
+// GSAP ripple animation for trigger button
+useEffect(() => {
+  if (isOpen) return;
+  const ring1 = ring1Ref.current;
+  const ring2 = ring2Ref.current;
+  if (!ring1 || !ring2) return;
+
+  const tl1 = gsap.timeline({ repeat: -1 });
+  tl1.fromTo(ring1,
+    { scale: 0.8, opacity: 0.6 },
+    { scale: 1.7, opacity: 0, duration: 1.8, ease: 'power2.out' }
+  );
+
+  const tl2 = gsap.timeline({ repeat: -1, delay: 0.7 });
+  tl2.fromTo(ring2,
+    { scale: 0.8, opacity: 0.4 },
+    { scale: 2.1, opacity: 0, duration: 2.2, ease: 'power2.out' }
+  );
+
+  return () => { tl1.kill(); tl2.kill(); };
+}, [isOpen]);
+
 
   const isMobile = () =>
     typeof window !== "undefined" &&
@@ -567,29 +593,30 @@ const stopAudioAnalysis = useCallback(() => {
         )}
         aria-label={isOpen ? "Close chat" : "Open chat"}
       >
-        {isOpen ? (
-          <div className="w-[42px] h-[42px] bg-[#016BF2] rounded-full flex items-center justify-center shadow-lg transition-transform duration-300 rotate-90 hover:bg-[#0150B6]">
-            <X className="w-5 h-5 text-white" />
-          </div>
-        ) : (
-          <div className="relative w-full h-full">
-            {/* Outer pulse ring */}
-            <div className="w-full h-full absolute rounded-full animate-pulse opacity-20">
-              <div className="w-full h-full rounded-full border border-[#016BF2]" />
-            </div>
-            {/* Middle pulse ring */}
-            <div
-              className="w-[52px] h-[52px] absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full animate-pulse opacity-40"
-              style={{ animationDelay: "0.3s" }}
-            >
-              <div className="w-full h-full rounded-full border border-[#016BF2]" />
-            </div>
-            {/* Center blue button */}
-            <div className="w-[42px] h-[42px] bg-[#016BF2] absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full flex items-center justify-center shadow-lg hover:bg-[#0150B6] transition-colors">
-              <MessageCircle className="w-5 h-5 text-white" />
-            </div>
-          </div>
-        )}
+       {isOpen ? (
+  <div className="w-[42px] h-[42px] bg-[#016BF2] rounded-full flex items-center justify-center shadow-lg transition-transform duration-300 rotate-90 hover:bg-[#0150B6]">
+    <X className="w-5 h-5 text-white" />
+  </div>
+) : (
+  <div className="relative w-full h-full flex items-center justify-center">
+    {/* GSAP ripple ring 1 */}
+    <div
+      ref={ring1Ref}
+      className="absolute rounded-full bg-[#016BF2]/40"
+      style={{ width: 42, height: 42 }}
+    />
+    {/* GSAP ripple ring 2 */}
+    <div
+      ref={ring2Ref}
+      className="absolute rounded-full bg-[#016BF2]/25"
+      style={{ width: 42, height: 42 }}
+    />
+    {/* Center blue button */}
+    <div className="relative z-10 w-[42px] h-[42px] bg-[#016BF2] rounded-full flex items-center justify-center shadow-lg hover:bg-[#0150B6] transition-colors">
+      <MessageCircle className="w-5 h-5 text-white" />
+    </div>
+  </div>
+)}
       </button>
 
       {/* ── Chat window ── */}

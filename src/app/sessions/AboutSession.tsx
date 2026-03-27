@@ -226,11 +226,12 @@ function AboutSession({ startTextAnimation = false }: AboutSessionProps) {
           </div>
 
           <Button
-            label="Explore our services"
+          href='/aboutUs'
+            label="Learn more"
             variant="primary"
             size="large"
             icon={<MoveRight size={16} />}
-            className="ml-[22] lg:ml-[0] my-[35] lg:mt-[65] lg:mb-0"
+            className="ml-[22] lg:ml-[0] hover:w-fit! my-[35] lg:mt-[65] lg:mb-0"
           />
         </div>
 

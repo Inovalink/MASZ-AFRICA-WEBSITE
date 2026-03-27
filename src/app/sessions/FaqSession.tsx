@@ -208,12 +208,16 @@ export default function FaqSession() {
               </LineByLineText>
             </div>
             <Button
+            href='/contactUs'
               label="Reach out to us"
               variant="primaryWhite"
               size="large"
-              icon={<MoveRight className='text-white group-hover:text-[#016BF2]!'  size={16} />}
+              iconClassName="lg:group-hover/btn:text-[#016BF2]! lg:text-white!"
+
+              icon={<MoveRight  size={16} />}
               className=" lg:bg-transparent! lg:border-white! text-white! hover:bg-white! hover:text-[#016BF2]! hover:w-fit! hover:border-transparent! transition-colors duration-300"
             />
+
           </div>
         </div>
 

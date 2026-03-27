@@ -24,13 +24,9 @@ function Footer() {
       title: "Services",
       path: "/services",
     },
+
     {
       id: 3,
-      title: "Careers",
-      path: "/careers",
-    },
-    {
-      id: 4,
       title: "Contact Us",
       path: "/contactUs",
     },
@@ -39,30 +35,55 @@ function Footer() {
   const addressObject = [
     {
       id: 1,
-      description: "admin@maszgh,com",
+      description: (
+        <Link
+          className="hover:text-[#016BF2] focus:text-[#016BF2]"
+          href="mailto:admin@maszgh.com"
+        >
+          admin@maszgh.com
+        </Link>
+      ),
       icon: <Mail size={16} />,
     },
     {
       id: 2,
       description: (
-        <>
-          +233 24 416 3975 <br /> +233 54 095 3033
-        </>
+        <div className="flex flex-col">
+          <Link
+            className="hover:text-[#016BF2] focus:text-[#016BF2]"
+            href="tel:+233244163975"
+          >
+            +233 24 416 3975
+          </Link>
+          <Link
+            className="hover:text-[#016BF2] focus:text-[#016BF2]"
+            href="tel:+233540953033"
+          >
+            +233 54 095 3033
+          </Link>
+        </div>
       ),
+
       icon: <Phone size={16} />,
     },
     {
       id: 3,
-      description: "P.O. Box 729, Tarkwa,Western Region, Ghana",
+      description: (
+        <Link className="hover:text-[#016BF2] focus:text-[#016BF2]" href="/">
+          P.O. Box 729, Tarkwa,Western Region, Ghana
+        </Link>
+      ),
+
       icon: <Inbox size={16} />,
     },
     {
       id: 4,
       description: (
-        <>
+        <Link className="hover:text-[#016BF2] focus:text-[#016BF2]" href="/">
           House #17, Breeze Street, <br /> GT 353-5495, Community 16, Tema
-        </>
+        </Link>
       ),
+
       icon: <MapPin size={16} />,
     },
   ];

@@ -2,22 +2,25 @@
 
 import React from 'react';
 import clsx from 'clsx';
+import Link from 'next/link';
 
 interface ButtonProps {
   label: string;
-  onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
+  href?: string;                // when provided, renders as <Link> (uses page transition)
+  onClick?: (event: React.MouseEvent<HTMLButtonElement | HTMLAnchorElement>) => void;
   variant?: 'primary' | 'primaryWhite' | 'secondary' | 'outline';
   size?: 'small' | 'medium' | 'large' | 'extraLarge';
   disabled?: boolean;
   icon?: React.ReactNode;
   className?: string;
-  iconClassName?: string; // extra classes on the icon span, e.g. 'group-hover/card:text-blue-500'
-  alwaysExpanded?: boolean; // skip the collapsed pill state, label always visible
+  iconClassName?: string;
+  alwaysExpanded?: boolean;
   type?: 'button' | 'submit' | 'reset';
 }
 
 const Button: React.FC<ButtonProps> = ({
   label,
+  href,
   onClick,
   variant = 'primary',
   size = 'medium',
@@ -48,24 +51,17 @@ const Button: React.FC<ButtonProps> = ({
       'px-4 py-3 lg:px-6 lg:py-6 text-base w-[160px] h-[60px] lg:w-[100px] lg:h-[100px]',
   };
 
-  return (
-    <button
-      type={type}
-      onClick={onClick}
-      disabled={disabled}
-      className={clsx(
-        baseClasses,
-        variantClasses[variant],
-        sizeClasses[size],
+  const combinedClassName = clsx(
+    baseClasses,
+    variantClasses[variant],
+    sizeClasses[size],
+    !alwaysExpanded && 'lg:w-[48px] lg:h-[48px] lg:px-0 lg:hover:w-auto lg:hover:px-6',
+    disabled && 'opacity-50 cursor-not-allowed',
+    className
+  );
 
-        // Desktop animation behavior — skip collapsed pill if alwaysExpanded
-        !alwaysExpanded && 'lg:w-[48px] lg:h-[48px] lg:px-0 lg:hover:w-auto lg:hover:px-6',
-
-        disabled && 'opacity-50 cursor-not-allowed',
-        className
-      )}
-    >
-      {/* Label */}
+  const content = (
+    <>
       <span
         className={clsx(
           'whitespace-nowrap transition-all duration-[600ms] ease-[cubic-bezier(0.25,0.8,0.25,1)]',
@@ -75,8 +71,6 @@ const Button: React.FC<ButtonProps> = ({
       >
         {label}
       </span>
-
-      {/* Icon */}
       {icon && (
         <span
           className={clsx(
@@ -89,6 +83,32 @@ const Button: React.FC<ButtonProps> = ({
           {icon}
         </span>
       )}
+    </>
+  );
+
+  // Render as Next.js Link when href is provided — triggers page transition
+  if (href) {
+    return (
+      <Link
+        href={href}
+        onClick={onClick as React.MouseEventHandler<HTMLAnchorElement>}
+        className={combinedClassName}
+        aria-disabled={disabled}
+      >
+        {content}
+      </Link>
+    );
+  }
+
+  // Otherwise render as button
+  return (
+    <button
+      type={type}
+      onClick={onClick as React.MouseEventHandler<HTMLButtonElement>}
+      disabled={disabled}
+      className={combinedClassName}
+    >
+      {content}
     </button>
   );
 };

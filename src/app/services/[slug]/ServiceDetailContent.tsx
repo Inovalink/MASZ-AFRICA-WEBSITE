@@ -39,6 +39,7 @@ export default function ServiceDetailContent({
   const benefitsTextRef = useRef<HTMLDivElement>(null);
   const benefitsBannerRef = useRef<HTMLDivElement>(null);
   const [startBannerText, setStartBannerText] = useState(false);
+  const [activeBenefitId, setActiveBenefitId] = useState<string | null>(null);
 
   useEffect(() => {
     const el = benefitsBannerRef.current;
@@ -213,7 +214,7 @@ export default function ServiceDetailContent({
                 {/* Logo mark */}
                 <div className=" mb-[21] ">
                   <svg
-                  className="w-[80px] h-[41px] md:w-[90px] md:h-[49px] lg:w-[115px] lg:h-[62px]"
+                    className="w-[80px] h-[41px] md:w-[90px] md:h-[49px] lg:w-[115px] lg:h-[62px]"
                     width="115"
                     height="62"
                     viewBox="0 0 115 62"
@@ -330,28 +331,47 @@ export default function ServiceDetailContent({
               <div className="benefits-main-content flex">
                 <div className="left-side    xl:mx-[120]  min-[1920px]:mx-[200]!">
                   <div className="benefits-list grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 items-stretch justify-center lg:flex-start gap-6 lg:flex-wrap">
-                    {service.benefits.map((item, index) => (
-                      <div
-                        key={item.id}
-                        className="item-list group relative overflow-hidden bg-white flex flex-col 
-              max-w-[400px] lg:max-w-full  lg:min-h-[350px] items-center  
-              lg:gap-10 px-[30px] py-[40px] cursor-pointer"
-                      >
-                        <span className="liquid-bg absolute inset-0 -z-0" />
-                        <div className="item-icon relative z-10 bg-[#016BF2] text-white group-hover:text-[#016BF2] p-[10px] transition-colors duration-500 group-hover:bg-white">
-                          {/* <Square3Stack3DIcon className="h-8 lg:w-auto text-primary-default transition-colors duration-500 group-hover:text-blue-600" /> */}
-                          {item.icon}
-                        </div>
-                        <div className="mt-2 item-text relative z-10 text-center flex flex-col items-center justify-center transition-colors duration-500 group-hover:text-white">
-                          <div className="title  capitalize mb-2 lg:mb-0 lg:min-h-[50] text-md-medium md:text-lg-medium lg:text-xl-medium">
-                            {item.title}
+                    {service.benefits.map((item, index) => {
+                      const isActive = activeBenefitId === item.id;
+                      return (
+                        <div
+                          key={item.id}
+                          onClick={() => setActiveBenefitId((prev) => prev === item.id ? null : item.id)}
+                          className={[
+                            "item-list group relative overflow-hidden bg-white flex flex-col",
+                            "max-w-[400px] lg:max-w-full lg:min-h-[350px] items-center",
+                            "lg:gap-10 px-[30px] py-[40px] cursor-pointer",
+                            isActive ? "benefit-active" : "",
+                          ].join(" ")}
+                        >
+                          <span className="liquid-bg absolute inset-0 -z-0" />
+                          <div
+                            className={[
+                              "item-icon relative z-10 p-[10px] transition-colors duration-500",
+                              "bg-[#016BF2] text-white",
+                              "group-hover:text-[#016BF2] group-hover:bg-white",
+                              isActive ? "!text-[#016BF2] !bg-white" : "",
+                            ].join(" ")}
+                          >
+                            {item.icon}
                           </div>
-                          <div className="subtext lg:mt-[20px] text-xs-regular md:text-sm-regular max-w-xs md:max-w-full  lg:text-md-regular">
-                            {item.description}
+                          <div
+                            className={[
+                              "mt-2 item-text relative z-10 text-center flex flex-col items-center justify-center transition-colors duration-500",
+                              "group-hover:text-white",
+                              isActive ? "!text-white" : "",
+                            ].join(" ")}
+                          >
+                            <div className="title capitalize mb-2 lg:mb-0 lg:min-h-[50] text-md-medium md:text-lg-medium lg:text-xl-medium">
+                              {item.title}
+                            </div>
+                            <div className="subtext lg:mt-[20px] text-xs-regular md:text-sm-regular max-w-xs md:max-w-full lg:text-md-regular">
+                              {item.description}
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    ))}
+                      );
+                    })}
                   </div>
                 </div>
               </div>

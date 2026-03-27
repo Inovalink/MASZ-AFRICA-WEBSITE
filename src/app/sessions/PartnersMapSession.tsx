@@ -1,71 +1,32 @@
 "use client";
 
-import React, { useState, memo, useEffect, useRef } from "react";
+import React, { useState, memo, useEffect, useRef, useCallback } from "react";
 import Image from "next/image";
 
 // ─── Shared partner data — single source of truth for both map + marquee ─────
-
+// svgX / svgY are coordinates inside the SVG viewBox (0 0 1010 666),
+// derived from each country's SVG path centroid + city-level offset.
 export const PARTNERS = [
-  {
-    id: 1,
-    name: "Aglogold Ashanti",
-    address: "House #17, Breeze Street, GT 353-5495, Community 16, Tema",
-    lat: 6.7,
-    lng: -1.5,
-    logo: "",
-  },
-  {
-    id: 2,
-    name: "NIO",
-    address: "88 Supply District, Shanghai, China",
-    lat: 31.2,
-    lng: 121.4,
-    logo: "/partnerLogos/Partner-2.svg",
-  },
-  {
-    id: 3,
-    name: "adidas",
-    address: "42 Industrial Way, London, United Kingdom",
-    lat: 51.5,
-    lng: -0.1,
-    logo: "/partnerLogos/Partner-1.svg",
-  },
-  {
-    id: 4,
-    name: "DIADORA",
-    address: "14 Mine Road, Johannesburg, South Africa",
-    lat: -26.2,
-    lng: 28.0,
-    logo: "",
-  },
-  {
-    id: 5,
-    name: "PUMA",
-    address: "500 Commerce Blvd, Houston, TX",
-    lat: 29.7,
-    lng: -95.3,
-    logo: "",
-  },
-  {
-    id: 6,
-    name: "NIKE",
-    address: "25 Mining Ave, Perth, Australia",
-    lat: -31.9,
-    lng: 115.8,
-    logo: "",
-  },
+  { id: 1,  name: "AngloGold Ashanti Ghana",       address: "Community 16, Tema, Ghana",                         svgX: 469, svgY: 446, logo: "" },
+  { id: 2,  name: "AngloGold South Africa",         address: "76 Jeppe Street, Johannesburg, South Africa",      svgX: 556, svgY: 543, logo: "/partnerLogos/Partner-2.svg" },
+  { id: 3,  name: "Kinross Gold Nigeria",           address: "Victoria Island, Lagos, Nigeria",                  svgX: 483, svgY: 435, logo: "" },
+  { id: 4,  name: "Barrick Gold Tanzania",          address: "Msalato Industrial Area, Dodoma, Tanzania",        svgX: 580, svgY: 465, logo: "" },
+  { id: 5,  name: "Gold Fields Kenya",              address: "Upper Hill Road, Nairobi, Kenya",                  svgX: 581, svgY: 455, logo: "/partnerLogos/Partner-1.svg" },
+  { id: 6,  name: "Endeavour Mining Senegal",       address: "Almadies Zone, Dakar, Senegal",                    svgX: 425, svgY: 416, logo: "" },
+  { id: 7,  name: "Perseus Mining Ivory Coast",     address: "Plateau District, Abidjan, Côte d'Ivoire",        svgX: 457, svgY: 443, logo: "" },
+  { id: 8,  name: "Hummingbird Resources Mali",     address: "Badalabougou, Bamako, Mali",                       svgX: 466, svgY: 418, logo: "" },
+  { id: 9,  name: "Newmont Mining USA",             address: "Greenwood Village, Colorado, USA",                 svgX: 178, svgY: 318, logo: "" },
+  { id: 10, name: "Freeport-McMoRan",               address: "Phoenix, Arizona, USA",                            svgX: 164, svgY: 337, logo: "" },
+  { id: 11, name: "Coeur Mining Canada",            address: "401 Bay Street, Toronto, Ontario",                 svgX: 240, svgY: 296, logo: "" },
+  { id: 12, name: "Vale Brasil",                    address: "Praia de Botafogo 186, Rio de Janeiro, Brazil",    svgX: 335, svgY: 530, logo: "" },
 ];
 
-function toPercent(lat: number, lng: number) {
-  return {
-    x: ((lng + 180) / 360) * 100,
-    y: ((90 - lat) / 180) * 100,
-  };
-}
+const SVG_W = 1010;
+const SVG_H = 666;
 
 // ─── Tooltip ──────────────────────────────────────────────────────────────────
 
-function Tooltip({ name, address }: { name: string; address: string; flipLeft?: boolean }) {
+function Tooltip({ name, address }: { name: string; address: string }) {
   return (
     <div
       className="absolute z-30 pointer-events-none"
@@ -103,21 +64,39 @@ function Pin({
   isActive,
   onEnter,
   onLeave,
+  onTap,
 }: {
   partner: (typeof PARTNERS)[number];
   isActive: boolean;
   onEnter: () => void;
   onLeave: () => void;
+  onTap: () => void;
 }) {
-  const { x, y } = toPercent(partner.lat, partner.lng);
+  // Convert SVG coordinates → percentage of the SVG viewBox
+  const xPct = (partner.svgX / SVG_W) * 100;
+  const yPct = (partner.svgY / SVG_H) * 100;
+
   return (
     <div
       className="absolute"
-      style={{ left: `${x}%`, top: `${y}%`, transform: "translate(-50%,-50%)" }}
+      style={{
+        left: `${xPct}%`,
+        top: `${yPct}%`,
+        transform: "translate(-50%,-50%)",
+        zIndex: isActive ? 50 : 1,
+      }}
     >
-      {/* Pulse ring — always visible, faster when active */}
+      {/* Invisible larger hit area for easier hovering + tap */}
+      <div
+        className="absolute cursor-pointer"
+        style={{ width: 30, height: 30, top: -10, left: -10 }}
+        onClick={(e) => { e.stopPropagation(); onTap(); }}
+        onMouseEnter={onEnter}
+        onMouseLeave={onLeave}
+      />
+      {/* Pulse ring */}
       <span
-        className="absolute rounded-full bg-[#51B948]/25 animate-ping"
+        className="absolute rounded-full bg-[#51B948]/25 animate-ping pointer-events-none"
         style={{
           width: isActive ? 28 : 20,
           height: isActive ? 28 : 20,
@@ -129,16 +108,14 @@ function Pin({
       />
       <div
         className={[
-          "relative rounded-full border-2 border-white cursor-pointer transition-all duration-200",
+          "relative rounded-full border-2 border-white pointer-events-none transition-all duration-200",
           isActive
             ? "w-[14px] h-[14px] bg-[#51B948] scale-150"
             : "w-[11px] h-[11px] bg-[#51B948]",
         ].join(" ")}
-        onMouseEnter={onEnter}
-        onMouseLeave={onLeave}
       />
       {isActive && (
-        <Tooltip name={partner.name} address={partner.address} flipLeft={x > 78} />
+        <Tooltip name={partner.name} address={partner.address} />
       )}
     </div>
   );
@@ -154,17 +131,25 @@ function PartnersMarqueeInline({
   activeId,
   onEnter,
   onLeave,
+  onTap,
+  isPaused,
 }: {
   activeId: number | null;
   onEnter: (id: number) => void;
   onLeave: () => void;
+  onTap: (id: number) => void;
+  isPaused: boolean;
 }) {
   const trackRef = useRef<HTMLDivElement>(null);
   const offsetRef = useRef(0);
   const lastTimeRef = useRef<number>(0);
   const scrollDirRef = useRef<1 | -1>(1);
+  const pausedRef = useRef(isPaused);
   const [colorIndex, setColorIndex] = useState(0);
   const speed = 60;
+
+  // Keep ref in sync with prop
+  useEffect(() => { pausedRef.current = isPaused; }, [isPaused]);
 
   const scrollingPartners = [...PARTNERS, ...PARTNERS, ...PARTNERS];
 
@@ -196,7 +181,7 @@ function PartnersMarqueeInline({
         : 0;
       lastTimeRef.current = time;
       const halfWidth = track.scrollWidth / 3;
-      if (halfWidth > 0) {
+      if (halfWidth > 0 && !pausedRef.current) {
         offsetRef.current += speed * dt * scrollDirRef.current;
         if (offsetRef.current >= halfWidth) offsetRef.current -= halfWidth;
         if (offsetRef.current < 0) offsetRef.current += halfWidth;
@@ -230,6 +215,7 @@ function PartnersMarqueeInline({
                 "flex items-center gap-3 shrink-0 cursor-pointer transition-opacity duration-200",
                 activeId !== null && !isActive ? "opacity-40" : "opacity-100",
               ].join(" ")}
+              onClick={(e) => { e.stopPropagation(); onTap(partner.id); }}
               onMouseEnter={() => onEnter(partner.id)}
               onMouseLeave={onLeave}
             >
@@ -269,6 +255,29 @@ function PartnersMarqueeInline({
 
 function PartnersMapSession() {
   const [activeId, setActiveId] = useState<number | null>(null);
+  // "locked" means a tap selected a partner (persists until tapped again)
+  const [lockedId, setLockedId] = useState<number | null>(null);
+
+  // The visible active partner = locked selection OR hover
+  const visibleId = lockedId ?? activeId;
+
+  const handleTap = useCallback((id: number) => {
+    setLockedId((prev) => (prev === id ? null : id));
+  }, []);
+
+  // Click anywhere outside a pin / marquee item dismisses the lock
+  const sectionRef = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    if (lockedId === null) return;
+    const handleClickOutside = (e: MouseEvent) => {
+      // Let pin / marquee onClick handlers run first via stopPropagation;
+      // if the click reaches the document, nothing interactive was tapped.
+      setLockedId(null);
+    };
+    document.addEventListener("click", handleClickOutside);
+    return () => document.removeEventListener("click", handleClickOutside);
+  }, [lockedId]);
 
   return (
     <section className="my-[80px] lg:my-[140px]">
@@ -284,15 +293,18 @@ function PartnersMapSession() {
         </p>
       </div>
 
-      {/* Map */}
-      <div className="mx-[22px] lg:mx-[24px] xl:mx-[120px] min-[1920px]:mx-[200px] relative   lg:h-[530px] select-none mb-10 lg:mb-20">
+      {/* Map — aspect-ratio locked to match SVG viewBox so % pins align */}
+      <div
+        className="mx-auto relative select-none mb-10 lg:mb-20"
+        style={{ aspectRatio: `${SVG_W} / ${SVG_H}`, maxHeight: 530 }}
+      >
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src="/maszAssets/world-map.svg"
           alt=""
           aria-hidden="true"
           draggable={false}
-          className="w-full h-full"
+          className="absolute inset-0 w-full h-full"
           style={{
             filter:
               "brightness(1) saturate(100%) invert(96%) sepia(0%) saturate(200%) hue-rotate(180deg) brightness(98%) contrast(85%)",
@@ -303,9 +315,10 @@ function PartnersMapSession() {
             <Pin
               key={partner.id}
               partner={partner}
-              isActive={activeId === partner.id}
+              isActive={visibleId === partner.id}
               onEnter={() => setActiveId(partner.id)}
               onLeave={() => setActiveId(null)}
+              onTap={() => handleTap(partner.id)}
             />
           ))}
         </div>
@@ -313,9 +326,11 @@ function PartnersMapSession() {
 
       {/* Marquee — full bleed, directly below map, shares activeId */}
       <PartnersMarqueeInline
-        activeId={activeId}
+        activeId={visibleId}
         onEnter={(id) => setActiveId(id)}
         onLeave={() => setActiveId(null)}
+        onTap={handleTap}
+        isPaused={lockedId !== null}
       />
     </section>
   );

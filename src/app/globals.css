@@ -1036,7 +1036,8 @@ section {
   transition: transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-.group:hover .liquid-bg {
+.group:hover .liquid-bg,
+.benefit-active .liquid-bg {
   transform: scaleY(1);
 }
 
