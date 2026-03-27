@@ -386,7 +386,7 @@ function OurStorySection({
         {/* Lottie — visible on desktop beside text */}
         {lottieData && (
           <div className="hidden lg:flex bg-white lg:w-1/2 items-center justify-center">
-            <div className="w-[280px] h-[205px]">
+            <div className="w-[320px] h-[250px]">
               <Lottie
                 animationData={lottieData}
                 loop
@@ -523,13 +523,13 @@ function AboutUSPage() {
 
             {/* TOP TEXT */}
             <div className="about-page-hero-text-container flex flex-col  items-start  mx-6  lg:mx-[24] xl:mx-[120px] min-[1920px]:mx-[200]! my-[40px] lg:my-[40px]">
-              <div className="page-header text-xl-semibold md:text-2xl-semibold uppercase lg:text-4xl-bold">
+              <div className="page-header text-xl-semibold md:text-2xl-semibold uppercase lg:text-4xl-semibold">
                 We are{" "}
                 <span className="subtext text-primary-default">
                   Masz-Africa
                 </span>
               </div>
-              <div className=" text-xs-medium text-default-body md:text-xl-medium lg:text-2xl-medium">
+              <div className="  text-default-body subtext text-sm-medium md:text-md-medium lg:text-lg-medium">
                 General Mining & procurement services limited
               </div>
             </div>

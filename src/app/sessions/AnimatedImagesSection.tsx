@@ -20,23 +20,40 @@ interface GalleryImageProps {
 function GalleryImage({ src, alt, index, title, subtext }: GalleryImageProps) {
   const imageInnerRef = useRef<HTMLDivElement>(null);
   const [isHovered, setIsHovered] = useState(false);
+  const [isTapped, setIsTapped] = useState(false);
 
-  const IMAGE_WIDTH = 360;
+  const IMAGE_WIDTH = 320;
   const IMAGE_HEIGHT = 540;
 
   const hoverTextContent = [title, ...subtext].join("\n");
+  
+  useEffect(() => {
+    if (!isTapped) return;
+  
+    const handleOutsideTouch = (e: TouchEvent) => {
+      if (
+        imageInnerRef.current &&
+        !imageInnerRef.current.contains(e.target as Node)
+      ) {
+        setIsTapped(false);
+      }
+    };
+  
+    document.addEventListener("touchstart", handleOutsideTouch);
+    return () => document.removeEventListener("touchstart", handleOutsideTouch);
+  }, [isTapped]);
 
   return (
     <div
       data-scroll-reveal-item
-      className="relative shrink-0 overflow-hidden group"
+      className={`relative shrink-0 w-[${IMAGE_WIDTH}] md:w-[360] overflow-hidden group`}
       style={{
-        width: `${IMAGE_WIDTH}px`,
         minWidth: `${IMAGE_WIDTH}px`,
         height: `${IMAGE_HEIGHT}px`,
       }}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
+      onTouchStart={() => setIsTapped((prev) => !prev)}
     >
       <div ref={imageInnerRef} className="relative w-full h-full">
         <Image
@@ -48,10 +65,17 @@ function GalleryImage({ src, alt, index, title, subtext }: GalleryImageProps) {
           quality={95}
           priority={index < 3}
         />
-        <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-10" />
-        <div className="absolute inset-0 flex flex-col justify-center items-start p-6 text-left opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-20 pointer-events-none">
+        <div
+          className="absolute inset-0 bg-black/60 transition-opacity duration-500 z-10"
+          style={{ opacity: isHovered || isTapped ? 1 : 0 }}
+        />
+        <div
+          className="absolute inset-0 flex flex-col justify-center items-start p-6 text-left transition-opacity duration-500 z-20 pointer-events-none"
+          style={{ opacity: isHovered || isTapped ? 1 : 0 }}
+        >
+        
           <div className="text-white">
-            {isHovered && (
+            {(isHovered || isTapped) && (
               <LineByLineText
                 key="hover-text"
                 startAnimation={true}
@@ -74,11 +98,11 @@ function GalleryImage({ src, alt, index, title, subtext }: GalleryImageProps) {
 }
 
 export default function AnimatedImagesSection() {
-  const galleryRef  = useRef<HTMLDivElement>(null);
-  const trackRef    = useRef<HTMLDivElement>(null);
-  const sectionRef  = useRef<HTMLDivElement>(null);
+  const galleryRef = useRef<HTMLDivElement>(null);
+  const trackRef = useRef<HTMLDivElement>(null);
+  const sectionRef = useRef<HTMLDivElement>(null);
   const [isPaused, setIsPaused] = useState(false);
-  const offsetRef   = useRef(0);
+  const offsetRef = useRef(0);
   const scrollTriggerRef = useRef<ScrollTrigger | null>(null);
 
   const IMAGE_WIDTH = 360;
@@ -86,16 +110,106 @@ export default function AnimatedImagesSection() {
   const IMAGE_GAP = 16;
 
   const images = [
-    { src: "/homeAssets/Image-1.jpg",  title: "High Performance",    subtext: ["Delivering exceptional quality mining equipment", "that meets the highest industry standards.", "Built for durability and maximum efficiency", "in the most challenging environments."] },
-    { src: "/homeAssets/Image-2.jpg",  title: "Reliable Solutions",  subtext: ["Trusted by industry leaders worldwide", "for consistent performance and reliability.", "Our products ensure uninterrupted operations", "and optimal productivity."] },
-    { src: "/homeAssets/Image-3.jpg",  title: "Expert Engineering",  subtext: ["Designed by experienced engineers", "who understand mining challenges.", "Every product is tested and certified", "for safety and performance excellence."] },
-    { src: "/homeAssets/Image-4.jpg",  title: "Quality Assurance",   subtext: ["Rigorous quality control processes", "ensure every product meets specifications.", "We maintain the highest standards", "from manufacturing to delivery."] },
-    { src: "/homeAssets/Image-5.jpg",  title: "Innovation Driven",   subtext: ["Cutting-edge technology solutions", "for modern mining operations.", "Continuous innovation to stay ahead", "of industry demands and challenges."] },
-    { src: "/homeAssets/Image-6.jpg",  title: "Global Reach",        subtext: ["Serving clients across continents", "with reliable supply chain networks.", "Local expertise with global standards", "for seamless operations worldwide."] },
-    { src: "/homeAssets/Image-7.webp", title: "Technical Excellence",subtext: ["Advanced technical support services", "to maximize your equipment performance.", "Expert guidance and on-site assistance", "whenever you need it."] },
-    { src: "/homeAssets/Image-8.webp", title: "Sustainable Operations", subtext: ["Environmentally conscious solutions", "for responsible mining practices.", "Efficient processes that reduce waste", "and minimize environmental impact."] },
-    { src: "/homeAssets/Image-9.webp", title: "Customer Focused",    subtext: ["Dedicated to your success", "with personalized service and support.", "Building long-term partnerships", "based on trust and reliability."] },
-    { src: "/homeAssets/Image-10.webp",title: "Proven Results",      subtext: ["Track record of successful projects", "and satisfied clients worldwide.", "Measurable improvements in efficiency", "and operational excellence."] },
+    {
+      src: "/homeAssets/Image-1.jpg",
+      title: "High Performance",
+      subtext: [
+        "Delivering exceptional quality mining equipment",
+        "that meets the highest industry standards.",
+        "Built for durability and maximum efficiency",
+        "in the most challenging environments.",
+      ],
+    },
+    {
+      src: "/homeAssets/Image-2.jpg",
+      title: "Reliable Solutions",
+      subtext: [
+        "Trusted by industry leaders worldwide",
+        "for consistent performance and reliability.",
+        "Our products ensure uninterrupted operations",
+        "and optimal productivity.",
+      ],
+    },
+    {
+      src: "/homeAssets/Image-3.jpg",
+      title: "Expert Engineering",
+      subtext: [
+        "Designed by experienced engineers",
+        "who understand mining challenges.",
+        "Every product is tested and certified",
+        "for safety and performance excellence.",
+      ],
+    },
+    {
+      src: "/homeAssets/Image-4.jpg",
+      title: "Quality Assurance",
+      subtext: [
+        "Rigorous quality control processes",
+        "ensure every product meets specifications.",
+        "We maintain the highest standards",
+        "from manufacturing to delivery.",
+      ],
+    },
+    {
+      src: "/homeAssets/Image-5.jpg",
+      title: "Innovation Driven",
+      subtext: [
+        "Cutting-edge technology solutions",
+        "for modern mining operations.",
+        "Continuous innovation to stay ahead",
+        "of industry demands and challenges.",
+      ],
+    },
+    {
+      src: "/homeAssets/Image-6.jpg",
+      title: "Global Reach",
+      subtext: [
+        "Serving clients across continents",
+        "with reliable supply chain networks.",
+        "Local expertise with global standards",
+        "for seamless operations worldwide.",
+      ],
+    },
+    {
+      src: "/homeAssets/Image-7.webp",
+      title: "Technical Excellence",
+      subtext: [
+        "Advanced technical support services",
+        "to maximize your equipment performance.",
+        "Expert guidance and on-site assistance",
+        "whenever you need it.",
+      ],
+    },
+    {
+      src: "/homeAssets/Image-8.webp",
+      title: "Sustainable Operations",
+      subtext: [
+        "Environmentally conscious solutions",
+        "for responsible mining practices.",
+        "Efficient processes that reduce waste",
+        "and minimize environmental impact.",
+      ],
+    },
+    {
+      src: "/homeAssets/Image-9.webp",
+      title: "Customer Focused",
+      subtext: [
+        "Dedicated to your success",
+        "with personalized service and support.",
+        "Building long-term partnerships",
+        "based on trust and reliability.",
+      ],
+    },
+    {
+      src: "/homeAssets/Image-10.webp",
+      title: "Proven Results",
+      subtext: [
+        "Track record of successful projects",
+        "and satisfied clients worldwide.",
+        "Measurable improvements in efficiency",
+        "and operational excellence.",
+      ],
+    },
   ];
 
   const scrollingItems = [...images, ...images];
@@ -133,7 +247,7 @@ export default function AnimatedImagesSection() {
         offsetRef.current -= scrollSpeed * direction;
 
         if (offsetRef.current >= totalWidth) offsetRef.current = 0;
-        if (offsetRef.current < 0)           offsetRef.current = totalWidth;
+        if (offsetRef.current < 0) offsetRef.current = totalWidth;
 
         track.style.transform = `translate3d(-${offsetRef.current}px, 0, 0)`;
       }
@@ -162,7 +276,11 @@ export default function AnimatedImagesSection() {
       />
       <div className="relative w-full">
         <div className="relative w-full overflow-hidden">
-          <div ref={galleryRef} className="relative" style={{ height: "650px" }}>
+          <div
+            ref={galleryRef}
+            className="relative"
+            style={{ height: "650px" }}
+          >
             <div
               className="relative overflow-hidden w-full py-12"
               onMouseEnter={() => setIsPaused(true)}
@@ -188,13 +306,19 @@ export default function AnimatedImagesSection() {
                   );
                 })}
               </div>
-              <div className="pointer-events-none absolute left-0 top-0 h-full w-24 bg-linear-to-r from-[#f3f3f3] to-transparent z-20" />
-              <div className="pointer-events-none absolute right-0 top-0 h-full w-24 bg-linear-to-l from-[#f3f3f3] to-transparent z-20" />
+              <div className="pointer-events-none absolute left-0 top-0 h-full w-8 md:w-24 bg-linear-to-r from-[#f3f3f3] to-transparent z-20" />
+              <div className="pointer-events-none absolute right-0 top-0 h-full w-8 md:w-24 bg-linear-to-l from-[#f3f3f3] to-transparent z-20" />
             </div>
           </div>
         </div>
-        <div className="absolute top-[20%] left-[5%] w-2 h-2 bg-primary-default rounded-full opacity-40 animate-pulse" style={{ animationDelay: "0s" }} />
-        <div className="absolute bottom-[20%] right-[5%] w-3 h-3 bg-primary-default rounded-full opacity-30 animate-pulse" style={{ animationDelay: "1s" }} />
+        <div
+          className="absolute top-[20%] left-[5%] w-2 h-2 bg-primary-default rounded-full opacity-40 animate-pulse"
+          style={{ animationDelay: "0s" }}
+        />
+        <div
+          className="absolute bottom-[20%] right-[5%] w-3 h-3 bg-primary-default rounded-full opacity-30 animate-pulse"
+          style={{ animationDelay: "1s" }}
+        />
       </div>
     </section>
   );

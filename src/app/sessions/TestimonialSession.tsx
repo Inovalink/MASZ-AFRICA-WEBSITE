@@ -6,7 +6,6 @@ import Image from "next/image";
 import LineByLineText from "../components/LineByLineText";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import PartnersMarquee from "../components/PartnersMarquee";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -92,14 +91,6 @@ function TestimonialSession() {
     },
   ];
 
-  const partners = [
-    { id: 1, name: "DIADORA", logo: "" },
-    { id: 2, name: "NIO", logo: "/partnerLogos/Partner-2.svg" },
-    { id: 3, name: "adidas", logo: "/partnerLogos/Partner-1.svg" },
-    { id: 4, name: "DIADORA", logo: "" },
-    { id: 5, name: "PUMA", logo: "" },
-    { id: 6, name: "NIKE", logo: "" },
-  ];
 
   const scrollingItems = [...testimonialDetails, ...testimonialDetails];
 
@@ -196,9 +187,9 @@ function TestimonialSession() {
   return (
     <section
       ref={sectionRef}
-      className="min-h-screen bg-[#f3f3f3] py-24   mt-[100] relative "
+      className="min-h-screen bg-[#f3f3f3] py-24  mt-[100]  "
     >
-      <div className="testimonial-session-main-container lg:mx-[24] lg:mb-[180]  xl:mx-[120] min-[1920px]:mx-[200]!">
+      <div className="testimonial-session-main-container lg:mx-[24]   xl:mx-[120] min-[1920px]:mx-[200]!">
         <div className="testimonial-session-content" key={resetKey}>
           <div ref={tagRef}>
             <Tag text="testimonial" className="uppercase ml-5" />
@@ -222,10 +213,11 @@ function TestimonialSession() {
               </LineByLineText>
             </div>
 
-            <div className="testimonial-section-subtext max-w-[484px] w-full md:my-6 text-md-medium lg:text-xl-medium font-medium text-default-body ">
+            <div className="testimonial-section-subtext max-w-[484px]  w-full md:my-6 text-md-medium lg:text-xl-medium font-medium text-default-body ">
               <LineByLineText
                 startAnimation={startSubtextAnimation}
                 onComplete={handleSubtextComplete}
+                className="mx-5 md:mx-0"
                 duration={0.13}
                 stagger={0.05}
                 delay={0.03}
@@ -241,7 +233,7 @@ function TestimonialSession() {
             {/* Scroll container */}
             <div
               ref={containerRef}
-              className="relative overflow-hidden w-full py-12"
+              className="relative overflow-hidden w-full  py-12"
               onMouseEnter={() => setIsPaused(true)}
               onMouseLeave={() => setIsPaused(false)}
             >
@@ -300,16 +292,13 @@ function TestimonialSession() {
               {/* Left fade/vanishing point */}
               <div className="pointer-events-none absolute left-0 top-0 h-full w-24 bg-linear-to-r from-[#f3f3f3] to-transparent" />
               {/* Right fade/vanishing point */}
-              <div className="pointer-events-none absolute right-0 top-0 h-full w-24 bg-linear-to-l from-[#f3f3f3] to-transparent" />
+              <div className="pointer-events-none absolute right-0 top-0 h-full w-24 bg-linear-to-x from-[#f3f3f3] to-transparent" />
             </div>
           </div>
         </div>
       </div>
 
-      {/* Partners Marquee */}
-      <div className="absolute  bottom-0 left-0 right-0">
-        <PartnersMarquee partners={partners} speed={60}  scrollReverse />
-      </div>
+      
     </section>
   );
 }

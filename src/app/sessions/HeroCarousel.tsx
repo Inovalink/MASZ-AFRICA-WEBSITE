@@ -164,14 +164,14 @@ export default function HeroCarousel({ startTextAnimation = false }: HeroCarouse
     <>
       <section
         ref={sectionRef}
-        className="relative w-full bg-[#E0E0E0] py-6 md:py-8 mt-12 md:mt-16 cursor-none"
+        className="relative w-full bg-[#F7F7F7] py-6 md:py-8 mt-12 md:mt-16 cursor-none"
         onMouseMove={onMouseMove}
         onMouseEnter={onSectionEnter}
         onMouseLeave={onSectionLeave}
       >
         {/* Top dashed line */}
         <div
-          className="absolute left-0 right-0 top-0 h-0 border-t-2 border-dashed border-black/60"
+          className="absolute left-0 right-0 top-0 h-0 border-t-2 hidden border-dashed border-black/60"
           aria-hidden
         />
 
@@ -195,7 +195,7 @@ export default function HeroCarousel({ startTextAnimation = false }: HeroCarouse
 
         {/* Bottom dashed line */}
         <div
-          className="absolute left-0 right-0 bottom-0 h-0 border-t-2 border-dashed border-black/60"
+          className="absolute left-0 hidden right-0 bottom-0 h-0 border-t-2 border-dashed border-black/60"
           aria-hidden
         />
       </section>

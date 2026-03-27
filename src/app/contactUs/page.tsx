@@ -23,6 +23,8 @@ import Link from "next/link";
 import ScrollReveal from "../components/ScrollReveal";
 import LineByLineText from "../components/LineByLineText";
 
+const API_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:5001';
+
 type ContactType = "individual" | "business";
 
 interface Country {
@@ -186,10 +188,43 @@ export default function ContactPage() {
     subject: "",
     message: "",
   });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
+  const [submitMessage, setSubmitMessage] = useState('');
 
-  const handleSubmit = () => {
-    // Handle form submission
-    console.log({ ...formData, contactType });
+  const handleSubmit = async () => {
+    if (!formData.fullName || !formData.email || !formData.message) {
+      setSubmitStatus('error');
+      setSubmitMessage('Please fill in your name, email, and message.');
+      return;
+    }
+    setIsSubmitting(true);
+    setSubmitStatus('idle');
+    try {
+      const phone = formData.phone ? `${selectedCountry?.dialCode ?? ''}${formData.phone}` : undefined;
+      const res = await fetch(`${API_URL}/api/contact`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          fullName: formData.fullName,
+          email: formData.email,
+          phoneNumber: phone,
+          subject: formData.subject || 'General Inquiry',
+          message: formData.message,
+          contactingAs: contactType === 'individual' ? 'INDIVIDUAL' : 'BUSINESS',
+        }),
+      });
+      const json = await res.json();
+      if (!res.ok) throw new Error(json.error?.message ?? 'Submission failed');
+      setSubmitStatus('success');
+      setSubmitMessage(json.message ?? "Thank you! We'll get back to you within 24–48 hours.");
+      setFormData({ fullName: '', email: '', phone: '', subject: '', message: '' });
+    } catch (err: unknown) {
+      setSubmitStatus('error');
+      setSubmitMessage(err instanceof Error ? err.message : 'Something went wrong. Please try again.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -296,7 +331,7 @@ export default function ContactPage() {
                 delay={0.2}
                 duration={0.3}
                 stagger={0.05}
-                className="text-2xl-semibold lg:text-4xl-semibold leading-[111%] uppercase text-white"
+                className="text-2xl-semibold lg:text-4xl-semibold leading-[111%] uppercase text-default-heading "
               >
                 LET&apos;S GET IN TOUCH
               </LineByLineText>
@@ -465,12 +500,20 @@ export default function ContactPage() {
               </div>
             </div>
 
+            {/* Status message */}
+            {submitStatus !== 'idle' && (
+              <div className={`mb-[14px] px-[14px] py-[12px] text-sm-medium ${submitStatus === 'success' ? 'bg-green-50 text-green-700 border border-green-200' : 'bg-red-50 text-red-700 border border-red-200'}`}>
+                {submitMessage}
+              </div>
+            )}
+
             {/* Submit button */}
             <button
               onClick={handleSubmit}
-              className="w-full bg-primary-default text-white text-sm-medium lg:text-md-medium py-[14px] lg:py-[19px] uppercase tracking-wider bg-[#016BF2] transition-colors duration-300"
+              disabled={isSubmitting}
+              className="w-full bg-primary-default text-white text-sm-medium lg:text-md-medium py-[14px] lg:py-[19px] uppercase tracking-wider bg-[#016BF2] transition-colors duration-300 disabled:opacity-60 disabled:cursor-not-allowed"
             >
-              SEND MESSAGE
+              {isSubmitting ? 'SENDING...' : 'SEND MESSAGE'}
             </button>
           </div>
         </div>
@@ -486,7 +529,7 @@ export default function ContactPage() {
         staggerChildren={0.1}
         onRevealNearlyComplete={() => setLocationRevealed(true)}
       >
-        <div className="contact-bottom-section relative bg-[#016BF2] overflow-hidden mt-[60px] lg:mt-[100px]">
+        <div id="talk-to-us" className="contact-bottom-section relative bg-[#016BF2] overflow-hidden mt-[60px] lg:mt-[100px]">
           {/* SVG dot pattern background */}
           <Image src="/contactBg.svg" alt="Background pattern" width={456} height={670} className=" hidden lg:block absolute right-0" />
 
@@ -576,7 +619,7 @@ export default function ContactPage() {
                         <Link href="tel:+233244163975" className="group-hover:text-[#016BF2] group-focus:text-[#016BF2] hover:underline block">
                           +233 24 416 3975
                         </Link>
-                        <br />  
+                   
                         <Link href="tel:+233540953033" className="group-hover:text-[#016BF2] group-focus:text-[#016BF2] hover:underline block">
                           +233 54 095 3033
                         </Link>

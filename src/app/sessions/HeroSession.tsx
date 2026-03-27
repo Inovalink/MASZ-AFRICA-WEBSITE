@@ -6,6 +6,7 @@ import Button from "../components/button";
 import { MoveRight } from "lucide-react";
 import LineByLineText from "../components/LineByLineText";
 import AutoplayVideo from "../components/AutoplayVideo";
+import Link from "next/link";
 
 interface HeroSessionProps {
   /** When true, the hero subtext line-by-line animation starts (after scroll reveal is about to end). */
@@ -53,10 +54,13 @@ function HeroSession({ startTextAnimation = false }: HeroSessionProps) {
             </LineByLineText>
 
             {/* Button now shows correctly */}
+             <Link href="/services">
+            
             <Button
               label="Explore our services"
               variant="primary"
               size="large"
+            
               icon={
                 <>
                   {/* Mobile / default arrow */}
@@ -72,6 +76,7 @@ function HeroSession({ startTextAnimation = false }: HeroSessionProps) {
               }
               className=" mx-6 lg:mx-0 my-[35]"
             />
+            </Link>
           </div>
         </div>
       </div>

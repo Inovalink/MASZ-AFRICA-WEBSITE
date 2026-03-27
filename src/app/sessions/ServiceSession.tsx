@@ -179,14 +179,14 @@ function ServiceSession({ startTextAnimation = false }: ServiceSessionProps) {
               </li>
             ))}
           </ul>
-
+ <Link href="/services">
           <Button
             label="Explore our services"
             variant="primary"
             size="large"
             icon={<MoveRight size={16} />}
             className="ml-[22] my-[35] lg:my-[100]"
-          />
+          /></Link>
         </AnimatedListContainer>
       </div>
     </section>

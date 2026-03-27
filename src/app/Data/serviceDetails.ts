@@ -6,7 +6,7 @@ export interface serviceDetails {
   heroAltText: string;
   heroTag: string;
   heroTitle: string;
-
+video: string;
   description:string;
 
   benefitsImage: string;
@@ -37,6 +37,8 @@ export const serviceDetailsTemplate = [
     heroAltText: "Grinding media",
     heroTag: "consumable",
     heroTitle: "grinding media",
+    video: "/videos/services/Grinding Media Web comp.mp4",
+    
 
     description: `   MASZ-AFRICA supplies high-performance forged and cast steel
     grinding balls, meticulously engineered to deliver consistent,
@@ -75,7 +77,7 @@ export const serviceDetailsTemplate = [
     grinding media and expert support deliver measurable results
     that enhance both performance and profitability.`,
 
-    benefitsImage: "/serviceAssets/Image-16.jpg",
+    benefitsImage: "/serviceAssets/Image-19.webp",
     benefitsAltText: "Grinding media",
     benefitsTitle: " Engineered for Efficiency and Profitability.",
     benefitsSubtitle: `Delivering reliable mining consumables and expert technical
@@ -148,6 +150,8 @@ export const serviceDetailsTemplate = [
     heroAltText: "activated carbon",
     heroTag: "consumable",
     heroTitle: "activated carbon",
+    video: "/videos/services/Activated Carbon Web.mp4",
+
 
     description: `  MASZ-AFRICA supplies premium high-adsorption, low-attrition activated carbon 
     specifically engineered for CIP (Carbon in Pulp) and CIL (Carbon in Leach) gold recovery 
@@ -173,7 +177,7 @@ export const serviceDetailsTemplate = [
     By combining premium products with tailored technical support, MASZ-AFRICA ensures that every 
     operation achieves peak performance, improved recoveries, and long-term operational stability.`,
 
-    benefitsImage: "/serviceAssets/Image-16.jpg",
+    benefitsImage: "/serviceAssets/Image-19.webp",
     benefitsAltText: "Grinding media",
     benefitsTitle: " Engineered for Efficiency and Profitability.",
     benefitsSubtitle: `Delivering reliable mining consumables and expert technical
@@ -244,6 +248,8 @@ export const serviceDetailsTemplate = [
     heroAltText: "activated carbon",
     heroTag: "consumable",
     heroTitle: "metal and steel pipes",
+    video: "/videos/services/Metal And Steel Web.mp4",
+
 
     description: ` MASZ-AFRICA supplies high-quality carbon steel, stainless steel, and galvanized
     pipes engineered to perform reliably in the most demanding mining and industrial environments. 
@@ -265,7 +271,7 @@ export const serviceDetailsTemplate = [
     We also offer custom cutting, fabrication, and pre-assembly services to meet project-specific requirements, 
     minimizing on-site adjustments and ensuring seamless integration into client systems.`,
 
-    benefitsImage: "/serviceAssets/Image-3-1.webp",
+    benefitsImage: "/serviceAssets/Image-19.webp",
     benefitsAltText: "Metal and Steel Pipes",
     benefitsTitle: " Engineered for Efficiency and Profitability.",
     benefitsSubtitle: `Delivering reliable mining consumables and expert technical
@@ -327,6 +333,7 @@ export const serviceDetailsTemplate = [
     ],
   },
 
+  // Gearbox Servicing
   {
     slug: "gear-box-servicing-and-heavy-equipment-maintenance",
     headerFirst: "consumables that keep your mine",
@@ -335,6 +342,8 @@ export const serviceDetailsTemplate = [
     heroAltText: "activated carbon",
     heroTag: "service",
     heroTitle: "metal and steel pipes",
+    video: "/videos/services/Gearbox Servicing Web.mp4",
+
 
     description: ` MASZ-AFRICA delivers professional gearbox servicing, diagnostics, and heavy-machine 
     maintenance solutions for critical mining equipment, including crushers, grinding mills, conveyors, 
@@ -355,7 +364,7 @@ export const serviceDetailsTemplate = [
     diagnostics, or emergency interventions, our approach is structured, precise, and aligned with 
     international maintenance best practices, ensuring long-term operational continuity.`,
 
-    benefitsImage: "/serviceAssets/Image-3-1.webp",
+    benefitsImage: "/serviceAssets/Image-19.webp",
     benefitsAltText: "Metal and Steel Pipes",
     benefitsTitle: " Engineered for Efficiency and Profitability.",
     benefitsSubtitle: `Delivering reliable mining consumables and expert technical

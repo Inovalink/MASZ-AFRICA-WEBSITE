@@ -195,8 +195,8 @@ export default function RelatedServicesCarousel({ currentSlug }: Props) {
 
         <div className="relative overflow-hidden">
           {/* Side fade overlays */}
-          <div className="absolute left-0 top-0 bottom-0 w-10 md:w-16 lg:w-24 bg-linear-to-r from-white to-transparent pointer-events-none z-10" />
-          <div className="absolute right-0 top-0 bottom-0 w-10 md:w-16 lg:w-24 bg-linear-to-l from-white to-transparent pointer-events-none z-10" />
+          <div className="absolute left-0 top-0 bottom-0 w-4 md:w-16 lg:w-24 bg-linear-to-r from-white to-transparent pointer-events-none z-10" />
+          <div className="absolute right-0 top-0 bottom-0 w-4 md:w-16 lg:w-24 bg-linear-to-l from-white to-transparent pointer-events-none z-10" />
           <div
             ref={trackRef}
             className="flex gap-[16px] lg:gap-[32px] overflow-x-scroll
@@ -215,7 +215,7 @@ export default function RelatedServicesCarousel({ currentSlug }: Props) {
               <div
                 key={`${service.slug}-${i}`}
                 className="flex-shrink-0 group relative overflow-hidden
-                           w-[calc(100%-0px)]
+                           w-[calc(100%-32px)]
                            md:w-[calc(50%-10px)]
                            xl:w-[calc(33.333%-14px)]
                            h-[380px] lg:h-[469px]"
