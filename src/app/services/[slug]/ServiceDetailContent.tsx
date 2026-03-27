@@ -332,11 +332,11 @@ export default function ServiceDetailContent({
                 <div className="left-side    xl:mx-[120]  min-[1920px]:mx-[200]!">
                   <div className="benefits-list grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 items-stretch justify-center lg:flex-start gap-6 lg:flex-wrap">
                     {service.benefits.map((item, index) => {
-                      const isActive = activeBenefitId === item.id;
+                      const isActive = activeBenefitId === item.id.toString();
                       return (
                         <div
                           key={item.id}
-                          onClick={() => setActiveBenefitId((prev) => prev === item.id ? null : item.id)}
+                          onClick={() => setActiveBenefitId((prev) => prev === item.id.toString() ? null : item.id.toString())}
                           className={[
                             "item-list group relative overflow-hidden bg-white flex flex-col",
                             "max-w-[400px] lg:max-w-full lg:min-h-[350px] items-center",
