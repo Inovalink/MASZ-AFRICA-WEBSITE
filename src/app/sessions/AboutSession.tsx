@@ -231,7 +231,7 @@ function AboutSession({ startTextAnimation = false }: AboutSessionProps) {
             variant="primary"
             size="large"
             icon={<MoveRight size={16} />}
-            className="ml-[22] lg:ml-[0] hover:w-fit! my-[35] lg:mt-[65] lg:mb-0"
+            className="ml-[22] lg:ml-[0] hover:w-fit! w-fit  my-[35] lg:mt-[65] lg:mb-0"
           />
         </div>
 
