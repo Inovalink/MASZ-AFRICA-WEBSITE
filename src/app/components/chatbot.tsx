@@ -286,26 +286,42 @@ useEffect(() => {
     };
   }, [isOpen]);
 
-  // Mobile: track visual viewport height via CSS variable — avoids all RAF/scrollIntoView races
+  // Mobile: sync visual viewport size + offset so the window hugs the area above the keyboard
   useEffect(() => {
     if (typeof window === "undefined" || !isOpen) return;
+    const el = chatWindowRef.current;
     const vv = window.visualViewport;
+
     if (!vv) {
-      // Fallback for browsers without visualViewport
-      document.documentElement.style.setProperty(
-        "--vvh",
-        `${window.innerHeight}px`
-      );
+      if (el && isMobile()) {
+        el.style.height = `${window.innerHeight}px`;
+        el.style.top = "0px";
+      }
       return;
     }
+
     const update = () => {
-      document.documentElement.style.setProperty("--vvh", `${vv.height}px`);
+      if (!el || !isMobile()) return;
+      // height = visible area above keyboard; top = browser chrome offset
+      el.style.height = `${vv.height}px`;
+      el.style.top = `${vv.offsetTop}px`;
+      el.style.left = `${vv.offsetLeft}px`;
+      el.style.width = `${vv.width}px`;
     };
+
     update();
     vv.addEventListener("resize", update);
+    vv.addEventListener("scroll", update);
+
     return () => {
       vv.removeEventListener("resize", update);
-      document.documentElement.style.removeProperty("--vvh");
+      vv.removeEventListener("scroll", update);
+      if (el && isMobile()) {
+        el.style.height = "";
+        el.style.top = "";
+        el.style.left = "";
+        el.style.width = "";
+      }
     };
   }, [isOpen]);
 
@@ -595,8 +611,8 @@ useEffect(() => {
           ref={chatWindowRef}
           className={clsx(
             "fixed z-[110] flex flex-col overflow-hidden bg-white shadow-2xl",
-            // Mobile: full screen — h-[--vvh] shrinks with the visual viewport so the input stays above the keyboard
-            "inset-0 w-full max-w-none rounded-none h-[var(--vvh,100dvh)]",
+            // Mobile: full screen — JS sets exact height+top via visualViewport so keyboard doesn't leave a gap
+            "inset-0 w-full h-full max-w-none rounded-none",
             "pt-[env(safe-area-inset-top)] pb-[env(safe-area-inset-bottom)]",
             "pl-[env(safe-area-inset-left)] pr-[env(safe-area-inset-right)]",
             // Tablet/Desktop: Inovalink floating panel shape
@@ -726,7 +742,7 @@ useEffect(() => {
               </div>
             ) : (
               /* Messages */
-              <div className="flex-1 px-4 py-4 space-y-5 overflow-hidden">
+              <div className="flex-1 px-4 py-4 space-y-5 overflow-y-auto overscroll-contain">
                 {messages.map((message) =>
                   message.sender === "user" ? (
                     <AnimatedMessageRow
