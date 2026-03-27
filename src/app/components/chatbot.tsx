@@ -276,66 +276,36 @@ useEffect(() => {
     }
   }, [isOpen, messages]);
 
-  // Mobile: lock body scroll
+  // Mobile: lock body scroll (overflow-hidden only — no position:fixed which breaks iOS keyboard)
   useEffect(() => {
     if (typeof window === "undefined" || !isOpen || !isMobile()) return;
-    scrollPositionRef.current = window.scrollY;
-    const s = document.body.style;
-    const [prevO, prevP, prevT, prevW] = [
-      s.overflow,
-      s.position,
-      s.top,
-      s.width,
-    ];
-    s.overflow = "hidden";
-    s.position = "fixed";
-    s.top = `-${scrollPositionRef.current}px`;
-    s.width = "100%";
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
     return () => {
-      s.overflow = prevO;
-      s.position = prevP;
-      s.top = prevT;
-      s.width = prevW;
-      window.scrollTo(0, scrollPositionRef.current);
+      document.body.style.overflow = prev;
     };
   }, [isOpen]);
 
-  // Mobile: visual viewport keyboard resize
+  // Mobile: track visual viewport height via CSS variable — avoids all RAF/scrollIntoView races
   useEffect(() => {
-    if (typeof window === "undefined" || !window.visualViewport || !isOpen)
-      return;
-    const el = chatWindowRef.current;
+    if (typeof window === "undefined" || !isOpen) return;
     const vv = window.visualViewport;
+    if (!vv) {
+      // Fallback for browsers without visualViewport
+      document.documentElement.style.setProperty(
+        "--vvh",
+        `${window.innerHeight}px`
+      );
+      return;
+    }
     const update = () => {
-      if (!el || !isMobile()) return;
-      el.style.height = `${vv.height}px`;
-      el.style.top = `${vv.offsetTop}px`;
-      el.style.left = `${vv.offsetLeft}px`;
-      el.style.width = `${vv.width}px`;
-      requestAnimationFrame(() =>
-        textareaRef.current?.scrollIntoView({ behavior: "auto", block: "end" })
-      );
-      setTimeout(
-        () =>
-          textareaRef.current?.scrollIntoView({
-            behavior: "auto",
-            block: "end",
-          }),
-        150
-      );
+      document.documentElement.style.setProperty("--vvh", `${vv.height}px`);
     };
     update();
     vv.addEventListener("resize", update);
-    vv.addEventListener("scroll", update);
     return () => {
       vv.removeEventListener("resize", update);
-      vv.removeEventListener("scroll", update);
-      if (el && isMobile()) {
-        el.style.height = "";
-        el.style.top = "";
-        el.style.left = "";
-        el.style.width = "";
-      }
+      document.documentElement.style.removeProperty("--vvh");
     };
   }, [isOpen]);
 
@@ -625,8 +595,8 @@ useEffect(() => {
           ref={chatWindowRef}
           className={clsx(
             "fixed z-[110] flex flex-col overflow-hidden bg-white shadow-2xl",
-            // Mobile: full screen
-            "inset-0 w-full h-full min-h-dvh max-w-none rounded-none",
+            // Mobile: full screen — h-[--vvh] shrinks with the visual viewport so the input stays above the keyboard
+            "inset-0 w-full max-w-none rounded-none h-[var(--vvh,100dvh)]",
             "pt-[env(safe-area-inset-top)] pb-[env(safe-area-inset-bottom)]",
             "pl-[env(safe-area-inset-left)] pr-[env(safe-area-inset-right)]",
             // Tablet/Desktop: Inovalink floating panel shape
@@ -958,26 +928,7 @@ useEffect(() => {
                     setInputValue(e.target.value.slice(0, MAX_INPUT_LENGTH))
                   }
                   onKeyDown={handleKeyDown}
-                  onFocus={() => {
-                    if (isMobile()) {
-                      setTimeout(
-                        () =>
-                          textareaRef.current?.scrollIntoView({
-                            behavior: "auto",
-                            block: "end",
-                          }),
-                        100
-                      );
-                      setTimeout(
-                        () =>
-                          textareaRef.current?.scrollIntoView({
-                            behavior: "auto",
-                            block: "end",
-                          }),
-                        400
-                      );
-                    }
-                  }}
+                  onFocus={() => { /* keyboard resize handled via --vvh CSS variable */ }}
                   placeholder={
                     isListening ? "Listening…" : "Ask Maszbot assistant…"
                   }
