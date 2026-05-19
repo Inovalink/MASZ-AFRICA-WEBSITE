@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useRef, useEffect, useMemo, memo } from 'react';
+import React, { useState, useRef, useMemo, memo } from 'react';
 import AnimatedMetricCard, { AnimatedMetricCardProps } from '../components/AnimatedMetricCard';
 
 export interface Metric {
@@ -37,16 +37,10 @@ function MetricsCardAnimation({
   className,
   cardClassName,
 }: MetricsCardAnimationProps) {
-  const [startMetricsAnimation, setStartMetricsAnimation] = useState(false);
   const [startContentPhase, setStartContentPhase] = useState(false);
 
   // PERFORMANCE: Memoize metrics array
   const memoizedMetrics = useMemo(() => metrics, [metrics]);
-
-  // Start metrics animation when trigger fires
-  useEffect(() => {
-    if (startAnimation) setStartMetricsAnimation(true);
-  }, [startAnimation]);
 
   // When first empty card is shown, start content phase for all cards simultaneously
   const handleEmptyShown = () => setStartContentPhase(true);
@@ -60,7 +54,7 @@ function MetricsCardAnimation({
           key={index}
           text={metric.text}
           value={metric.value}
-          showAsEmpty={startMetricsAnimation}
+          showAsEmpty={startAnimation}
           showContent={startContentPhase}
           onEmptyShown={index === 0 ? handleEmptyShown : undefined}
           onSequenceComplete={handleSequenceComplete}

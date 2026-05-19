@@ -61,6 +61,7 @@ const serviceList = [
 
 function ServiceSession({ startTextAnimation = false }: ServiceSessionProps) {
   const [startListAnimation, setStartListAnimation] = useState(false);
+  const [hoveredId, setHoveredId] = useState<number | null>(null);
   const memoizedServiceList = useMemo(() => serviceList, []);
 
   return (
@@ -68,7 +69,7 @@ function ServiceSession({ startTextAnimation = false }: ServiceSessionProps) {
       <div className="services-section-container my-[100]">
         <Tag text="services" className="ml-[22] lg:ml-[0]" />
 
-        <div className="services-section-header flex items-center justify-between text-xl-semibold uppercase my-[30] lg:mt-[37] lg:mb-[98] lg:text-4xl-semibold">
+        <div className="services-section-header flex items-start justify-between text-xl-semibold  leading-[110%] uppercase my-[30] lg:mt-[37] lg:mb-[98] lg:text-4xl-semibold">
           <HeaderLineByLineAnimation
             startAnimation={startTextAnimation}
             onComplete={() => setStartListAnimation(true)}
@@ -109,14 +110,18 @@ function ServiceSession({ startTextAnimation = false }: ServiceSessionProps) {
                 key={list.id}
                 tabIndex={0}
                 className="relative mx-[22px] flex cursor-pointer border-b border-gray-300 outline-none service-item"
+                onMouseEnter={() => setHoveredId(list.id)}
+                onMouseLeave={() => setHoveredId(null)}
+                onFocus={() => setHoveredId(list.id)}
+                onBlur={() => setHoveredId(null)}
               >
                 {/* Number */}
-                <p className="pr-[80px] py-[20px] text-lg-semibold lg:text-2xl-semibold text-gray-700 flex items-center justify-center transition-all duration-[600ms] ease-[cubic-bezier(0.25,0.8,0.25,1)] transform-gpu origin-center service-number">
+                <p className="pr-[40px] lg:pr-[80px] py-[20px] text-lg-semibold lg:text-2xl-semibold text-gray-700 flex items-center justify-center transition-all duration-[600ms] ease-[cubic-bezier(0.25,0.8,0.25,1)] transform-gpu origin-center service-number">
                   {list.id}
                 </p>
 
                 {/* Text content */}
-                <div className="flex-1 relative">
+                <div className="flex-1 relative service-text-content">
                   <div className="uppercase pr-[20px] py-[20px] text-lg-semibold lg:text-3xl-semibold text-[#626262] transition-colors duration-[600ms] ease-[cubic-bezier(0.25,0.8,0.25,1)] service-title">
                     <LineByLineText
                       startAnimation={startListAnimation}
@@ -131,10 +136,18 @@ function ServiceSession({ startTextAnimation = false }: ServiceSessionProps) {
                   </div>
 
                   {/* Expandable subtext */}
-                  <div className="overflow-hidden max-h-0 opacity-0 translate-y-2 transition-all duration-[1200ms] ease-[cubic-bezier(0.25,0.8,0.25,1)] service-subtext-container">
-                    <div className="list-subtext text-sm-medium pr-[20px] lg:text-xl-medium lg:w-[500] lg:leading-7 lg:tracking-tight">
+                  <div className="overflow-hidden max-h-0 service-subtext-container">
+                    <LineByLineText
+                      startAnimation={hoveredId === list.id}
+                      duration={0.4}
+                      stagger={0.1}
+                      delay={0.45}
+                      yFrom={12}
+                      as="div"
+                      className="list-subtext text-sm-medium pr-[20px] lg:text-xl-medium lg:w-[500] lg:leading-7 lg:tracking-tight"
+                    >
                       {list.subtext}
-                    </div>
+                    </LineByLineText>
                     <div className="lg:hidden flex items-center bg-white my-[20px] pr-[20px]">
                       <Link
                         href={`/services/${list.slug}`}
@@ -156,9 +169,9 @@ function ServiceSession({ startTextAnimation = false }: ServiceSessionProps) {
                 */}
                 <div className="service-image-stack hidden xl:block pointer-events-none">
                   {/* Back card — blue rect, fans left + down */}
-                  <div className="service-image-back absolute w-[224px] h-[256px] rounded-[7px] bg-[#016BF2]" />
+                  <div className="service-image-back absolute xl:w-[175px] xl:h-[200px] 2xl:w-[224px] 2xl:h-[256px] rounded-[7px] bg-[#016BF2]" />
                   {/* Front image — sits on top, tilts the other way */}
-                  <div className="service-image-front absolute w-[224px] h-[256px] rounded-[7px] overflow-hidden">
+                  <div className="service-image-front absolute xl:w-[175px] xl:h-[200px] 2xl:w-[224px] 2xl:h-[256px] rounded-[7px] overflow-hidden">
                     <Image
                       className="w-full h-full object-cover"
                       src={list.heroImage}

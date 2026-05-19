@@ -3,7 +3,6 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import Tag from "@/app/components/tag";
 import Image from "next/image";
-import AnimationCopy from "@/app/animations/WritingTextAnimation";
 import { Square3Stack3DIcon } from "@heroicons/react/16/solid";
 import ScrollReveal from "@/app/components/ScrollReveal";
 import type { serviceDetails } from "@/app/Data/serviceDetails";
@@ -13,19 +12,10 @@ import AutoplayVideo from "@/app/components/AutoplayVideo";
 import { MoveDown, MoveUp } from "lucide-react";
 import Button from "@/app/components/button";
 
-/** Convert a string containing <br /> or <br> tags into JSX with real line breaks */
-function HtmlBreaks({ text }: { text: string }) {
-  const parts = text.split(/<br\s*\/?>/gi);
-  return (
-    <>
-      {parts.map((part, i) => (
-        <React.Fragment key={i}>
-          {part}
-          {i < parts.length - 1 && <br />}
-        </React.Fragment>
-      ))}
-    </>
-  );
+/** Split description at the double-<br /> paragraph boundary */
+function splitDescription(text: string): [string, string] {
+  const parts = text.split(/<br\s*\/?>\s*<br\s*\/?>/i);
+  return [(parts[0] ?? '').trim(), (parts[1] ?? '').trim()];
 }
 
 export default function ServiceDetailContent({
@@ -34,8 +24,10 @@ export default function ServiceDetailContent({
   service: serviceDetails;
 }) {
   const [startHeroText, setStartHeroText] = useState(false);
+  const [startDescText, setStartDescText] = useState(false);
   const [startBenefitsText, setStartBenefitsText] = useState(false);
   const heroTextRef = useRef<HTMLDivElement>(null);
+  const descRef = useRef<HTMLDivElement>(null);
   const benefitsTextRef = useRef<HTMLDivElement>(null);
   const benefitsBannerRef = useRef<HTMLDivElement>(null);
   const [startBannerText, setStartBannerText] = useState(false);
@@ -48,6 +40,23 @@ export default function ServiceDetailContent({
       ([entry]) => {
         if (entry.isIntersecting) {
           setStartBannerText(true);
+          io.disconnect();
+        }
+      },
+      { threshold: 0.1 }
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
+
+  // IntersectionObserver for the description LineByLineText
+  useEffect(() => {
+    const el = descRef.current;
+    if (!el) return;
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setStartDescText(true);
           io.disconnect();
         }
       },
@@ -117,7 +126,7 @@ export default function ServiceDetailContent({
                   delay={0.5}
                   duration={0.4}
                   stagger={0.05}
-                  className="description text-default-heading leading-tight text-2xl-semibold lg:text-4xl-semibold"
+                  className="description text-default-heading leading-[110%] text-2xl-semibold lg:text-4xl-semibold "
                 >
                   CONSUMABLES THAT KEEP YOUR MINE
                   <br />
@@ -156,13 +165,37 @@ export default function ServiceDetailContent({
           <div className="description ">
             <div className="description-content mx-[21] lg:mx-[24] xl:mx-[120]  min-[1920px]:mx-[200]! my-[100] lg:my-[150]">
               <Tag text="details" className="mb-[40] lg:mb-[50]" />
-              <div className=" lg:flex gap-[50] xl:gap-[100] text-default-body">
-                <AnimationCopy>
-                  <div className="description text-md-medium lg:text-2xl-medium lg:leading-8 lg:tracking-tight">
-                    <HtmlBreaks text={service.description || ""} />
+              {(() => {
+                const [para1, para2] = splitDescription(service.description || "");
+                return (
+                  <div ref={descRef} className="lg:grid lg:grid-cols-2 lg:gap-[80px] xl:gap-[120px] text-default-body">
+                    <LineByLineText
+                      startAnimation={startDescText}
+                      duration={0.13}
+                      stagger={0.05}
+                      delay={0}
+                      yFrom={16}
+                      as="div"
+                      className="description text-md-medium lg:text-xl-medium lg:leading-8 lg:tracking-tight"
+                    >
+                      {para1}
+                    </LineByLineText>
+                    {para2 && (
+                      <LineByLineText
+                        startAnimation={startDescText}
+                        duration={0.13}
+                        stagger={0.05}
+                        delay={0.2}
+                        yFrom={16}
+                        as="div"
+                        className="description mt-6 lg:mt-0 text-md-medium lg:text-xl-medium lg:leading-8 lg:tracking-tight"
+                      >
+                        {para2}
+                      </LineByLineText>
+                    )}
                   </div>
-                </AnimationCopy>
-              </div>
+                );
+              })()}
             </div>
           </div>
         </ScrollReveal>

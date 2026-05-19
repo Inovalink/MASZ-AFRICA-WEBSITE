@@ -139,7 +139,7 @@ mm.add("(min-width: 1919px)", () => {
 
 
       // Desktop / large screens: keep existing width + margin animation
-      mm.add("(min-width: 1440px) and (max-width: 1919px)", () => {
+      mm.add("(min-width: 1280px) and (max-width: 1919px)", () => {
         // gsap.set(header, {
         //   width: '80%',
         //   left: '10%',
@@ -202,7 +202,7 @@ mm.add("(min-width: 1919px)", () => {
       });
 
       // Mobile / tablet: only change background color, keep layout full-width
-      mm.add("(max-width: 1439px)", () => {
+      mm.add("(max-width: 1279px)", () => {
         gsap.set(header, {
           width: "100%",
           left: "0%",

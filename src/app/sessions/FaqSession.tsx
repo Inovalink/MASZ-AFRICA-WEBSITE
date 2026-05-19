@@ -32,30 +32,31 @@ export default function FaqSession() {
       id: 2,
       title: "How can I contact MASZ-Africa for support?",
       subtext:
-        "You can reach out via email, phone, or our contact form on the website.",
+        "You can reach our team via email, phone, or the contact form on our website — we aim to respond to all inquiries within one business day. For urgent operational matters, our dedicated support line ensures timely assistance without delays. We are committed to providing clear, actionable responses so your operations stay on track.",
     },
     {
       id: 3,
       title: "Does MASZ-Africa offer training services?",
       subtext:
-        "Yes, MASZ-Africa provides workforce training tailored to mining operations and safety practices.",
+        "Yes, MASZ-Africa delivers structured workforce training programs designed for the realities of active mining environments. Our training covers operational procedures, safety compliance, equipment handling, and emergency response — delivered by experienced industry professionals. Each program is tailored to client-specific requirements to ensure practical, measurable outcomes on the ground.",
     },
     {
       id: 4,
       title: "Where does MASZ-Africa operate?",
-      subtext: "MASZ-Africa operates across West Africa.",
+      subtext:
+        "MASZ-Africa is headquartered in Ghana and operates across West Africa, supporting mining sites from early-stage development through full production. Our regional presence allows us to respond quickly to client needs, coordinate logistics efficiently, and maintain hands-on support throughout the supply chain. We continue to extend our footprint as demand across the region grows.",
     },
     {
       id: 5,
       title: "Why choose MASZ-Africa?",
       subtext:
-        "MASZ-Africa combines reliability, expertise, innovation, and sustainability.",
+        "MASZ-Africa brings together proven industry expertise, reliable supply networks, and a genuine commitment to sustainable mining. Our team understands the operational pressures mining companies face, and we structure every engagement around delivering measurable results — not just services. When you work with MASZ-Africa, you gain a partner that is as invested in your operational success as you are.",
     },
     {
       id: 6,
-      title: "What services does MASZ-Africa provide?",
+      title: "Do you provide after-sales and ongoing technical support?",
       subtext:
-        "MASZ-Africa specializes in mining operations support, equipment supply, technical consultancy, safety solutions, and workforce training tailored to the mining and mineral processing industry. We are committed to improving operational efficiency, reducing risks, and promoting sustainable mining practices. Through innovation and industry expertise, we help our partners achieve long-term productivity and growth.",
+        "Yes, our relationship with clients extends well beyond the initial supply or project delivery. MASZ-Africa provides ongoing technical support, maintenance guidance, and field assistance to help you maximize the value of every solution we deliver. Our team remains accessible throughout the operational lifecycle to address issues, optimize performance, and support your long-term goals.",
     },
   ];
 
@@ -154,7 +155,7 @@ export default function FaqSession() {
   return (
     <section
       ref={sectionRef}
-      className="mt-[100px] mx-[21px] lg:mx-[24] xl:mx-[120] min-[1920px]:mx-[200]! lg:my-[120] bg-white relative z-10"
+      className="mt-[100px] mx-[21px] lg:mx-[24] xl:mx-[120] min-[1920px]:mx-[200]! lg:my-[150] bg-white relative z-10"
     >
       <div className="main-faq-section-container lg:flex lg:justify-between lg:items-stretch lg:gap-[50px]">
         {/* ─────────────────────────────────────────────

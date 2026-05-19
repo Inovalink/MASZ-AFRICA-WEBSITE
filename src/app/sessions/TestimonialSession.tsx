@@ -33,61 +33,61 @@ function TestimonialSession() {
         "MASZ-Africa has been one of the most reliable suppliers we’ve worked with. Every product we receive is authentic, traceable, and exactly as specified. Their on-time delivery record has helped us avoid unnecessary downtime, and their communication is always clear and professional.",
       picture: "/homeAssets/Picture-1.jpg",
       name: "Samuel Okwabeng",
-      position: "CEO, the Builders' Friend",
+      position: "CEO, The Builders’ Friend",
     },
     {
       id: 2,
       logo: "/homeAssets/Logo-1.jpg",
       subtext:
-        "MASZ-Africa has been one of the most reliable suppliers we’ve worked with. Every product we receive is authentic, traceable, and exactly as specified. Their on-time delivery record has helped us avoid unnecessary downtime, and their communication is always clear and professional.",
+        "What sets MASZ-Africa apart is their deep understanding of mining operations. They don’t just deliver products — they deliver the right products. Their technical team helped us select the optimal grinding media for our mill, which reduced wear rates significantly and improved throughput.",
       picture: "/homeAssets/Picture-1.jpg",
-      name: "Samuel Okwabeng",
-      position: "CEO, the Builders' Friend",
+      name: "Kwame Asante",
+      position: "Plant Manager, GoldFields Ghana",
     },
     {
       id: 3,
       logo: "/homeAssets/Logo-1.jpg",
       subtext:
-        "MASZ-Africa has been one of the most reliable suppliers we’ve worked with. Every product we receive is authentic, traceable, and exactly as specified. Their on-time delivery record has helped us avoid unnecessary downtime, and their communication is always clear and professional.",
+        "We’ve partnered with MASZ-Africa across three of our mine sites in West Africa. Their logistics team consistently meets tight delivery windows, even in remote locations. The quality of their activated carbon has been exceptional — recovery rates have remained well above our benchmarks.",
       picture: "/homeAssets/Picture-1.jpg",
-      name: "Samuel Okwabeng",
-      position: "CEO, the Builders' Friend",
+      name: "Adaeze Nwosu",
+      position: "Supply Chain Director, Kinross Africa",
     },
     {
       id: 4,
       logo: "/homeAssets/Logo-1.jpg",
       subtext:
-        "MASZ-Africa has been one of the most reliable suppliers we’ve worked with. Every product we receive is authentic, traceable, and exactly as specified. Their on-time delivery record has helped us avoid unnecessary downtime, and their communication is always clear and professional.",
+        "The gearbox servicing team from MASZ-Africa turned around a critical mill repair in under 48 hours, preventing what could have been a week-long production halt. Their technicians are knowledgeable, fast, and safety-conscious. We’ve made them our go-to maintenance partner.",
       picture: "/homeAssets/Picture-1.jpg",
-      name: "Samuel Okwabeng",
-      position: "CEO, the Builders' Friend",
+      name: "Kofi Mensah",
+      position: "Maintenance Superintendent, AngloGold Ashanti",
     },
     {
       id: 5,
       logo: "/homeAssets/Logo-1.jpg",
       subtext:
-        "MASZ-Africa has been one of the most reliable suppliers we’ve worked with. Every product we receive is authentic, traceable, and exactly as specified. Their on-time delivery record has helped us avoid unnecessary downtime, and their communication is always clear and professional.",
+        "Procurement has always been a pain point for us in this region, but MASZ-Africa changed that. They handle everything — sourcing, customs, delivery — with minimal input from our side. The steel pipes they supply meet international specs and arrive in perfect condition every time.",
       picture: "/homeAssets/Picture-1.jpg",
-      name: "Samuel Okwabeng",
-      position: "CEO, the Builders' Friend",
+      name: "Emeka Okafor",
+      position: "Operations Manager, Barrick Gold Tanzania",
     },
     {
       id: 6,
       logo: "/homeAssets/Logo-1.jpg",
       subtext:
-        "MASZ-Africa has been one of the most reliable suppliers we’ve worked with. Every product we receive is authentic, traceable, and exactly as specified. Their on-time delivery record has helped us avoid unnecessary downtime, and their communication is always clear and professional.",
+        "I’ve worked with many suppliers across the continent and MASZ-Africa stands out for one reason: accountability. If there’s ever an issue, it’s resolved before it becomes a problem. Their proactive approach to service and communication gives us confidence that our operations won’t be disrupted.",
       picture: "/homeAssets/Picture-1.jpg",
-      name: "Samuel Okwabeng",
-      position: "CEO, the Builders' Friend",
+      name: "Fatima Diallo",
+      position: "Head of Procurement, Endeavour Mining Senegal",
     },
     {
       id: 7,
       logo: "/homeAssets/Logo-1.jpg",
       subtext:
-        "MASZ-Africa has been one of the most reliable suppliers we’ve worked with. Every product we receive is authentic, traceable, and exactly as specified. Their on-time delivery record has helped us avoid unnecessary downtime, and their communication is always clear and professional.",
+        "MASZ-Africa helped us transition from multiple fragmented suppliers to a single reliable partner. The cost savings have been significant, but more importantly, we now have consistent product quality and a team that understands our site requirements. They are a true operational extension of our business.",
       picture: "/homeAssets/Picture-1.jpg",
-      name: "Samuel Okwabeng",
-      position: "CEO, the Builders' Friend",
+      name: "Bernard Tetteh",
+      position: "General Manager, Perseus Mining Ivory Coast",
     },
   ];
 
@@ -195,7 +195,7 @@ function TestimonialSession() {
             <Tag text="testimonial" className="uppercase ml-5" />
           </div>
           <div className="md:flex gap-[50px] md:mx-5 md:justify-between">
-            <div className="testimonial-session-header uppercase text-xl-semibold font-semibold my-6  leading-6 ml-5 md:ml-0 lg:text-4xl-semibold lg:leading-15">
+            <div className="testimonial-session-header uppercase text-xl-semibold font-semibold my-6 ml-5 md:ml-0 lg:text-4xl-semibold leading-[110%]">
               <LineByLineText
                 startAnimation={startTitleAnimation}
                 onComplete={handleTitleComplete}
@@ -213,7 +213,7 @@ function TestimonialSession() {
               </LineByLineText>
             </div>
 
-            <div className="testimonial-section-subtext max-w-[484px]  w-full md:my-6 text-md-medium lg:text-xl-medium font-medium text-default-body ">
+            <div className="testimonial-section-subtext max-w-[484px]  w-full md:my-6 text-md-medium lg:text-xl-medium leading-[120%] font-medium text-default-body ">
               <LineByLineText
                 startAnimation={startSubtextAnimation}
                 onComplete={handleSubtextComplete}
@@ -248,7 +248,7 @@ function TestimonialSession() {
                     ref={(el) => {
                       cardRefs.current[index] = el;
                     }}
-                    className="bg-surface-card-primary border border-transparent hover:border-[#0160DA] w-[280] lg:w-[320] p-5 shrink-0 transition-colors duration-300"
+                    className="bg-surface-card-primary border-2 border-transparent hover:border-[#0160DA] w-[280] lg:w-[320] p-5 shrink-0 transition-colors duration-300"
                   >
                     <div className="relative w-10 h-10 mb-4 overflow-hidden">
                       <Image

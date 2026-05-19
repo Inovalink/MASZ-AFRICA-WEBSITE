@@ -2,9 +2,6 @@
 
 import React, { useLayoutEffect, useEffect, useRef, ReactNode } from 'react';
 import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
-
-gsap.registerPlugin(ScrollTrigger);
 
 export type ScrollRevealDirection = 'up' | 'down' | 'left' | 'right';
 
@@ -38,13 +35,25 @@ const directionFromChild = {
   right: { x: -56, y: 0 },
 };
 
+// Convert GSAP-style "top X%" to IntersectionObserver rootMargin.
+// "top 80%" means trigger when element top reaches 80% down the viewport →
+// shrink IO root rectangle bottom by (100 - X)% so element intersects at that threshold.
+function startToRootMargin(start: string): string {
+  const m = start.match(/top\s+(\d+(?:\.\d+)?)%/);
+  if (m) {
+    const pct = parseFloat(m[1]);
+    return `0px 0px -${(100 - pct).toFixed(1)}% 0px`;
+  }
+  return '0px 0px -20% 0px';
+}
+
 export default function ScrollReveal({
   children,
   direction = 'up',
   delay = 0,
-  duration = 0.7, // 50% faster than 1.4
+  duration = 0.7,
   once = false,
-  start = 'top 60%', // animate only when section has entered 40% of viewport height
+  start = 'top 60%',
   className,
   stagger,
   staggerChildren,
@@ -90,54 +99,43 @@ export default function ScrollReveal({
     };
     if (scale) fromVars.scale = 0.94;
 
-    const scrollTriggerConfig = {
-      trigger: el,
-      start,
-      end: 'bottom top',
-      once,
-      toggleActions: once ? 'play none none none' : 'play none none reverse',
-      invalidateOnRefresh: true, // Re-evaluate on refresh so reload + delayed refresh gives correct start
+    const toVars: gsap.TweenVars = {
+      x: 0,
+      y: 0,
+      opacity: 1,
+      duration,
+      delay,
+      ease: 'power2.inOut',
+      overwrite: 'auto',
+      force3D: true,
+      onComplete: () => {
+        if (el) el.style.willChange = 'auto';
+      },
     };
+    if (scale) toVars.scale = 1;
 
-    const ctx = gsap.context(() => {
-      const toVars: gsap.TweenVars = {
-        x: 0,
-        y: 0,
-        opacity: 1,
-        duration,
-        delay,
-        ease: 'power2.inOut',
-        overwrite: 'auto',
-        force3D: true,
+    const parentTarget = staggerChildren != null ? el : (stagger != null ? el.children : el);
+    const toVarsWithCallback = { ...toVars };
+    if (onRevealNearlyComplete) {
+      (toVarsWithCallback as gsap.TweenVars).onUpdate = function () {
+        const tween = this;
+        if (tween.progress() >= 0.85 && !(tween as any)._revealFired) {
+          (tween as any)._revealFired = true;
+          onRevealNearlyComplete();
+        }
       };
-      if (scale) toVars.scale = 1;
+    }
 
-      // 1) Parent / wrapper animation
-      const parentTarget = staggerChildren != null ? el : (stagger != null ? el.children : el);
-      const toVarsWithCallback = { ...toVars };
-      if (onRevealNearlyComplete) {
-        (toVarsWithCallback as gsap.TweenVars).onUpdate = function () {
-          const tween = this;
-          if (tween.progress() >= 0.85 && !(tween as any)._revealFired) {
-            (tween as any)._revealFired = true;
-            onRevealNearlyComplete();
-          }
-        };
-      }
-      const parentTween = gsap.fromTo(
+    const playForward = () => {
+      gsap.fromTo(
         parentTarget,
         fromVars,
         {
           ...toVarsWithCallback,
           stagger: staggerChildren != null ? 0 : (stagger ?? 0),
-          scrollTrigger: scrollTriggerConfig,
         }
       );
-      if (once && parentTween.scrollTrigger) {
-        parentTween.then(() => parentTween.scrollTrigger?.kill());
-      }
 
-      // 2) Children stagger: elements with [data-scroll-reveal-item] first, else direct children (or first child's children)
       if (staggerChildren != null) {
         const marked = el.querySelectorAll<HTMLElement>('[data-scroll-reveal-item]');
         const childTargets =
@@ -151,35 +149,56 @@ export default function ScrollReveal({
 
         if (childTargets.length > 0) {
           const childFrom = directionFromChild[direction];
-          const childFromVars: gsap.TweenVars = {
-            ...childFrom,
-            opacity: 0,
-            ease: 'power2.inOut',
-          };
-          const childTween = gsap.fromTo(
+          gsap.fromTo(
             childTargets,
-            childFromVars,
+            { ...childFrom, opacity: 0, ease: 'power2.inOut' },
             {
               x: 0,
               y: 0,
               opacity: 1,
-              duration: 0.3, // 50% faster than 0.6
+              duration: 0.3,
               stagger: staggerChildren,
               delay: 0.2,
               ease: 'power2.inOut',
               overwrite: 'auto',
               force3D: true,
-              scrollTrigger: { ...scrollTriggerConfig },
             }
           );
-          if (once && childTween.scrollTrigger) {
-            childTween.then(() => childTween.scrollTrigger?.kill());
-          }
         }
       }
-    }, el);
+    };
 
-    return () => ctx.revert();
+    const rootMargin = startToRootMargin(start);
+    let hasPlayed = false;
+
+    const io = new IntersectionObserver(
+      (entries) => {
+        const entry = entries[0];
+        if (!entry) return;
+        if (entry.isIntersecting) {
+          if (once && hasPlayed) return;
+          hasPlayed = true;
+          playForward();
+          if (once) io.disconnect();
+        } else if (!once && hasPlayed) {
+          // Reverse when element leaves viewport (non-once mode)
+          gsap.to(el, {
+            ...fromVars,
+            duration: duration * 0.5,
+            overwrite: 'auto',
+            force3D: true,
+          });
+          hasPlayed = false;
+        }
+      },
+      { rootMargin, threshold: 0 }
+    );
+    io.observe(el);
+
+    return () => {
+      io.disconnect();
+      gsap.killTweensOf(el);
+    };
   }, [direction, delay, duration, once, start, stagger, staggerChildren, scale]);
 
   const from = directionFrom[direction];
@@ -188,6 +207,7 @@ export default function ScrollReveal({
     transform: scale
       ? `translate3d(${from.x}px, ${from.y}px, 0) scale(0.94)`
       : `translate3d(${from.x}px, ${from.y}px, 0)`,
+    willChange: 'transform, opacity',
   };
 
   return (

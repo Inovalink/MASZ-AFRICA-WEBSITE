@@ -20,7 +20,6 @@ import {
 } from "@tabler/icons-react";
 import { Linkedin } from "lucide-react";
 import Link from "next/link";
-import ScrollReveal from "../components/ScrollReveal";
 import LineByLineText from "../components/LineByLineText";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:5001';
@@ -45,8 +44,11 @@ function CountryCodeDropdown({
   const [countries, setCountries] = useState<Country[]>([]);
   const [search, setSearch] = useState("");
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const hasFetched = useRef(false);
 
-  useEffect(() => {
+  const loadCountries = () => {
+    if (hasFetched.current) return;
+    hasFetched.current = true;
     fetch("https://restcountries.com/v3.1/all?fields=name,idd,cca2,flag")
       .then((r) => r.json())
       .then((data: any[]) => {
@@ -76,6 +78,14 @@ function CountryCodeDropdown({
         setCountries(fallback);
         if (!value) onChange(fallback[0]);
       });
+  };
+
+  // Set Ghana as default immediately without waiting for the fetch
+  useEffect(() => {
+    if (!value) {
+      onChange({ name: "Ghana", dialCode: "+233", code: "GH", flag: "🇬🇭" });
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -105,7 +115,7 @@ function CountryCodeDropdown({
       {/* Trigger */}
       <button
         type="button"
-        onClick={() => setOpen(!open)}
+        onClick={() => { if (!open) loadCountries(); setOpen(!open); }}
         className="flex items-center gap-[5px] px-[12px] h-full text-sm-medium text-default-body  bg-white"
       >
         <span>{value?.dialCode ?? "+..."}</span>
@@ -181,6 +191,8 @@ export default function ContactPage() {
   const [contactType, setContactType] = useState<ContactType>("individual");
   const [selectedCountry, setSelectedCountry] = useState<Country | null>(null);
   const [locationRevealed, setLocationRevealed] = useState(false);
+  const [showMap, setShowMap] = useState(false);
+  const mapSectionRef = useRef<HTMLDivElement>(null);
   const [formData, setFormData] = useState({
     fullName: "",
     email: "",
@@ -192,6 +204,27 @@ export default function ContactPage() {
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error' | 'validation'>('idle');
   const [submitMessage, setSubmitMessage] = useState('');
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
+
+  useEffect(() => {
+    const el = mapSectionRef.current;
+    if (!el) return;
+
+    // Mount iframes well before the section is visible so Maps JS loads quietly
+    const ioMap = new IntersectionObserver(
+      ([entry]) => { if (entry.isIntersecting) { setShowMap(true); ioMap.disconnect(); } },
+      { rootMargin: "1200px" }
+    );
+    ioMap.observe(el);
+
+    // Trigger text animations when section actually enters the viewport
+    const ioReveal = new IntersectionObserver(
+      ([entry]) => { if (entry.isIntersecting) { setLocationRevealed(true); ioReveal.disconnect(); } },
+      { threshold: 0.1 }
+    );
+    ioReveal.observe(el);
+
+    return () => { ioMap.disconnect(); ioReveal.disconnect(); };
+  }, []);
 
   const validateForm = (): boolean => {
     const errors: Record<string, string> = {};
@@ -587,31 +620,23 @@ export default function ContactPage() {
       </div>
 
      {/* ── MAP + LOCATION SECTION ── */}
-     <ScrollReveal
-        direction="up"
-        duration={0.4}
-        start="top 90%"
-        scale
-        once
-        staggerChildren={0.1}
-        onRevealNearlyComplete={() => setLocationRevealed(true)}
-      >
-        <div id="talk-to-us" className="contact-bottom-section relative bg-[#016BF2] overflow-hidden mt-[60px] lg:mt-[100px]">
+        <div ref={mapSectionRef} id="talk-to-us" className="contact-bottom-section relative bg-[#016BF2] overflow-hidden mt-[60px] lg:mt-[100px]">
           {/* SVG dot pattern background */}
           <Image src="/contactBg.svg" alt="Background pattern" width={456} height={670} className=" hidden lg:block absolute right-0" />
 
           <div className="relative z-10 mx-[24px] xl:mx-[120px] min-[1920px]:mx-[200px] py-[40px] lg:py-[60px]">
             {/* Mobile/Tablet: map on top (below lg) */}
             <div className="lg:hidden w-full h-[280px] overflow-hidden mb-[32px]">
-              <iframe
-                title="MASZ Africa Head Office"
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3970.7!2d-1.9947!3d5.3054!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNcKwMTgnMTkuNCJOIDHCsDU5JzQxLjAiVw!5e0!3m2!1sen!2sgh!4v1234567890"
-                width="100%"
-                height="100%"
-                style={{ border: 0 }}
-                loading="lazy"
-                referrerPolicy="no-referrer-when-downgrade"
-              />
+              {showMap && (
+                <iframe
+                  title="MASZ Africa Head Office"
+                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3970.7!2d-1.9947!3d5.3054!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNcKwMTgnMTkuNCJOIDHCsDU5JzQxLjAiVw!5e0!3m2!1sen!2sgh!4v1234567890"
+                  width="100%"
+                  height="100%"
+                  style={{ border: 0 }}
+                  referrerPolicy="no-referrer-when-downgrade"
+                />
+              )}
             </div>
 
             <div className="flex flex-col lg:flex-row lg:gap-[40px] xl:gap-[60px] lg:items-stretch">
@@ -698,20 +723,20 @@ export default function ContactPage() {
 
               {/* RIGHT — Google Map (desktop only, lg+) */}
               <div className="hidden lg:block flex-1 min-h-[400px] overflow-hidden">
-                <iframe
-                  title="MASZ Africa Head Office"
-                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3970.7!2d-1.9947!3d5.3054!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNcKwMTgnMTkuNCJOIDHCsDU5JzQxLjAiVw!5e0!3m2!1sen!2sgh!4v1234567890"
-                  width="100%"
-                  height="100%"
-                  style={{ border: 0 }}
-                  loading="lazy"
-                  referrerPolicy="no-referrer-when-downgrade"
-                />
+                {showMap && (
+                  <iframe
+                    title="MASZ Africa Head Office"
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3970.7!2d-1.9947!3d5.3054!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNcKwMTgnMTkuNCJOIDHCsDU5JzQxLjAiVw!5e0!3m2!1sen!2sgh!4v1234567890"
+                    width="100%"
+                    height="100%"
+                    style={{ border: 0 }}
+                    referrerPolicy="no-referrer-when-downgrade"
+                  />
+                )}
               </div>
             </div>
           </div>
         </div>
-      </ScrollReveal>
     </section>
   );
 

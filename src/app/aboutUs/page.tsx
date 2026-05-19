@@ -85,59 +85,20 @@ const valueCards: CoreValue[] = [
 
 // achievements data moved to src/app/data/achievements.ts to avoid circular dependency
 
-const  OUR_STORY_TEXT = (
+// Used for the line-by-line animation (no <br /> so SplitType handles it cleanly)
+const OUR_STORY_PARA_1 =
+  "MASZ-AFRICA Ltd is a Ghana-based private limited liability company that provides high-quality mining consumables, engineering support, and procurement solutions to mining and mineral processing industries across Africa. Established in September 2025 by a multidisciplinary team with more than 15 years of combined experience in metallurgy, engineering, finance, supply chain management, and business improvement, the company was created to address the lack of dependable, responsive, and technically knowledgeable supply partners within the African mining sector.";
+
+const OUR_STORY_PARA_2 =
+  "From the beginning, MASZ-Africa has focused on quality, reliability, and client satisfaction. Through strong partnerships with globally recognized manufacturers and original equipment suppliers, the company delivers world-class products supported by solid technical expertise and consistent on-time delivery. With a growing presence across West Africa, MASZ-Africa aims to become a continental leader in mining supply, logistics, and technical services. The company is committed to empowering mining operations with reliable supplies, innovative solutions, and smooth service delivery that keeps production running efficiently.";
+
+// Used for the static (post-animation) display — matches the mt-4 gap in the animation phase
+const OUR_STORY_TEXT = (
   <>
-    MASZ-AFRICA Ltd is a Ghana-based private limited liability company that
-    provides high-quality mining consumables, engineering support, and
-    procurement solutions to mining and mineral processing industries across
-    Africa. Established in September 2025 by a multidisciplinary team with more
-    than 15 years of combined experience in metallurgy, engineering, finance,
-    supply chain management, and business improvement, the company was created
-    to address the lack of dependable, responsive, and technically knowledgeable
-    supply partners within the African mining sector.From the beginning,
-    MASZ-Africa has focused on quality, reliability, and client satisfaction.
-    Through strong partnerships with globally recognized manufacturers and
-    original equipment suppliers, the company delivers world-class products
-    supported by solid technical expertise and consistent on-time delivery. With
-    a growing presence across West Africa, MASZ-Africa aims to become a
-    continental leader in mining supply, logistics, and technical services. The
-    company is committed to empowering mining operations with reliable supplies,
-    innovative solutions, and smooth service delivery that keeps production
-    running efficiently.
+    <span className="block">{OUR_STORY_PARA_1}</span>
+    <span className="block mt-4">{OUR_STORY_PARA_2}</span>
   </>
 );
-
-// const OUR_STORY_TEXT_1 = (
-//   <>
-//     MASZ-AFRICA Ltd is a Ghana-based private limited liability company that
-//     provides high-quality mining consumables, engineering support, and
-//     procurement solutions to mining and mineral processing industries across
-//     Africa. Established in September 2025 by a multidisciplinary team with more
-//     than 15 years of combined experience in metallurgy, engineering, finance,
-//     supply chain management, and business improvement, the company was created
-//     to address the lack of dependable, responsive, and technically knowledgeable
-//     supply partners within the African mining sector.
-//     <br className="hidden lg:block" />
-//     <br  />
-//     From the beginning, MASZ-Africa has focused on quality, reliability, and
-//     client satisfaction.
-//   </>
-// );
-
-// const OUR_STORY_TEXT_2 = (
-//   <>
-//     Through strong partnerships with globally recognized manufacturers and
-//     original equipment suppliers, the company delivers world-class products
-//     supported by solid technical expertise and consistent on-time delivery.
-//     <br className="hidden lg:block" />
-//     <br  />
-//     With a growing presence across West Africa, MASZ-Africa aims to become a
-//     continental leader in mining supply, logistics, and technical services. The
-//     company is committed to empowering mining operations with reliable supplies,
-//     innovative solutions, and smooth service delivery that keeps production
-//     running efficiently.
-//   </>
-// );
 
 const METRICS = [
   { text: "years of combined experience", value: "15+" },
@@ -163,13 +124,14 @@ function OurStorySection({
   startTextAnimation?: boolean;
 }) {
   const [lineByLineComplete, setLineByLineComplete] = useState(false);
+  const [para1Complete, setPara1Complete] = useState(false);
   const [showAnimationCopy, setShowAnimationCopy] = useState(false);
-  const [startBodyAnimation, setStartBodyAnimation] = useState(false);
   const [startMetricsAnimation, setStartMetricsAnimation] = useState(false);
-  const [lottieData, setLottieData] = useState<any>(null);
+  const [lottieData, setLottieData] = useState<object | null>(null);
   const sectionRef = useRef<HTMLDivElement>(null);
   const overlayRef1 = useRef<HTMLDivElement>(null);
   const overlayRef2 = useRef<HTMLDivElement>(null);
+  const metricsRef = useRef<HTMLDivElement>(null);
   const hasScrolledDownFromTopRef = useRef(false);
   const hasReturnedToTopRef = useRef(false);
   const pendingCopyRef = useRef<{
@@ -219,15 +181,21 @@ function OurStorySection({
   }, []);
 
   useEffect(() => {
-    if (startTextAnimation) {
-      setStartBodyAnimation(true);
-    }
-  }, [startTextAnimation]);
-
-  useEffect(() => {
-    if (!lineByLineComplete) return;
-    setStartMetricsAnimation(true);
-  }, [lineByLineComplete]);
+    if (!lineByLineComplete || startMetricsAnimation) return;
+    const el = metricsRef.current;
+    if (!el) return;
+    const io = new IntersectionObserver(
+      (entries) => {
+        if (entries[0]?.isIntersecting) {
+          setStartMetricsAnimation(true);
+          io.disconnect();
+        }
+      },
+      { threshold: 0.2 }
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, [lineByLineComplete, startMetricsAnimation]);
 
   useEffect(() => {
     const section = sectionRef.current;
@@ -327,31 +295,36 @@ function OurStorySection({
 
           {/* Text + Lottie: flex row — text left, lottie right on desktop */}
           {!lineByLineComplete ? (
-            <div
-              className="flex flex-col  relative"
-            >
+            <div className="flex flex-col relative">
               <LineByLineText
                 duration={0.13}
                 stagger={0.07}
                 delay={0}
-                startAnimation={startBodyAnimation}
+                startAnimation={startTextAnimation}
+                deferSplit
+                onComplete={() => setPara1Complete(true)}
+                className=" text-md-medium lg:text-xl-medium 2xl:text-2xl-medium lg:mt-[10] lg:leading-8 lg:tracking-tight text-[#777777]"
+              >
+                {OUR_STORY_PARA_1}
+              </LineByLineText>
+              <LineByLineText
+                duration={0.13}
+                stagger={0.07}
+                delay={0}
+                startAnimation={para1Complete}
                 deferSplit
                 onComplete={() => setLineByLineComplete(true)}
-                className="main-text-description  text-md-medium lg:text-xl-medium lg:mt-[10] lg:leading-8 lg:tracking-tight text-[#777777]"
+                className=" mt-4 text-md-medium lg:text-xl-medium 2xl:text-2xl-medium lg:leading-8 lg:tracking-tight text-[#777777]"
               >
-                {OUR_STORY_TEXT}
+                {OUR_STORY_PARA_2}
               </LineByLineText>
             </div>
           ) : (
-            <div
-              className="flex flex-col  relative"
-            >
+            <div className="flex flex-col  relative">
               {/* Text with AnimationCopy overlay */}
-              <div
-                className="relative  overflow-hidden"
-              >
+              <div className="relative  overflow-hidden">
                 <div
-                  className="main-text-description text-md-medium lg:text-xl-medium lg:mt-[10] lg:leading-8 lg:tracking-tight text-[#777777]"
+                  className=" text-md-medium lg:text-xl-medium 2xl:text-2xl-medium lg:mt-[10] lg:leading-8 lg:tracking-tight text-[#777777]"
                   style={
                     showAnimationCopy
                       ? { visibility: "hidden", pointerEvents: "none" }
@@ -374,7 +347,7 @@ function OurStorySection({
                   aria-hidden={true}
                 >
                   <AnimationCopy>
-                    <div className="main-text-description text-[#777777] text-md-medium lg:text-xl-medium lg:mt-[10] lg:leading-8 lg:tracking-tight">
+                    <div className=" text-[#777777] text-md-medium lg:text-xl-medium 2xl:text-2xl-medium lg:mt-[10] lg:leading-8 lg:tracking-tight">
                       {OUR_STORY_TEXT}
                     </div>
                   </AnimationCopy>
@@ -413,12 +386,14 @@ function OurStorySection({
       </div>
 
       {/* Metrics Cards Animation */}
-      <MetricsCardAnimation
-        cardClassName=""
-        metrics={METRICS}
-        startAnimation={startMetricsAnimation}
-        className="my-[50px] bg-[#016BF2]! lg:gap-4! py-[31px] px-[36px] gap-4! flex flex-col md:grid md:grid-cols-2 xl:grid-cols-4 mt-[50]"
-      />
+      <div ref={metricsRef}>
+        <MetricsCardAnimation
+          cardClassName=""
+          metrics={METRICS}
+          startAnimation={startMetricsAnimation}
+          className="my-[50px] bg-[#016BF2]! lg:gap-4! py-[31px] px-[36px] gap-4! flex flex-col md:grid md:grid-cols-2 2xl:grid-cols-4 mt-[50]"
+        />
+      </div>
     </div>
   );
 }
@@ -537,10 +512,12 @@ function AboutUSPage() {
             {/* PARALLAX IMAGE */}
             <div
               style={{ contain: "layout style paint", willChange: "transform" }}
-              className="lg:mx-6 mx-6 xl:mx-[120] min-[1920px]:mx-[200]!"
+              className=" mx-6 xl:mx-[120] min-[1920px]:mx-[200]!"
             >
-                     <AutoplayVideo src="/videos/Masz Brand Identity About.mp4" fullWidth={false} />
-
+              <AutoplayVideo
+                src="/videos/Masz Brand Identity About.mp4"
+                fullWidth={false}
+              />
             </div>
             <div className="flex justify-between text-[13.4px] px-2 leading-[140%] text-[#777777] mx-6 mt-4.5 lg:mx-6 xl:mx-[120] min-[1920px]:mx-[200]!">
               <span>Concept 1.0</span>
@@ -615,12 +592,12 @@ function AboutUSPage() {
                   </div>
 
                   {/* Heading */}
-                  <h2 className="text-white text-xl-semibold lg:text-4xl-bold  leading-tight tracking-tight mb-[9px] lg:mb-[21px]">
+                  <h2 className="text-white text-xl-semibold lg:text-4xl-bold  leading-[110%] tracking-tight mb-[9px] lg:mb-[21px]">
                     Defining The Future We Stand For
                   </h2>
 
                   {/* Subtext */}
-                  <p className="text-[rgba(255,255,255,0.75)] text-[10.4px] font-medium lg:text-xl-medium leading-relaxed">
+                  <p className="text-[rgba(255,255,255,0.75)] text-[10.4px] font-medium lg:text-xl-medium leading-[120%]">
                     Our guiding principles define how we operate today—and the
                     impact we aim to make tomorrow. They guide our work, shape
                     our decisions, and keep us aligned with the needs of a
@@ -736,12 +713,12 @@ function AboutUSPage() {
           >
             <div className="core-value-section-content-wrapper  mx-[21] lg:mx-[24px] xl:mx-[120] min-[1920px]:mx-[200]!">
               <Tag text="Our core values" className="my-[60]" />
-              <div className="core-values-text-wrapper">
-                <div className="section-header uppercase text-xl-semibold lg:text-4xl-semibold">
+              <div className="core-values-text-wrapper md:flex md:gap-[50] justify-between md:mb-[50]">
+                <div className="section-header uppercase text-xl-semibold lg:text-4xl-semibold leading-[110%]">
                   <span className="text-primary-default">The heart </span>of our
                   work
                 </div>
-                <div className="subtext text-sm-medium lg:text-md-medium my-[20] lg:w-[700]">
+                <div className="subtext text-sm-medium lg:text-xl-medium text-default-body leading-[120%] my-[20] md:my-0 max-w-[484]">
                   Our core values guide how we operate, shaping our decisions,
                   relationships, and the standard we deliver every day, ensuring
                   we remain consistent, trustworthy, and committed to excellence

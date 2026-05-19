@@ -792,37 +792,10 @@ section {
 .no-scrollbar {
   scrollbar-width: none;
 }
-/* Show button when li is hovered or button itself is hovered */
-.service-item:hover .service-button,
-.service-button:hover {
-  opacity: 1;
-  transform: translateX(0);
-  pointer-events: auto;
-}
 
-/* Default button hidden off-screen */
-.service-button {
-  opacity: 0;
-  transform: translateX(1rem); /* matches translate-x-4 */
-  pointer-events: none;
-  transition: all 0.5s cubic-bezier(0.25,0.8,0.25,1);
-}
-
-/* Arrow inside the button */
-.service-button .lucide {
-  transition: transform 0.5s cubic-bezier(0.25,0.8,0.25,1);
-}
-
-/* Arrow moves slightly when button hovered */
-.service-button:hover .lucide {
-  transform: translateX(0.25rem);
-}
-
-/* Expand subtext container smoothly */
+/* Expand subtext container — height only, GSAP handles text */
 .service-item:hover .service-subtext-container {
-  max-height: 240px; /* same as before */
-  opacity: 1;
-  transform: translateY(0);
+  max-height: 480px;
 }
 
 /* Top and bottom border animations */
@@ -894,9 +867,7 @@ section {
 
 /* --- Subtext expansion --- */
 .service-item:focus-within .service-subtext-container {
-  max-height: 240px; /* same as before */
-  opacity: 1;
-  transform: translateY(0);
+  max-height: 480px;
 }
 
 /* --- Title color change --- */
@@ -1135,19 +1106,21 @@ section {
 /* Hero carousel – hover card (cursor-style tooltip) */
 .hero-carousel-hover-card {
   position: fixed;
+  left: 0;
+  top: 0;
   z-index: 9999;
   width: 260px;
   min-height: 88px;
   padding: 18px 20px;
-  border-radius: 0 !important; /* Sharp edges only, no rounded corners */
+  border-radius: 0 !important;
   border: none;
   box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
   color: #fff;
   pointer-events: none;
-  /* Smooth follow: transition position so the card glides to the cursor */
+  will-change: translate;
+  /* GPU-accelerated follow: translate never triggers layout, left/top do */
   transition:
-    left 0.12s cubic-bezier(0.25, 0.46, 0.45, 0.94),
-    top 0.12s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+    translate 0.18s cubic-bezier(0.25, 0.46, 0.45, 0.94),
     opacity 0.15s ease-out,
     transform 0.15s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   animation: hero-carousel-card-in 0.2s ease-out forwards;
@@ -1185,6 +1158,46 @@ section {
   }
 }
 
+/* Subtext: only the height transitions — GSAP handles the per-line text reveal. */
+.service-subtext-container {
+  transition: max-height 0.45s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+/* Title padding-top also contributes to li height — transition it at the same
+   speed as max-height so the full height lands in one smooth motion. */
+.service-item .service-title {
+  transition:
+    color 0.6s cubic-bezier(0.25, 0.8, 0.25, 1),
+    padding-top 0.45s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+/* Text content shrinks its usable width on hover so the title wraps
+   before reaching the absolutely-positioned image stack. */
+.service-item .service-text-content {
+  transition: padding-right 0.45s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+/* xl (1280–1535px): smaller stack, less padding needed */
+@media (min-width: 1280px) and (max-width: 1535px) {
+  .service-item:hover .service-text-content,
+  .service-item:focus-within .service-text-content {
+    padding-right: 290px;
+  }
+}
+
+/* 2xl (1536px+): full-size stack, restore original padding */
+@media (min-width: 1536px) {
+  .service-image-stack {
+    width: 280px;
+    height: 300px;
+  }
+
+  .service-item:hover .service-text-content,
+  .service-item:focus-within .service-text-content {
+    padding-right: 360px;
+  }
+}
+
 /* Title gets top padding on expand so content is vertically centered against the image */
 @media (min-width: 1024px) {
   .service-item:hover .service-title,
@@ -1214,28 +1227,27 @@ section {
 
 /*
   Strategy:
-  - Default: width 0, overflow hidden, opacity 0, visibility hidden
-    → zero layout footprint, cards fully invisible and non-interactive
-  - Expanded: width 280px, overflow visible, opacity 1, visibility visible
-    → cards fan out with rotation animations
-  - Cards are position:absolute so they don't affect document flow
+  - Default: position:absolute (out of flex flow), opacity 0, visibility hidden,
+    shifted 80px left via translateX → zero layout impact, no jump
+  - Expanded: slides right to final position (translateX 0) while fading in
+  - Cards fan out with rotation animations after the slide settles
 */
 
 .service-image-stack {
-  position: relative;
-  width: 0;
-  min-width: 0;
-  height: 0;
-  overflow: hidden;
+  position: absolute;
+  right: 80px;
+  top: 50%;
+  width: 220px;
+  height: 235px;
+  overflow: visible;
   opacity: 0;
   visibility: hidden;
-  flex-shrink: 0;
-  align-self: center;
+  pointer-events: none;
+  transform: translateY(-50%) translateX(-80px);
   transition:
-    width 0s ease 0s,
-    height 0s ease 0s,
-    opacity 0.1s ease 0s,
-    visibility 0s ease 0.1s;
+    opacity 0.5s cubic-bezier(0.25, 0.8, 0.25, 1) 0s,
+    transform 0.5s cubic-bezier(0.25, 0.8, 0.25, 1) 0s,
+    visibility 0s ease 0.5s;
 }
 
 .service-image-back {
@@ -1256,24 +1268,20 @@ section {
   transition: transform 0.1s ease 0s;
 }
 
-/* EXPANDED */
+/* EXPANDED — slide in from left, fade in */
 
 .service-item:hover .service-image-stack,
 .service-item:focus-within .service-image-stack {
-  width: 280px;
-  height: 300px;
-  overflow: visible;
   opacity: 1;
   visibility: visible;
+  transform: translateY(-50%) translateX(0);
   transition:
-    width 0s ease 0s,
-    height 0s ease 0s,
-    overflow 0s ease 0s,
-    visibility 0s ease 0s,
-    opacity 0.35s cubic-bezier(0.25, 0.8, 0.25, 1) 0.5s;
+    opacity 0.5s cubic-bezier(0.25, 0.8, 0.25, 1) 0.6s,
+    transform 0.5s cubic-bezier(0.25, 0.8, 0.25, 1) 0.6s,
+    visibility 0s ease 0s;
 }
 
-/* Back card fans — offset kept via translate so center-anchor is preserved */
+/* Back card fans out */
 .service-item:hover .service-image-back,
 .service-item:focus-within .service-image-back {
   transform: translate(-50%, -50%) rotate(18.78deg);
@@ -1293,14 +1301,26 @@ section {
   opacity: 0;
   transform: translateX(1rem);
   pointer-events: none;
-  transition: all 0.5s cubic-bezier(0.25, 0.8, 0.25, 1);
+  z-index: 10;
+  transition:
+    opacity 0.5s cubic-bezier(0.25, 0.8, 0.25, 1),
+    transform 0.5s cubic-bezier(0.25, 0.8, 0.25, 1);
 }
 
 .service-item:hover .service-button,
+.service-item:focus-within .service-button,
 .service-button:hover {
   opacity: 1;
   transform: translateX(0);
   pointer-events: auto;
+}
+
+.service-button .lucide {
+  transition: transform 0.5s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.service-button:hover .lucide {
+  transform: translateX(0.25rem);
 }
 
 /* ── Pure CSS scroll reveal (opacity-only — no transform, safe for child ScrollTriggers) ── */

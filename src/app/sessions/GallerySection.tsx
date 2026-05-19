@@ -106,7 +106,7 @@ const GallerySection = () => {
 {/* ----------------- */}
 <div className="md:flex  mx-[24] xl:mx-[120]  min-[1920px]:mx-[200]! overflow-hidden gap-[50px] md:mb-[80] md:justify-between">
         {/* Header */}
-        <div className="section-header uppercase text-xl-semibold lg:text-4xl-semibold mb-[20px]">
+        <div className="section-header uppercase text-xl-semibold lg:text-4xl-semibold leading-[110%] mb-[20px]">
           <HeaderLineByLineAnimation
             startAnimation={startTextAnimation}
             lineY={HEADER_LINE_Y}
@@ -129,7 +129,7 @@ const GallerySection = () => {
 
             delay={0.1}
             stagger={0.05}
-            className="text-sm-medium lg:text-xl-medium text-default-body"
+            className="text-sm-medium lg:text-xl-medium leading-[120%] text-default-body"
           >
             Take a walk through our company gallery, presenting the people and
             processes behind our success, reflecting our commitment to quality

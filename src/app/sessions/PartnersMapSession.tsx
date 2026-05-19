@@ -7,19 +7,11 @@ import Image from "next/image";
 // svgX / svgY are coordinates inside the SVG viewBox (0 0 1010 666),
 // derived from each country's SVG path centroid + city-level offset.
 export const PARTNERS = [
-  { id: 1,  name: "AngloGold Ashanti Ghana",       address: "Community 16, Tema, Ghana",                         svgX: 469, svgY: 446, logo: "" },
-  { id: 2,  name: "AngloGold South Africa",         address: "76 Jeppe Street, Johannesburg, South Africa",      svgX: 556, svgY: 543, logo: "/partnerLogos/Partner-2.svg" },
-  { id: 3,  name: "Kinross Gold Nigeria",           address: "Victoria Island, Lagos, Nigeria",                  svgX: 483, svgY: 435, logo: "" },
-  { id: 4,  name: "Barrick Gold Tanzania",          address: "Msalato Industrial Area, Dodoma, Tanzania",        svgX: 580, svgY: 465, logo: "" },
-  { id: 5,  name: "Gold Fields Kenya",              address: "Upper Hill Road, Nairobi, Kenya",                  svgX: 581, svgY: 455, logo: "/partnerLogos/Partner-1.svg" },
-  { id: 6,  name: "Endeavour Mining Senegal",       address: "Almadies Zone, Dakar, Senegal",                    svgX: 425, svgY: 416, logo: "" },
-  { id: 7,  name: "Perseus Mining Ivory Coast",     address: "Plateau District, Abidjan, Côte d'Ivoire",        svgX: 457, svgY: 443, logo: "" },
-  { id: 8,  name: "Hummingbird Resources Mali",     address: "Badalabougou, Bamako, Mali",                       svgX: 466, svgY: 418, logo: "" },
-  { id: 9,  name: "Newmont Mining USA",             address: "Greenwood Village, Colorado, USA",                 svgX: 178, svgY: 318, logo: "" },
-  { id: 10, name: "Freeport-McMoRan",               address: "Phoenix, Arizona, USA",                            svgX: 164, svgY: 337, logo: "" },
-  { id: 11, name: "Coeur Mining Canada",            address: "401 Bay Street, Toronto, Ontario",                 svgX: 240, svgY: 296, logo: "" },
-  { id: 12, name: "Vale Brasil",                    address: "Praia de Botafogo 186, Rio de Janeiro, Brazil",    svgX: 335, svgY: 530, logo: "" },
-];
+  { id: 1,  name: "Asantegold Bibiani",  address: "No. 19 Abidjan Avenue East Legon, Accra - Ghana",             svgX: 478, svgY: 431, logo: "/partnerLogos/Asante_Gold_Bibiani_logo.png", logoHeight: 90 },
+  { id: 2,  name: "Damang Goldfields",  address: "16 Amber Street, Roman Ridge, Ghana",                          svgX: 474, svgY: 435, logo: "/partnerLogos/Damang_Gold_Fields_Logo.png",  logoHeight: 90 },
+  { id: 3,  name: "Asanko Mines",       address: "#4 Sir Arku Korsah Road, Airport Residential Area, Accra, Ghana", svgX: 476, svgY: 433, logo: "/partnerLogos/Asanko_Mines_logo.png",      logoHeight: 48 },
+  ];
+
 
 const SVG_W = 1010;
 const SVG_H = 666;
@@ -151,7 +143,7 @@ function PartnersMarqueeInline({
   // Keep ref in sync with prop
   useEffect(() => { pausedRef.current = isPaused; }, [isPaused]);
 
-  const scrollingPartners = [...PARTNERS, ...PARTNERS, ...PARTNERS];
+  const scrollingPartners = [...PARTNERS, ...PARTNERS, ...PARTNERS, ...PARTNERS, ...PARTNERS, ...PARTNERS];
 
   useEffect(() => {
     const id = setInterval(() => {
@@ -180,7 +172,7 @@ function PartnersMarqueeInline({
         ? Math.min((time - lastTimeRef.current) / 1000, 0.1)
         : 0;
       lastTimeRef.current = time;
-      const halfWidth = track.scrollWidth / 3;
+      const halfWidth = track.scrollWidth / 6;
       if (halfWidth > 0 && !pausedRef.current) {
         offsetRef.current += speed * dt * scrollDirRef.current;
         if (offsetRef.current >= halfWidth) offsetRef.current -= halfWidth;
@@ -203,7 +195,7 @@ function PartnersMarqueeInline({
     >
       <div
         ref={trackRef}
-        className="flex items-center gap-16 lg:gap-24 will-change-transform"
+        className="flex items-center h-16 gap-16 lg:gap-24 will-change-transform"
         style={{ transition: "none" }}
       >
         {scrollingPartners.map((partner, index) => {
@@ -223,13 +215,14 @@ function PartnersMarqueeInline({
                 <div className="w-3 h-3 rotate-45 bg-white/30" />
               )}
               {partner.logo ? (
-                <div className="relative h-8 lg:h-12 w-auto">
+                <div className="relative flex items-center">
                   <Image
                     src={partner.logo}
                     alt={partner.name}
                     width={120}
-                    height={48}
-                    className="object-contain h-full w-auto brightness-0 invert"
+                    height={partner.logoHeight ?? 48}
+                    style={{ height: `${partner.logoHeight ?? 48}px`, width: "auto" }}
+                    className="object-contain brightness-0 invert"
                     loading="lazy"
                   />
                 </div>
@@ -282,11 +275,11 @@ function PartnersMapSession() {
   return (
     <section className="my-[80px] lg:my-[140px]">
       {/* Header */}
-      <div className="mx-[22px] lg:mx-[24px] xl:mx-[120px] min-[1920px]:mx-[200px] mb-[32px] lg:mb-[48px]">
-        <h2 className="text-xl-semibold lg:text-4xl-semibold uppercase text-default-heading leading-tight mb-[12px]">
+      <div className="mx-[22px] lg:mx-[24px] md:flex md:justify-between xl:mx-[120px] min-[1920px]:mx-[200px] mb-[32px] lg:mb-[72px]">
+        <h2 className="text-xl-semibold lg:text-4xl-semibold uppercase leading-[110%] text-default-heading  mb-[12px]">
           Our <span className="text-primary-default">Partners</span>
         </h2>
-        <p className="text-sm-medium lg:text-xl-medium text-default-body leading-relaxed max-w-[656px]">
+        <p className="text-sm-medium lg:text-xl-medium text-default-body leading-[120%] max-w-[656px]">
           Built on trusted relationships across the mining supply chain. From
           sourcing to delivery, our partners ensure reliability at every stage.
           Together, we drive efficiency, safety, and consistent results.

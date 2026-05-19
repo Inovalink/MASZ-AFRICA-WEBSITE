@@ -64,7 +64,7 @@ const AchievementCard = memo(function AchievementCard({
         </svg>
       </div>
       <p
-        className={`text-sm-medium lg:text-md-medium leading-relaxed ${
+        className={`text-sm-medium lg:text-lg-medium xl:text-xl-medium leading-relaxed ${
           isActive ? "text-white" : ""
         }`}
       >

@@ -3,8 +3,8 @@
 import React, { useState, useRef, useEffect, memo } from 'react';
 import gsap from 'gsap';
 import Tag from '../components/tag';
-import Image from 'next/image';
 import Button from '../components/button';
+import ImageCarousel from '../components/ImageCarousel';
 import { MoveRight } from 'lucide-react';
 import AnimationCopy from '../animations/WritingTextAnimation';
 import HeaderLineByLineAnimation from '../animations/HeaderLineByLineAnimation';
@@ -36,6 +36,14 @@ interface AboutSessionProps {
   /** When true, the about body line-by-line animation starts (after scroll reveal is about to end). */
   startTextAnimation?: boolean;
 }
+
+const ABOUT_CAROUSEL_SLIDES = [
+  { src: '/homeAssets/Image-2.webp', alt: '', priority: true },
+  { src: '/homeAssets/Image-7.webp', alt: '' },
+  { src: '/homeAssets/Image-8.webp', alt: '' },
+  { src: '/homeAssets/Image-9.webp', alt: '' },
+
+];
 
 const HEADER_LINE_Y = 28;
 const HEADER_STAGGER = 0.07;
@@ -147,11 +155,11 @@ function AboutSession({ startTextAnimation = false }: AboutSessionProps) {
   }, [showAnimationCopy]);
 
   return (
-    <section ref={sectionRef} className=" lg:mx-[24] xl:mx-[120] min-[1920px]:mx-[200]! relative lg:my-[170]">
-<div className="about-session-container my-[100] lg:flex lg:justify-between lg:items-stretch lg:gap-[50px]">        {/* Left: Text + Button */}
-        <div className="session-container lg:w-1/2" data-scroll-reveal-item>
+    <section ref={sectionRef} className=" lg:mx-[24] xl:mx-[120] min-[1920px]:mx-[200]! relative lg:my-[100] xl:my-[150]">
+<div className="about-session-container my-[100] xl:flex xl:justify-between xl:items-stretch xl:gap-[50px]">        {/* Left: Text + Button */}
+        <div className="session-container xl:w-1/2" data-scroll-reveal-item>
           <Tag text="About us" className="ml-[22] lg:ml-[0]" />
-          <div className="about-us-header text-xl-semibold uppercase ml-[22] lg:ml-[0] my-[30] lg:my-[37]  lg:text-4xl-semibold">
+          <div className="about-us-header text-xl-semibold leading-[110%] uppercase ml-[22] lg:ml-[0] my-[30] lg:my-[37]  lg:text-4xl-semibold ">
             <HeaderLineByLineAnimation
               startAnimation={startTextAnimation}
               onComplete={() => setStartBodyAnimation(true)}
@@ -172,14 +180,14 @@ function AboutSession({ startTextAnimation = false }: AboutSessionProps) {
               duration={DESCRIPTION_DURATION}
               stagger={DESCRIPTION_STAGGER}
               onComplete={() => setLineByLineComplete(true)}
-              className="about-us-text mx-[25] lg:ml-[0] text-lg-medium lg:text-xl-medium lg:leading-8 lg:tracking-tight text-default-body"
+              className="about-us-text mx-[25] lg:ml-[0] text-lg-medium lg:text-xl-medium  2xl:text-2xl-medium  lg:leading-8 lg:tracking-tight text-default-body"
             >
               {ABOUT_BODY_TEXT}
             </LineByLineText>
           ) : showAnimationCopy ? (
             <div className="relative overflow-hidden" style={{ contain: 'layout style paint' }}>
               <div
-                className="about-us-text mx-[25] lg:ml-[0] text-lg-medium lg:text-xl-medium lg:leading-8 lg:tracking-tight text-default-body "
+                className="about-us-text mx-[25] lg:ml-[0] text-lg-medium lg:text-xl-medium  2xl:text-2xl-medium  lg:leading-8 lg:tracking-tight text-default-body "
                 style={{ visibility: 'hidden', pointerEvents: 'none' }}
                 aria-hidden
               >
@@ -198,7 +206,7 @@ function AboutSession({ startTextAnimation = false }: AboutSessionProps) {
                 <AnimationCopy
                 colorAccent='#41E932'
                 >
-                  <div className="about-us-text text-default-body mx-[25] lg:ml-[0] text-lg-medium lg:text-xl-medium lg:leading-8 lg:tracking-tight">
+                  <div className="about-us-text text-default-body mx-[25] lg:ml-[0] text-lg-medium lg:text-xl-medium  2xl:text-2xl-medium  lg:leading-8 lg:tracking-tight">
                     {ABOUT_BODY_TEXT}
                   </div>
                 </AnimationCopy>
@@ -207,7 +215,7 @@ function AboutSession({ startTextAnimation = false }: AboutSessionProps) {
           ) : (
             /* After line-by-line completes: always show static text (stays visible, no disappear) */
             <div
-              className="about-us-text mx-[25] lg:ml-[0] text-lg-medium lg:text-xl-medium lg:leading-8 lg:tracking-tight text-default-body opacity-100"
+              className="about-us-text mx-[25] lg:ml-[0] text-lg-medium lg:text-xl-medium  2xl:text-2xl-medium  lg:leading-8 lg:tracking-tight text-default-body opacity-100"
               style={{ visibility: 'visible' }}
             >
               {ABOUT_BODY_TEXT}
@@ -215,15 +223,10 @@ function AboutSession({ startTextAnimation = false }: AboutSessionProps) {
           )}
 
           {/* Mobile-only image */}
-          <div className="lg:hidden about-us-image rounded-[4px] overflow-hidden relative w-[88%] h-[400px] mx-[25] mt-[50] bg-red-500 flex items-center justify-center">
-            <Image
-              src="/homeAssets/Image-2.jpg"
-              alt=""
-              fill
-              priority
-              className="object-cover"
-            />
-          </div>
+          <ImageCarousel
+            slides={ABOUT_CAROUSEL_SLIDES}
+            className="xl:hidden about-us-image rounded-[4px] h-[400px] mx-[25] lg:mx-0 mt-[50]"
+          />
 
           <Button
           href='/aboutUs'
@@ -236,16 +239,11 @@ function AboutSession({ startTextAnimation = false }: AboutSessionProps) {
         </div>
 
         {/* Right: Large screen image */}
-        <div className="hidden lg:flex lg:w-1/2 rounded-[4px] overflow-hidden lg:justify-end lg:items-stretch" data-scroll-reveal-item>
-        <div className="about-us-image relative w-full h-full flex items-center justify-center transition-all ease-in-out">
-           <Image
-              src="/homeAssets/Image-2.webp"
-              alt=""
-              fill
-              priority
-              className="object-cover"
-            />
-          </div>
+        <div className="hidden xl:flex xl:w-1/2 rounded-[4px] overflow-hidden xl:justify-end xl:items-stretch" data-scroll-reveal-item>
+          <ImageCarousel
+            slides={ABOUT_CAROUSEL_SLIDES}
+            className="about-us-image w-full h-full"
+          />
         </div>
       </div>
     </section>

@@ -22,8 +22,8 @@ function GalleryImage({ src, alt, index, title, subtext }: GalleryImageProps) {
   const [isHovered, setIsHovered] = useState(false);
   const [isTapped, setIsTapped] = useState(false);
 
-  const IMAGE_WIDTH = 320;
-  const IMAGE_HEIGHT = 540;
+  const IMAGE_WIDTH = 300;
+  // const IMAGE_HEIGHT = 540;
 
   const hoverTextContent = [title, ...subtext].join("\n");
   
@@ -46,10 +46,10 @@ function GalleryImage({ src, alt, index, title, subtext }: GalleryImageProps) {
   return (
     <div
       data-scroll-reveal-item
-      className={`relative shrink-0 w-[${IMAGE_WIDTH}] md:w-[360] overflow-hidden group`}
+      className={`relative shrink-0 w-[${IMAGE_WIDTH}] h-[400] md:h-[540] md:w-[360] overflow-hidden group`}
       style={{
         minWidth: `${IMAGE_WIDTH}px`,
-        height: `${IMAGE_HEIGHT}px`,
+        // height: `${IMAGE_HEIGHT}px`,
       }}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}

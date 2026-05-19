@@ -7,12 +7,12 @@ import ServiceSession from "./sessions/ServiceSession";
 import HeroCarousel from "./sessions/HeroCarousel";
 import SustainabilitySession from "./sessions/SustainabilitySession";
 import CoreValueSession from "./sessions/CoreValueSession";
+import AchievementsSession from "./sessions/AchievementsSession";
 import TestimonialSession from "./sessions/TestimonialSession";
+import PartnersMapSession from "./sessions/PartnersMapSession";
 import AnimatedImagesSection from "./sessions/AnimatedImagesSection";
 import FaqSession from "./sessions/FaqSession";
-import AchievementsSession from "./sessions/AchievementsSession";
 import ScrollReveal from "@/app/components/ScrollReveal";
-import PartnersMapSession from "./sessions/PartnersMapSession";
 import PartnersMarquee from "./components/PartnersMarquee";
 
 // PERFORMANCE: All session components are already memoized in their own files

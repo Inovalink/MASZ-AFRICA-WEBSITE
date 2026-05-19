@@ -32,43 +32,22 @@ export default function LenisProvider({ children }: { children: ReactNode }) {
     // Set Lenis scroll to 0 immediately so ScrollTrigger sees scroll at 0 when triggers are created
     lenis.scrollTo(0, { immediate: true });
 
-    /**
-     * PERFORMANCE OPTIMIZATION: Throttled ScrollTrigger Updates
-     * 
-     * DESKTOP OPTIMIZATION:
-     * - Throttles ScrollTrigger.update() to max once per frame
-     * - Prevents excessive calculations during fast scrolling
-     * - Reduces CPU work by batching scroll events
-     * 
-     * Why this helps:
-     * - ScrollTrigger.update() is expensive (recalculates all triggers)
-     * - Without throttling: Called multiple times per scroll event → lag
-     * - With throttling: Called max once per frame → smooth
-     */
-    let rafId: number | null = null;
     let ticking = false;
     lenis.on('scroll', () => {
       if (ticking) return;
       ticking = true;
-      rafId = requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
         ScrollTrigger.update();
         ticking = false;
-        rafId = null;
       });
     });
 
-    /**
-     * PERFORMANCE: Lenis RAF loop
-     * 
-     * This runs continuously to update smooth scroll position.
-     * Optimized to run efficiently without blocking.
-     */
     function raf(time: number) {
       lenis.raf(time);
       requestAnimationFrame(raf);
     }
-
     requestAnimationFrame(raf);
+
     lenisRef.current = lenis;
 
     ScrollTrigger.scrollerProxy(document.body, {

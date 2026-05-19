@@ -5,6 +5,10 @@ import Image from "next/image";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import HeaderLineByLineAnimation from "../animations/HeaderLineByLineAnimation";
 import LineByLineText from "../components/LineByLineText";
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/dist/ScrollTrigger';
+
+gsap.registerPlugin(ScrollTrigger);
 
 // ─── SVG Icons as named function components ───────────────────────────────────
 
@@ -142,6 +146,19 @@ const IndicatorButtons = memo(function IndicatorButtons({
 }: IndicatorButtonsProps) {
   return (
     <div className="flex flex-row gap-2.5">
+      {/* Intro slide indicator */}
+      <button
+        onClick={() => onSelect(0)}
+        aria-label="Go to Introduction"
+        className={[
+          "flex items-center justify-center text-[#51B948] bg-white/2 backdrop-blur-sm w-[65px] h-[65px] lg:w-[115px] lg:h-[99px] border transition-all duration-200 cursor-pointer",
+          currentSlide === 0 ? "border-white" : "border-white/24 hover:border-white",
+        ].join(" ")}
+      >
+        <div className="bg-white w-[42px] h-[42px] lg:w-[67px] lg:h-[59px] flex items-center justify-center">
+          <IconRecycle className="size-[32px]! lg:size-[40px]!" />
+        </div>
+      </button>
       {CARDS.map((card) => {
         const isActive = currentSlide === card.id;
         const SlideIcon = card.Icon;
@@ -231,13 +248,33 @@ function SustainabilitySession({
     "right"
   );
 
+  const AUTOSLIDE_MS = 5000;
+  const isHoveredRef = useRef(false);
+  const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
+  const startTimer = useCallback(() => {
+    if (timerRef.current) clearInterval(timerRef.current);
+    timerRef.current = setInterval(() => {
+      if (!isHoveredRef.current) {
+        setSlideDirection('right');
+        setCurrentSlide(prev => (prev + 1) % TOTAL_SLIDES);
+      }
+    }, AUTOSLIDE_MS);
+  }, []);
+
+  useEffect(() => {
+    startTimer();
+    return () => { if (timerRef.current) clearInterval(timerRef.current); };
+  }, [startTimer]);
+
   const navigate = useCallback(
     (nextSlide: number, direction?: "left" | "right") => {
       const dir = direction ?? (nextSlide > currentSlide ? "right" : "left");
       setSlideDirection(dir);
       setCurrentSlide(nextSlide);
+      startTimer();
     },
-    [currentSlide]
+    [currentSlide, startTimer]
   );
 
   const goLeft = useCallback(
@@ -257,6 +294,9 @@ function SustainabilitySession({
 
   const touchStartX = useRef<number>(0);
   const touchEndX = useRef<number>(0);
+  const sectionRef = useRef<HTMLElement>(null);
+  const introParallaxRef = useRef<HTMLDivElement>(null);
+  const cardParallaxRefs = useRef<Array<HTMLDivElement | null>>(Array(CARDS.length).fill(null));
 
   const onTouchStart = useCallback((e: React.TouchEvent) => {
     touchStartX.current = e.touches[0].clientX;
@@ -278,8 +318,79 @@ function SustainabilitySession({
     [currentSlide, navigate]
   );
 
+  useEffect(() => {
+    const section = sectionRef.current;
+    if (!section) return;
+
+    const allImages = [
+      introParallaxRef.current,
+      ...cardParallaxRefs.current,
+    ].filter((el): el is HTMLDivElement => el !== null);
+
+    if (allImages.length === 0) return;
+
+    let mm: ReturnType<typeof gsap.matchMedia> | null = null;
+    let ctx: ReturnType<typeof gsap.context> | null = null;
+
+    const init = () => {
+      if (!sectionRef.current) return;
+      mm = gsap.matchMedia();
+      ctx = gsap.context(() => {
+        mm!.add('(max-width: 1023px)', () => {
+          gsap.fromTo(
+            allImages,
+            { y: 0 },
+            {
+              y: '15%',
+              ease: 'none',
+              force3D: true,
+              scrollTrigger: {
+                trigger: section,
+                start: 'top bottom',
+                end: 'bottom top',
+                scrub: 1.2,
+                invalidateOnRefresh: true,
+              },
+            }
+          );
+        });
+
+        mm!.add('(min-width: 1024px)', () => {
+          gsap.fromTo(
+            allImages,
+            { y: 0 },
+            {
+              y: '20%',
+              ease: 'none',
+              force3D: true,
+              scrollTrigger: {
+                trigger: section,
+                start: 'top bottom',
+                end: 'bottom top',
+                scrub: 1.2,
+                invalidateOnRefresh: true,
+              },
+            }
+          );
+        });
+      }, section);
+    };
+
+    requestAnimationFrame(() => requestAnimationFrame(() => init()));
+
+    return () => {
+      ctx?.revert();
+      mm?.revert();
+    };
+  }, []);
+
   return (
-    <section className=" my-[80px]  lg:my-[140px]">
+    <section
+      ref={sectionRef}
+      className=" my-[80px]  lg:my-[140px]"
+      onMouseEnter={() => { isHoveredRef.current = true; }}
+      onMouseLeave={() => { isHoveredRef.current = false; }}
+    >
       <div
         className="relative w-full h-[700px] lg:h-[800px] overflow-hidden"
         onTouchStart={onTouchStart}
@@ -297,17 +408,19 @@ function SustainabilitySession({
         >
           {/* Intro slide image */}
           <div
-            className="absolute top-0 h-full"
+            className="absolute top-0 h-full overflow-hidden"
             style={{ left: "0%", width: `${100 / TOTAL_SLIDES}%` }}
           >
-            <Image
-              src="/homeAssets/Image-17.webp"
-              alt="Sustainability"
-              fill
-              priority
-              sizes="100vw"
-              className="object-cover"
-            />
+            <div
+              ref={introParallaxRef}
+              style={{
+                position: 'absolute',
+                inset: '-15% 0',
+                willChange: 'transform',
+              }}
+            >
+              <Image src="/homeAssets/Image-17.webp" alt="Sustainability" fill priority sizes="100vw" className="object-cover" />
+            </div>
             <div
               className="absolute inset-0 pointer-events-none"
               style={{
@@ -321,19 +434,22 @@ function SustainabilitySession({
           {CARDS.map((c, i) => (
             <div
               key={c.id}
-              className="absolute top-0 h-full"
+              className="absolute top-0 h-full overflow-hidden"
               style={{
                 left: `${((i + 1) / TOTAL_SLIDES) * 100}%`,
                 width: `${100 / TOTAL_SLIDES}%`,
               }}
             >
-              <Image
-                src={c.image}
-                alt={c.title}
-                fill
-                sizes="100vw"
-                className="object-cover"
-              />
+              <div
+                ref={(el) => { cardParallaxRefs.current[i] = el; }}
+                style={{
+                  position: 'absolute',
+                  inset: '-15% 0',
+                  willChange: 'transform',
+                }}
+              >
+                <Image src={c.image} alt={c.title} fill sizes="100vw" className="object-cover" />
+              </div>
               <div
                 className="absolute inset-0 pointer-events-none"
                 style={{

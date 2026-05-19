@@ -76,8 +76,9 @@ const CoreValueCard: React.FC<CoreValueCardProps> = ({ card }) => {
         x: 0, y: 0,
         fontSize: M.title.fontSize, fontWeight: M.title.fontWeight,
         padding: 0,
+        whiteSpace: 'normal',
       });
-      gsap.set(desc,   { autoAlpha: 0, x: M.description.x, y: M.description.y });
+      gsap.set(desc,   { autoAlpha: 0, paddingLeft: 0, x: M.description.x, y: M.description.y });
       gsap.set(image,  { autoAlpha: 0 });
     } else {
       // Distribute available width equally among all cards
@@ -105,6 +106,7 @@ const CoreValueCard: React.FC<CoreValueCardProps> = ({ card }) => {
         x: titleH / 2, y: 0,
         fontSize: D.title.fontSize, fontWeight: D.title.fontWeight,
         padding: D.title.padding,
+        whiteSpace: 'nowrap',
       });
       gsap.set(desc,   { autoAlpha: 0, x: D.description.x, y: D.description.y });
       gsap.set(image,  { autoAlpha: 0 });
@@ -204,14 +206,20 @@ const CoreValueCard: React.FC<CoreValueCardProps> = ({ card }) => {
     // ── Mobile expand ───────────────────────────────────────────────────────
     const mobileExpand = () => {
       const numW = number?.offsetWidth ?? 30;
+      // Reduce indent on small screens (≤375px) to prevent right-side overflow
+      const indent = window.innerWidth <= 375 ? 20 : 40;
       hoverTl.current?.kill();
+      // Compute height from content: top offset (100) + description natural height + bottom padding
+      const descH = (desc as HTMLElement | null)?.scrollHeight ?? 200;
+      const targetH = Math.max(380, 120 + descH);
       hoverTl.current = gsap.timeline();
       hoverTl.current
-        .to(cardEl, { height: 420, duration: 0.5, ease: 'cubic-bezier(0.22,1,0.36,1)' }, 0)
-        .to(image,  { autoAlpha: 1, duration: 0.4 }, 0)
-        .to(number, { left: 40, top: 20, xPercent: 0, yPercent: 0, fontSize: '1.375rem', duration: 0.4 }, 0)
-        .to(title,  { left: 40 + numW + 8, top: 23, xPercent: 0, yPercent: 0, fontSize: '1.125rem', duration: 0.4 }, 0)
-        .to(desc,   { autoAlpha: 1, x: 40, y: 0, left: 0, top: 100, duration: 0.5, delay: 0.1 }, 0);
+      .to(cardEl, { height: 420, duration: 0.5, ease: 'cubic-bezier(0.22,1,0.36,1)' }, 0)
+      .to(image,  { autoAlpha: 1, duration: 0.4 }, 0)
+        .to(number, { left: indent, top: 20, xPercent: 0, yPercent: 0, fontSize: '1.375rem', duration: 0.4 }, 0)
+        .to(title,  { left: indent + numW + 8, top: 23, xPercent: 0, yPercent: 0, fontSize: '1.125rem', whiteSpace: 'normal', duration: 0.4 }, 0)
+        // Use paddingLeft instead of x so the element stays within card bounds (no right overflow)
+        .to(desc,   { autoAlpha: 1, paddingLeft: indent, x: 0, y: 0, left: 0, top: 100, duration: 0.5, delay: 0.1 }, 0);
     };
 
     const mobileCollapse = () => {
@@ -219,11 +227,11 @@ const CoreValueCard: React.FC<CoreValueCardProps> = ({ card }) => {
       hoverTl.current?.kill();
       hoverTl.current = gsap.timeline();
       hoverTl.current
-        .to(cardEl, { height: M.card.height, duration: 0.5, ease: 'cubic-bezier(0.22,1,0.36,1)' }, 0)
+        .to(cardEl, { height: window.innerWidth <= 375 ? 88 : M.card.height, duration: 0.5, ease: 'cubic-bezier(0.22,1,0.36,1)' }, 0)
         .to(image,  { autoAlpha: 0, duration: 0.3 }, 0)
         .to(number, { left: 20, top: '50%', xPercent: 0, yPercent: -50, fontSize: '1.375rem', duration: 0.4 }, 0)
-        .to(title,  { left: 20 + numW + 8, top: '50%', xPercent: 0, yPercent: -50, duration: 0.4 }, 0)
-        .to(desc,   { autoAlpha: 0, x: M.description.x, y: M.description.y, left: 0, top: 0, duration: 0.3 }, 0);
+        .to(title,  { left: 20 + numW + 8, top: '50%', xPercent: 0, yPercent: -50, whiteSpace: 'normal', duration: 0.4 }, 0)
+        .to(desc,   { autoAlpha: 0, paddingLeft: 0, x: M.description.x, y: M.description.y, left: 0, top: 0, duration: 0.3 }, 0);
     };
 
     const onEnter = () => { if (!isMobile.current) onEnterDesktop(); };
@@ -262,7 +270,7 @@ const CoreValueCard: React.FC<CoreValueCardProps> = ({ card }) => {
 
       {/* Content — absolutely positioned, coordinates set entirely by GSAP */}
       <div className="relative z-10  h-full">
-        <p ref={numberRef} className="text-[22px] absolute" >
+        <p ref={numberRef} className="text-[22px] font-semibold absolute" >
           {card.number}.
         </p>
 
@@ -276,9 +284,7 @@ const CoreValueCard: React.FC<CoreValueCardProps> = ({ card }) => {
 
         <p
           ref={descriptionRef}
-          className="absolute text-white text-sm-semibold md:text-md-semibold lg:text-lg-semibold pr-[80px] md:pr-[150px] w-full lg:bottom-[150px]   leading-relaxed"
-          // width capped so text wraps nicely inside expanded card
-          // style={{ width: '340px', fontSize: '0.875rem', opacity: 0 }}
+          className="absolute text-white text-sm-semibold md:text-md-semibold lg:text-lg-semibold pr-5 md:pr-[150px] w-full lg:bottom-[150px] leading-relaxed"
         >
           {card.description}
         </p>

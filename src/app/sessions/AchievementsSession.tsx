@@ -108,7 +108,7 @@ function AchievementsSession({ startTextAnimation: externalTrigger }: Achievemen
 
         <div className="md:flex gap-[50px] md:mb-[80] md:justify-between">
         {/* Header */}
-        <div className="section-header uppercase text-xl-semibold lg:text-4xl-semibold mb-[20px]">
+        <div className="section-header uppercase text-xl-semibold leading-[110%] lg:text-4xl-semibold mb-[20px]">
           <HeaderLineByLineAnimation
             startAnimation={startTextAnimation}
             onComplete={onHeaderComplete}
@@ -129,12 +129,10 @@ function AchievementsSession({ startTextAnimation: externalTrigger }: Achievemen
             startAnimation={startSubtextAnimation}
             duration={0.13}
             stagger={0.05}
-            className="text-sm-medium lg:text-xl-medium text-default-body"
+            className="text-sm-medium lg:text-xl-medium leading-[120%] text-default-body"
           >
             Every milestone we&apos;ve reached is a result of hard work, strong partnerships, 
-            and a genuine commitment to supporting our clients&apos; operations. These achievements 
-            represent the trust we&apos;ve earned and our ongoing mission to keep Africa&apos;s mining 
-            industry moving forward.
+            and a genuine commitment to supporting our clients&apos; operations.
           </LineByLineText>
         </div>
 </div>

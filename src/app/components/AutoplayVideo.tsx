@@ -36,37 +36,30 @@ function AutoplayVideo({ src, classname = '', fullWidth = true }: AutoplayVideoP
   //   };
   // }, []);
   
-//New useEffect with improved logic to prevent navbar hiding on initial load and ensure video is more centered in viewport before triggering class changes  
   useEffect(() => {
     const el = containerRef.current;
     if (!el || typeof window === 'undefined') return;
-  
-    let observer: IntersectionObserver | null = null;
-  
-    // Delay observer setup to prevent hiding navbar on initial page load
-    const timeoutId = setTimeout(() => {
-      observer = new IntersectionObserver(
-        ([entry]) => {
-          if (entry.isIntersecting) {
-            document.body.classList.add('video-in-view');
-          } else {
-            document.body.classList.remove('video-in-view');
-          }
-        },
-        {
-          // Only trigger when video is significantly in viewport
-          threshold: 0.6,
-          // Shrink the detection zone so video needs to be more centered
-          rootMargin: '-10% 0px -10% 0px',
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        // Only hide the navbar when the user has scrolled past the initial
+        // viewport — prevents hero-section videos from triggering on page load.
+        if (entry.isIntersecting && window.scrollY > 150) {
+          document.body.classList.add('video-in-view');
+        } else {
+          document.body.classList.remove('video-in-view');
         }
-      );
-  
-      observer.observe(el);
-    }, 500); // 500ms delay after page load
-  
+      },
+      {
+        threshold: 0.6,
+        rootMargin: '-10% 0px -10% 0px',
+      }
+    );
+
+    observer.observe(el);
+
     return () => {
-      clearTimeout(timeoutId);
-      observer?.disconnect();
+      observer.disconnect();
       document.body.classList.remove('video-in-view');
     };
   }, []);

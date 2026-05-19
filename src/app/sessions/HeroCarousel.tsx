@@ -19,12 +19,16 @@ const TOOLTIP_COLORS = ['#016BF2', '#D92D20', '#51B948', '#F79009'] as const;
 
 /** Slide data: title, short description (subtitle), and image path */
 const CAROUSEL_ITEMS = [
-  { title: 'Consumables', subtitle: 'Certified quality', image: '/homeAssets/Image-1.jpg' },
-  { title: 'Technical support', subtitle: 'On-site expertise', image: '/homeAssets/Image-2.jpg' },
-  { title: 'Mining supply', subtitle: 'Reliable delivery', image: '/homeAssets/Image-3.jpg' },
-  { title: 'Equipment', subtitle: 'Built for tough environments', image: '/homeAssets/Image-4.jpg' },
-  { title: 'Engineering', subtitle: 'Real industry experience', image: '/homeAssets/Image-5.jpg' },
-  { title: 'MASZ-Africa', subtitle: 'Performance that counts', image: '/homeAssets/Image-6.jpg' },
+  { title: 'Industrial Equipment', subtitle: 'Performs consistently under demanding conditions.', image: '/homeAssets/Image-4.jpg' },
+  { title: 'Engineering Excellence', subtitle: 'Technical precision and strategic planning.', image: '/homeAssets/Image-5.jpg' },
+  { title: 'Operational Performance', subtitle: 'Coordinated logistics and field expertise.', image: '/homeAssets/Image-3.jpg' },
+  { title: 'Mining Consumables', subtitle: 'Critical for productivity, durability, safety.', image: '/homeAssets/Image-1.jpg' },
+  { title: 'Industry Partnership', subtitle: 'Dependable partners for long-term goals.', image: '/homeAssets/Image-6.jpg' },
+  { title: 'Technical Support', subtitle: 'Reduce downtime, maintain operational continuity.', image: '/homeAssets/Image-2.jpg' },
+  { title: 'Resource Logistics', subtitle: 'Timely procurement for uninterrupted operations.', image: '/homeAssets/Image-3.jpg' },
+  { title: 'Safety Standards', subtitle: 'Strong safety practices, workforce protection.', image: '/homeAssets/Image-4.jpg' },
+  { title: 'Sustainable Operations', subtitle: 'Sustainable practices, innovation, long-term efficiency.', image: '/homeAssets/Image-5.jpg' },
+  { title: 'Field Solutions', subtitle: 'Practical solutions for operational demands.', image: '/homeAssets/Image-6.jpg' },
 ];
 
 type CarouselItem = (typeof CAROUSEL_ITEMS)[number];
@@ -56,11 +60,11 @@ function CarouselSlide({
   const item = { title, subtitle, image };
   return (
     <div
-      className="shrink-0 w-[min(85vw,440px)] flex items-center gap-6 mx-4 md:mx-6 cursor-none"
+      className="shrink-0 w-[min(90vw,560px)] flex items-center gap-5 mx-4 md:mx-6 cursor-none"
       onMouseEnter={() => onHoverStart(item)}
       onMouseLeave={onHoverEnd}
     >
-      <div className="flex flex-col justify-center min-w-0 overflow-hidden">
+      <div className="flex flex-col justify-center flex-1 min-w-0">
         <LineByLineText
           startAnimation={startTextAnimation}
           duration={0.45}
@@ -68,19 +72,19 @@ function CarouselSlide({
           delay={0}
           yFrom={14}
           as="div"
-          className="text-black font-bold uppercase tracking-tight text-lg md:text-xl lg:text-2xl"
+          className="text-black font-bold uppercase tracking-tight leading-[110%]  text-md-bold md:text-xl lg:text-2xl"
         >
           <>{title}</>
           <br />
-          <span className="text-black/80 font-medium text-sm md:text-base mt-0.5">{subtitle}</span>
+          <span className="text-black/80 font-medium text-[10px]  sm:text-[12px] md:text-base mt-0.5">{subtitle}</span>
         </LineByLineText>
       </div>
-      <div className="relative shrink-0 w-[180px] h-[120px] md:w-[220px] md:h-[140px] rounded overflow-hidden bg-white/10">
+      <div className="relative shrink-0 w-34 h-26.5 sm:w-40 sm:h-30 md:w-55 md:h-45 rounded overflow-hidden bg-white/10">
         <Image
           src={image}
           alt=""
           fill
-          sizes="(max-width: 768px) 180px, 220px"
+          sizes="(max-width: 768px) 200px, 240px"
           className="object-cover"
         />
       </div>
@@ -148,8 +152,7 @@ export default function HeroCarousel({ startTextAnimation = false }: HeroCarouse
         <div
           className="hero-carousel-hover-card rounded-none"
           style={{
-            left: position.x,
-            top: position.y,
+            translate: `${position.x}px ${position.y}px`,
             backgroundColor: tooltipColor,
           }}
         >
@@ -164,7 +167,7 @@ export default function HeroCarousel({ startTextAnimation = false }: HeroCarouse
     <>
       <section
         ref={sectionRef}
-        className="relative w-full bg-[#F7F7F7] py-6 md:py-8 mt-12 md:mt-16 cursor-none"
+        className="relative w-full bg-[#F7F7F7] py-8 md:py-12 mt-12 md:mt-16 cursor-none"
         onMouseMove={onMouseMove}
         onMouseEnter={onSectionEnter}
         onMouseLeave={onSectionLeave}

@@ -10,6 +10,7 @@ import React, {
 } from "react";
 import gsap from "gsap";
 import AnimationCopy from "../animations/WritingTextAnimation";
+import { useScrollToTopTrigger } from "../hooks/useScrollToTopTrigger";
 import AnimatedMetricCard from "../components/AnimatedMetricCard";
 import HeaderLineByLineAnimation from "../animations/HeaderLineByLineAnimation";
 import Image from "next/image";
@@ -18,7 +19,6 @@ import Button from "../components/button";
 import { MoveRight } from "lucide-react";
 import Link from "next/link";
 
-// Animation constants - now used by HeaderLineByLineAnimation component
 const HEADER_LINE_Y = 28;
 const HEADER_STAGGER = 0.07;
 const HEADER_DURATION = 0.1;
@@ -45,13 +45,19 @@ const CORE_VALUE_BODY_TEXT = (
   </>
 );
 
+const CAROUSEL_IMAGES = [
+  "/homeAssets/Image-15.webp",
+  "/homeAssets/Image-11.webp",
+  "/homeAssets/Image-12.webp",
+  "/homeAssets/Image-13.webp",
+] as const;
 
+const CAROUSEL_INTERVAL_MS = 4000;
 
 interface CoreValueSessionProps {
   startTextAnimation?: boolean;
 }
 
-// PERFORMANCE: Memoize metrics array outside component
 const METRICS = [
   { text: "years of combined experience", value: "15+" },
   {
@@ -71,161 +77,143 @@ const METRICS = [
 function CoreValueSession({
   startTextAnimation = false,
 }: CoreValueSessionProps) {
-  // PERFORMANCE: Memoize metrics array reference
   const memoizedMetrics = useMemo(() => METRICS, []);
 
   const [lineByLineComplete, setLineByLineComplete] = useState(false);
-  const [showAnimationCopy, setShowAnimationCopy] = useState(false);
   const [startBodyAnimation, setStartBodyAnimation] = useState(false);
+  const showAnimationCopy = useScrollToTopTrigger(lineByLineComplete);
   const [startMetricsAnimation, setStartMetricsAnimation] = useState(false);
   const [startContentPhase, setStartContentPhase] = useState(false);
   const [imageVisible, setImageVisible] = useState(false);
+  // Internal gate: true once the section has actually entered the viewport
+  const [inView, setInView] = useState(false);
+  const [carouselIndex, setCarouselIndex] = useState(0);
+
   const imageRef = useRef<HTMLDivElement>(null);
-
-  // Animate image in after text animation completes
-  useEffect(() => {
-    if (!imageVisible || !imageRef.current) return;
-    gsap.fromTo(
-      imageRef.current,
-      { opacity: 0, y: 40, force3D: true },
-      {
-        opacity: 1,
-        y: 0,
-        duration: 0.8,
-        ease: "power3.out",
-        force3D: true,
-      }
-    );
-  }, [imageVisible]);
-
-  // PERFORMANCE: Memoize callbacks to prevent re-renders
-  const handleEmptyShown = useCallback(() => {
-    setStartContentPhase(true);
-  }, []);
-
-  const handleSequenceComplete = useCallback(() => {}, []);
+  const metricsRef = useRef<HTMLDivElement>(null);
   const sectionRef = useRef<HTMLElement>(null);
-  const hasLeftSectionRef = useRef(false);
-  const prevInViewRef = useRef(false);
-  const hasScrolledDownFromTopRef = useRef(false);
-  const hasReturnedToTopRef = useRef(false);
-  const pendingCopyRef = useRef<{
-    idleId: number;
-    timeoutId: ReturnType<typeof setTimeout>;
-  } | null>(null);
   const overlayRef = useRef<HTMLDivElement>(null);
+  const carouselTimerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  // True once the image/metrics block has entered the viewport at least once
+  const imageInViewRef = useRef(false);
 
-  // Only run AnimationCopy on second scroll down from top (not on first load/first scroll)
+  // ── In-view gate ────────────────────────────────────────────────────────────
+  // Fires once when at least 15% of the section is visible. Disconnects after
+  // the first hit so it never re-fires. This replaces the parent-prop-only
+  // trigger so text never animates before the section scrolls into view.
   useEffect(() => {
     const section = sectionRef.current;
     if (!section) return;
 
-    const clearPending = () => {
-      const p = pendingCopyRef.current;
-      if (p) {
-        cancelIdleCallback(p.idleId);
-        clearTimeout(p.timeoutId);
-        pendingCopyRef.current = null;
-      }
+    const io = new IntersectionObserver(
+      (entries) => {
+        if (entries[0]?.isIntersecting) {
+          setInView(true);
+          io.disconnect();
+        }
+      },
+      { threshold: 0.15 }
+    );
+    io.observe(section);
+    return () => io.disconnect();
+  }, []);
+
+  // ── Fade in AnimationCopy overlay after React mounts it ─────────────────────
+  useEffect(() => {
+    if (!showAnimationCopy) return;
+    const overlay = overlayRef.current;
+    if (!overlay) return;
+    gsap.fromTo(
+      overlay,
+      { opacity: 0, force3D: true },
+      { opacity: 1, duration: 0.5, ease: "power2.out", force3D: true }
+    );
+  }, [showAnimationCopy]);
+
+  // ── Image viewport gate + GSAP fade-in ─────────────────────────────────────
+  // Calls GSAP directly from trigger() to avoid an extra React render cycle
+  // between "text done" and "fade starts" — eliminates the blank-space flash.
+  // setImageVisible(true) is still set so the metrics gate can depend on it.
+  useEffect(() => {
+    const imageDiv = imageRef.current;
+    if (!imageDiv || imageVisible) return;
+
+    const trigger = () => {
+      setImageVisible(true);
+      gsap.fromTo(
+        imageDiv,
+        { opacity: 0, y: 40, force3D: true },
+        { opacity: 1, y: 0, duration: 0.8, ease: "power3.out", force3D: true }
+      );
     };
 
-    // Track scroll position to detect "second scroll down from top"
-    let lastScrollY = typeof window !== "undefined" ? window.scrollY : 0;
-    const TOP_THRESHOLD = 150; // Consider "at top" if within 150px
-    let wasAtTop = lastScrollY <= TOP_THRESHOLD;
-
-    // PERFORMANCE: Throttle scroll handler to reduce work
-    let scrollTimeout: ReturnType<typeof setTimeout> | null = null;
-    const handleScroll = () => {
-      if (scrollTimeout) return;
-      scrollTimeout = setTimeout(() => {
-        scrollTimeout = null;
-      }, 16); // ~60fps max
-
-      const currentScrollY = window.scrollY;
-      const isAtTop = currentScrollY <= TOP_THRESHOLD;
-      const isScrollingDown = currentScrollY > lastScrollY;
-      const justLeftTop = wasAtTop && !isAtTop && isScrollingDown;
-
-      // If user scrolled back to top, mark that they've returned
-      if (
-        isAtTop &&
-        hasScrolledDownFromTopRef.current &&
-        !hasReturnedToTopRef.current
-      ) {
-        hasReturnedToTopRef.current = true;
-      }
-
-      // Detect second scroll down from top: was at top, now scrolling down and leaving top
-      if (justLeftTop && hasReturnedToTopRef.current && !showAnimationCopy) {
-        clearPending();
-        const runCopy = () => {
-          clearPending();
-          setShowAnimationCopy(true);
-          // Smooth fade-in after state update — use GSAP for GPU-accelerated transition
-
-          requestAnimationFrame(() => {
-            const overlay = overlayRef.current;
-            if (overlay) {
-              gsap.fromTo(
-                overlay,
-                { opacity: 0, force3D: true },
-                { opacity: 1, duration: 0.2, ease: "power2.out", force3D: true }
-              );
-            }
-          });
-        };
-        // Triple rAF for ultra-smooth transition — ensures all layout is settled
-        requestAnimationFrame(() => {
-          requestAnimationFrame(() => {
-            requestAnimationFrame(() => {
-              const idleId = requestIdleCallback(runCopy, { timeout: 500 });
-              const timeoutId = setTimeout(runCopy, 500);
-              pendingCopyRef.current = { idleId, timeoutId };
-            });
-          });
-        });
-      }
-
-      // Track first scroll down from top
-      if (justLeftTop && !hasScrolledDownFromTopRef.current) {
-        hasScrolledDownFromTopRef.current = true;
-      }
-
-      wasAtTop = isAtTop;
-      lastScrollY = currentScrollY;
-    };
+    if (imageInViewRef.current && lineByLineComplete) {
+      trigger();
+      return;
+    }
 
     const io = new IntersectionObserver(
       (entries) => {
-        const [e] = entries;
-        if (!e) return;
-        const inView = e.isIntersecting;
-        if (prevInViewRef.current && !inView) hasLeftSectionRef.current = true;
-        prevInViewRef.current = inView;
+        if (entries[0]?.isIntersecting) {
+          imageInViewRef.current = true;
+          if (lineByLineComplete) {
+            trigger();
+            io.disconnect();
+          }
+        }
       },
-      { root: null, rootMargin: "50px", threshold: [0, 0.1, 0.5] }
+      { threshold: 0.1 }
     );
-    io.observe(section);
+    io.observe(imageDiv);
+    return () => io.disconnect();
+  }, [lineByLineComplete, imageVisible]);
 
-    // Listen to scroll events to detect "scroll down from top"
-    window.addEventListener("scroll", handleScroll, { passive: true });
+  // ── Metrics viewport gate ────────────────────────────────────────────────────
+  // Only fires after imageVisible (parent block is visible) AND the metrics
+  // container itself has scrolled into view — avoids animating off-screen.
+  useEffect(() => {
+    if (!imageVisible || startMetricsAnimation) return;
+    const metricsDiv = metricsRef.current;
+    if (!metricsDiv) return;
 
+    const io = new IntersectionObserver(
+      (entries) => {
+        if (entries[0]?.isIntersecting) {
+          setStartMetricsAnimation(true);
+          io.disconnect();
+        }
+      },
+      { threshold: 0.2 }
+    );
+    io.observe(metricsDiv);
+    return () => io.disconnect();
+  }, [imageVisible, startMetricsAnimation]);
+
+  // ── Carousel auto-rotation ───────────────────────────────────────────────────
+  useEffect(() => {
+    carouselTimerRef.current = setInterval(() => {
+      setCarouselIndex((prev) => (prev + 1) % CAROUSEL_IMAGES.length);
+    }, CAROUSEL_INTERVAL_MS);
     return () => {
-      io.disconnect();
-      window.removeEventListener("scroll", handleScroll);
-      clearPending();
-      if (scrollTimeout) clearTimeout(scrollTimeout);
+      if (carouselTimerRef.current) clearInterval(carouselTimerRef.current);
     };
-  }, [showAnimationCopy]);
+  }, []);
+
+  const handleEmptyShown = useCallback(() => setStartContentPhase(true), []);
+  const handleSequenceComplete = useCallback(() => {}, []);
+
+  // Use internal in-view detection OR parent prop — whichever fires first.
+  // In practice the IntersectionObserver (threshold 0.15) fires before the
+  // parent's ScrollReveal callback, so the section must be meaningfully visible.
+  const shouldStart = inView || startTextAnimation;
 
   return (
     <section ref={sectionRef} className="lg:my-[140] my-[80]">
       <div className="core-value-section-container">
-        {/* Header - line-by-line first, then body animates */}
+        {/* Header — line-by-line reveal */}
         <div className="section-header uppercase text-xl-semibold lg:mx-[24] xl:mx-[120] min-[1920px]:mx-[200]! ml-[22] mt-[30] mb-[51] lg:text-4xl-semibold">
           <HeaderLineByLineAnimation
-            startAnimation={startTextAnimation}
+            startAnimation={shouldStart}
             onComplete={() => setStartBodyAnimation(true)}
             lineY={HEADER_LINE_Y}
             duration={HEADER_DURATION}
@@ -238,82 +226,68 @@ function CoreValueSession({
           </HeaderLineByLineAnimation>
         </div>
 
-        {/* Description: line-by-line; then static; then AnimationCopy overlay (spacer keeps layout, no jump) */}
+        {/* Body text — three phases matching AboutSession */}
         {!lineByLineComplete ? (
+          /* Phase 1: line-by-line reveal */
           <LineByLineText
-          duration={CORE_VALUE_BODY_TEXT_DURATION}
-          stagger={CORE_VALUE_BODY_TEXT_STAGGER}
-          delay={0}
+            duration={CORE_VALUE_BODY_TEXT_DURATION}
+            stagger={CORE_VALUE_BODY_TEXT_STAGGER}
+            delay={0}
             startAnimation={startBodyAnimation}
-            onComplete={() => {
-              setLineByLineComplete(true);
-              setImageVisible(true);
-              setStartMetricsAnimation(true);
-            }}
-            className="core-value-section-subtext lg:mx-[120] min-[1920px]:mx-[200]! text-lg-medium mx-[25px] lg:text-2xl-medium lg:leading-8 lg:tracking-tight text-default-body"
+            onComplete={() => setLineByLineComplete(true)}
+            className="core-value-section-subtext mx-6.25 xl:mx-[120] min-[1920px]:mx-[200]! text-lg-medium lg:text-2xl-medium lg:leading-8 lg:tracking-tight text-default-body"
           >
             {CORE_VALUE_BODY_TEXT}
           </LineByLineText>
-        ) : (
-          <div
-            className="relative overflow-hidden"
-            style={{ contain: "layout style paint" }}
-          >
-            {/* Spacer: always in DOM, holds height; hidden when overlay is shown so layout never shifts */}
+        ) : showAnimationCopy ? (
+          /* Phase 3: AnimationCopy overlay — only mounts after scroll-to-top trigger */
+          <div className="relative overflow-hidden" style={{ contain: "layout style paint" }}>
             <div
-              className="core-value-section-subtext lg:mx-[120] min-[1920px]:mx-[200]! text-lg-medium mx-[25px] lg:text-2xl-medium lg:leading-8 lg:tracking-tight text-default-body text-[#000000]"
-              style={
-                showAnimationCopy
-                  ? { visibility: "hidden", pointerEvents: "none" }
-                  : undefined
-              }
-              aria-hidden={showAnimationCopy}
+              className="core-value-section-subtext xl:mx-[120] min-[1920px]:mx-[200]! text-lg-medium mx-6.25 lg:text-2xl-medium lg:leading-8 lg:tracking-tight text-default-body"
+              style={{ visibility: "hidden", pointerEvents: "none" }}
+              aria-hidden
             >
               {CORE_VALUE_BODY_TEXT}
             </div>
-            {/* Pre-render AnimationCopy but keep it completely hidden until ready — prevents mount-time layout shift */}
             <div
               ref={overlayRef}
               className="absolute top-0 left-0 right-0"
-              style={{
-                opacity: 0,
-                visibility: showAnimationCopy ? "visible" : "hidden",
-                pointerEvents: showAnimationCopy ? "auto" : "none",
-                willChange: showAnimationCopy ? "opacity" : "auto",
-                contain: "layout style paint",
-                isolation: "isolate",
-              }}
-              aria-hidden={!showAnimationCopy}
+              style={{ contain: "layout style paint", isolation: "isolate" }}
             >
               <AnimationCopy>
-                <div className="core-value-section-subtext lg:mx-[200] text-lg-medium mx-[25px] lg:text-2xl-medium lg:leading-8 lg:tracking-tight">
+                <div className="core-value-section-subtext xl:mx-[120] min-[1920px]:mx-[200]! text-lg-medium mx-6.25 lg:text-2xl-medium lg:leading-8 lg:tracking-tight">
                   {CORE_VALUE_BODY_TEXT}
                 </div>
               </AnimationCopy>
             </div>
           </div>
+        ) : (
+          /* Phase 2: static text — AnimationCopy not in DOM */
+          <div className="core-value-section-subtext xl:mx-[120] min-[1920px]:mx-[200]! text-lg-medium mx-6.25 lg:text-2xl-medium lg:leading-8 lg:tracking-tight text-default-body">
+            {CORE_VALUE_BODY_TEXT}
+          </div>
         )}
 
+        {/* Image carousel + metrics — fades in via GSAP once body text finishes */}
         <div
           ref={imageRef}
           style={{ opacity: 0 }}
           className="lg:mx-[24] xl:mx-[120] mt-[50] min-[1920px]:mx-[200]! bg-[#016BF2]"
         >
-          {/* Image above metrics */}
-          <div className="relative h-[500px] overflow-hidden lg:h-[700px]">
-            {/* overlay */}
+          <div className="relative h-125 overflow-hidden lg:h-175">
+            {/* Overlay: tag + heading + button */}
             <div
-              className="absolute justify-end left-0 right-0 bottom-[47px] px-[24px] lg:px-[36px] flex flex-row  items-center lg:flex-row gap-5  lg:gap-[50px] lg:items-center lg:justify-between z-10"
+              className="absolute justify-end left-0 right-0 bottom-11.75 px-6 lg:px-9 flex flex-row items-center lg:flex-row gap-5 lg:gap-12.5 lg:items-center lg:justify-between z-10"
               aria-hidden="true"
             >
-              <div className="bg-white/19 hidden md:flex backdrop-blur-xs px-6 w-full  lg:px-[43px] justify-center  flex-col gap-2.5  min-h-[152px]  text-light flex-1 rounded-[4px] ">
-                <div className="bg-white w-fit rounded-[4px] text-default-heading text-sm-medium absolute top-0 -translate-y-1/2 py-2 px-4 ">
+              <div className="bg-white/19 hidden md:flex backdrop-blur-xs px-6 w-full lg:px-10.75 justify-center flex-col gap-2.5 min-h-38 text-light flex-1 rounded-sm">
+                <div className="bg-white w-fit rounded-sm text-default-heading text-sm-medium absolute top-0 -translate-y-1/2 py-2 px-4">
                   <span>Our Foundation</span>
                 </div>
-                <h3 className=" text-2xl-medium lg:text-3xl-medium">
+                <h3 className="text-2xl-medium lg:text-3xl-medium">
                   Values That Shape Every Project
                 </h3>
-                <p className=" text-md-medium lg:text-lg-medium">
+                <p className="text-md-medium lg:text-lg-medium">
                   Our core values guide how we operate, shaping our decisions.
                 </p>
               </div>
@@ -323,27 +297,56 @@ function CoreValueSession({
                   variant="primaryWhite"
                   size="large"
                   iconClassName="lg:group-hover/btn:text-[#016BF2]! lg:text-[#016BF2]!"
-                  icon={
-                    <MoveRight
-                      size={20}
-                    />
-                  }
-                  className="border-none "
+                  icon={<MoveRight size={20} />}
+                  className="border-none"
                 />
               </Link>
             </div>
 
-            <Image
-              src="/homeAssets/Image-15.webp"
-              width={1920}
-              height={1080}
-              alt=""
-              className="w-full h-full object-cover "
-              data-scroll-reveal-item
-            />
+            {/* Crossfade carousel images */}
+            {CAROUSEL_IMAGES.map((src, i) => (
+              <Image
+                key={src}
+                src={src}
+                fill
+                alt=""
+                priority={i === 0}
+                sizes="(max-width: 1024px) 100vw, calc(100vw - 240px)"
+                className={`object-cover transition-opacity duration-700 ease-in-out ${
+                  i === carouselIndex ? "opacity-100" : "opacity-0"
+                }`}
+              />
+            ))}
+
+            {/* Carousel dot indicators */}
+            <div className="absolute bottom-4 right-4 z-10 flex items-center gap-2">
+              {CAROUSEL_IMAGES.map((_, i) => (
+                <button
+                  key={i}
+                  onClick={() => {
+                    setCarouselIndex(i);
+                    // Reset timer on manual navigation
+                    if (carouselTimerRef.current)
+                      clearInterval(carouselTimerRef.current);
+                    carouselTimerRef.current = setInterval(() => {
+                      setCarouselIndex(
+                        (prev) => (prev + 1) % CAROUSEL_IMAGES.length
+                      );
+                    }, CAROUSEL_INTERVAL_MS);
+                  }}
+                  aria-label={`Show image ${i + 1}`}
+                  className={`h-2 rounded-full transition-all duration-300 cursor-pointer ${
+                    i === carouselIndex
+                      ? "bg-white w-6"
+                      : "bg-white/50 w-2 hover:bg-white/80"
+                  }`}
+                />
+              ))}
+            </div>
           </div>
-          {/* Metrics: Phase 1 – empty card shells appear one after the other; Phase 2 – per card: text line-by-line then number (YouTube-style scroll) */}
-          <div className="metrics-container    py-[32px] gap-4 flex flex-col mx-[21] lg:mx-[34] md:grid grid-cols-2 2xl:grid-cols-4">
+
+          {/* Metrics */}
+          <div ref={metricsRef} className="metrics-container py-8 gap-4 flex flex-col mx-[21] lg:mx-[34] md:grid grid-cols-2 2xl:grid-cols-4">
             {memoizedMetrics.map((metric, index) => (
               <AnimatedMetricCard
                 key={index}
@@ -359,9 +362,8 @@ function CoreValueSession({
           </div>
         </div>
 
-        {/* Images */}
-        <div className="core-value-section-images  flex flex-col gap-[20px] lg:flex">
-          {/* Image 1 */}
+        {/* Mobile-only supporting images */}
+        <div className="core-value-section-images flex flex-col gap-5 lg:flex">
           <div className="relative h-[300px] mx-[21px] overflow-hidden lg:hidden">
             <Image
               src="/homeAssets/Image-3.jpg"
@@ -372,8 +374,6 @@ function CoreValueSession({
               className="object-cover"
             />
           </div>
-
-          {/* Image 2 & 3 */}
           <div className="flex gap-[20px] lg:gap-[40] mx-[21px] lg:mx-0">
             <div className="relative h-[200px] flex-1 overflow-hidden lg:h-[800] lg:hidden">
               <Image
@@ -402,5 +402,4 @@ function CoreValueSession({
   );
 }
 
-// PERFORMANCE: Memoize component to prevent unnecessary re-renders
 export default memo(CoreValueSession);
