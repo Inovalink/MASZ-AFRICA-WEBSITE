@@ -1,6 +1,7 @@
 "use client";
 
 import { forwardRef } from "react";
+import Image from "next/image";
 
 interface CarouselCardProps {
   src: string;
@@ -23,17 +24,13 @@ const CarouselCard = forwardRef<HTMLDivElement, CarouselCardProps>(
           background: "#000",
         }}
       >
-        <img
+        <Image
+          fill
           src={src}
           alt=""
-          style={{
-            width: "100%",
-            height: "100%",
-            objectFit: "cover",
-            userSelect: "none",
-            pointerEvents: "none",
-          }}
+          className="object-cover select-none pointer-events-none"
           draggable={false}
+          sizes="300px"
         />
       </div>
     );

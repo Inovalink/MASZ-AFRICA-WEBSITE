@@ -6,8 +6,9 @@ const CSP = [
   // Fallback for unspecified resource types — self only
   "default-src 'self'",
   // Scripts: self + inline (Next.js hydration + GA init script) + Google Tag Manager
-  // 'unsafe-inline' is required because GA is initialised with dangerouslySetInnerHTML
-  "script-src 'self' 'unsafe-inline' https://www.googletagmanager.com",
+  // 'unsafe-inline'     — required for GA dangerouslySetInnerHTML init script
+  // 'wasm-unsafe-eval'  — required for WebAssembly (Turbopack dev server + DotLottie WASM renderer)
+  "script-src 'self' 'unsafe-inline' 'wasm-unsafe-eval' https://www.googletagmanager.com",
   // Styles: self + inline (Tailwind utility classes) + Google Fonts CSS
   "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
   // Fonts: self + Google Fonts static files + data URIs

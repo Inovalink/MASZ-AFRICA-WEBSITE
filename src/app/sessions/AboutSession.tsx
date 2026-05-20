@@ -10,27 +10,25 @@ import AnimationCopy from '../animations/WritingTextAnimation';
 import HeaderLineByLineAnimation from '../animations/HeaderLineByLineAnimation';
 import LineByLineText from '../components/LineByLineText';
 
-const ABOUT_BODY_TEXT = (
-  <>
-    MASZ-Africa is a Ghana-based mining supply and engineering support
-    company committed to helping mining operations run efficiently,
-    reliably, and without interruption. We provide high-quality
-    consumables, certified equipment, and practical technical services
-    backed by real hands-on industry experience. Through trusted
-    global sourcing and strong technical understanding, we ensure
-    every product we deliver performs exactly as required in demanding
-    mining environments.
-    <br />
-    Our team works closely with clients to understand their
-    operational needs, recommend the right solutions, and provide
-    support that genuinely improves performance. With a consistent
-    focus on on-time delivery, transparent communication, and
-    dependable field assistance, we help mines reduce downtime and
-    keep production moving. At MASZ-Africa, our goal is simple —
-    supply what works, support what matters, and deliver the level of
-    service every mining operation expects and deserves.
-  </>
-);
+const ABOUT_PARA_1 =
+  'MASZ-Africa is a Ghana-based mining supply and engineering support ' +
+  'company committed to helping mining operations run efficiently, ' +
+  'reliably, and without interruption. We provide high-quality ' +
+  'consumables, certified equipment, and practical technical services ' +
+  'backed by real hands-on industry experience. Through trusted ' +
+  'global sourcing and strong technical understanding, we ensure ' +
+  'every product we deliver performs exactly as required in demanding ' +
+  'mining environments.';
+
+const ABOUT_PARA_2 =
+  'Our team works closely with clients to understand their ' +
+  'operational needs, recommend the right solutions, and provide ' +
+  'support that genuinely improves performance. With a consistent ' +
+  'focus on on-time delivery, transparent communication, and ' +
+  'dependable field assistance, we help mines reduce downtime and ' +
+  'keep production moving. At MASZ-Africa, our goal is simple — ' +
+  'supply what works, support what matters, and deliver the level of ' +
+  'service every mining operation expects and deserves.';
 
 interface AboutSessionProps {
   /** When true, the about body line-by-line animation starts (after scroll reveal is about to end). */
@@ -175,23 +173,38 @@ function AboutSession({ startTextAnimation = false }: AboutSessionProps) {
 
           {/* Phase 1: line-by-line reveal. Phase 2: static text stays visible. Phase 3 (optional): AnimationCopy overlay on second scroll from top. */}
           {!lineByLineComplete ? (
-            <LineByLineText
-              startAnimation={startBodyAnimation}
-              duration={DESCRIPTION_DURATION}
-              stagger={DESCRIPTION_STAGGER}
-              onComplete={() => setLineByLineComplete(true)}
-              className="about-us-text mx-[25] lg:ml-[0] text-lg-medium lg:text-xl-medium  2xl:text-2xl-medium  lg:leading-8 lg:tracking-tight text-default-body"
-            >
-              {ABOUT_BODY_TEXT}
-            </LineByLineText>
+            // Two separate LineByLineText blocks so the gap between paragraphs
+            // lives outside the DOM that SplitType touches — spacing is preserved
+            // during animation, in static state, and in the AnimationCopy phase.
+            <div className="flex flex-col gap-5 mx-[25] lg:ml-[0]">
+              <LineByLineText
+                startAnimation={startBodyAnimation}
+                duration={DESCRIPTION_DURATION}
+                stagger={DESCRIPTION_STAGGER}
+                className="about-us-text text-lg-medium lg:text-xl-medium 2xl:text-[24px] lg:leading-8 lg:tracking-tight text-default-body"
+              >
+                {ABOUT_PARA_1}
+              </LineByLineText>
+              <LineByLineText
+                startAnimation={startBodyAnimation}
+                duration={DESCRIPTION_DURATION}
+                stagger={DESCRIPTION_STAGGER}
+                delay={DESCRIPTION_STAGGER * 8}
+                onComplete={() => setLineByLineComplete(true)}
+                className="about-us-text text-lg-medium lg:text-xl-medium 2xl:text-[24px] lg:leading-8 lg:tracking-tight text-default-body"
+              >
+                {ABOUT_PARA_2}
+              </LineByLineText>
+            </div>
           ) : showAnimationCopy ? (
             <div className="relative overflow-hidden" style={{ contain: 'layout style paint' }}>
               <div
-                className="about-us-text mx-[25] lg:ml-[0] text-lg-medium lg:text-xl-medium  2xl:text-2xl-medium  lg:leading-8 lg:tracking-tight text-default-body "
+                className="flex flex-col gap-5 mx-[25] lg:ml-[0] about-us-text text-lg-medium lg:text-xl-medium 2xl:text-[24px] lg:leading-8 lg:tracking-tight text-default-body"
                 style={{ visibility: 'hidden', pointerEvents: 'none' }}
                 aria-hidden
               >
-                {ABOUT_BODY_TEXT}
+                <p>{ABOUT_PARA_1}</p>
+                <p>{ABOUT_PARA_2}</p>
               </div>
               <div
                 ref={overlayRef}
@@ -203,22 +216,22 @@ function AboutSession({ startTextAnimation = false }: AboutSessionProps) {
                   isolation: 'isolate',
                 }}
               >
-                <AnimationCopy
-                colorAccent='#41E932'
-                >
-                  <div className="about-us-text text-default-body mx-[25] lg:ml-[0] text-lg-medium lg:text-xl-medium  2xl:text-2xl-medium  lg:leading-8 lg:tracking-tight">
-                    {ABOUT_BODY_TEXT}
+                <AnimationCopy colorAccent='#41E932'>
+                  <div className="flex flex-col gap-5 mx-[25] lg:ml-[0] about-us-text text-default-body text-lg-medium lg:text-xl-medium 2xl:text-[24px] lg:leading-8 lg:tracking-tight">
+                    <p>{ABOUT_PARA_1}</p>
+                    <p>{ABOUT_PARA_2}</p>
                   </div>
                 </AnimationCopy>
               </div>
             </div>
           ) : (
-            /* After line-by-line completes: always show static text (stays visible, no disappear) */
+            /* After line-by-line completes: always show static text */
             <div
-              className="about-us-text mx-[25] lg:ml-[0] text-lg-medium lg:text-xl-medium  2xl:text-2xl-medium  lg:leading-8 lg:tracking-tight text-default-body opacity-100"
+              className="flex flex-col gap-5 mx-[25] lg:ml-[0] about-us-text text-lg-medium lg:text-xl-medium 2xl:text-[24px] lg:leading-8 lg:tracking-tight text-default-body"
               style={{ visibility: 'visible' }}
             >
-              {ABOUT_BODY_TEXT}
+              <p>{ABOUT_PARA_1}</p>
+              <p>{ABOUT_PARA_2}</p>
             </div>
           )}
 

@@ -1,5 +1,6 @@
 "use client";
 import React, { useLayoutEffect, useEffect, useRef } from "react";
+import Image from "next/image";
 import { MoveRight } from "lucide-react";
 import Button from "../components/button";
 import Tag from "../components/tag";
@@ -225,10 +226,12 @@ function ServicesCardsSection(): React.JSX.Element {
                 </Link>
               </div>
               <div className="relative w-full h-full">
-                <img
+                <Image
+                  fill
                   src={card.image}
                   alt={card.title}
-                  className="i w-full h-full  object-cover"
+                  className="object-cover"
+                  sizes="(max-width: 768px) 100vw, 550px"
                 />
 
 {/* Blur layer with gradient mask — blends in from top, full blur at bottom */}
@@ -287,10 +290,12 @@ function ServicesCardsSection(): React.JSX.Element {
               {/* Lower Section with Image */}
               <div className="lower-section w-full h-[280px] sm:h-[360px] lg:h-[488px] relative">
                 <div className="image-container relative w-full h-full overflow-hidden">
-                  <img
+                  <Image
+                    fill
                     src={card.image}
                     alt={card.title}
-                    className="absolute inset-0 w-full h-full object-cover"
+                    className="object-cover"
+                    sizes="(max-width: 768px) 100vw, 550px"
                   />
                   <div className="absolute inset-0 bg-black/20"></div>
                   <div className="absolute inset-0 flex justify-between gap-4 items-center p-6 lg:p-12">

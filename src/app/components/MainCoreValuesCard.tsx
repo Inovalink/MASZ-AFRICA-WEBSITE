@@ -1,5 +1,6 @@
 'use client';
 import React, { useEffect, useRef } from 'react';
+import Image from 'next/image';
 import { gsap } from 'gsap';
 
 type CoreValue = {
@@ -263,7 +264,7 @@ const CoreValueCard: React.FC<CoreValueCardProps> = ({ card }) => {
     >
       {/* Background image — hidden until hover */}
       <div ref={imageRef} className="absolute inset-0 z-0" style={{ opacity: 0 }}>
-        <img src={card.image} alt={card.title} className="w-full h-full object-cover" />
+        <Image fill src={card.image} alt={card.title} className="object-cover" sizes="(max-width: 768px) 100vw, 50vw" />
         <div className="absolute inset-0 bg-black/30" />
         <div className="absolute bottom-0 left-0 right-0 h-[55%] bg-gradient-to-t from-black/90 via-black/50 to-transparent" />
       </div>

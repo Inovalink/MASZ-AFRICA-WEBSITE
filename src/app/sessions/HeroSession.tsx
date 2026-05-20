@@ -35,6 +35,7 @@ function HeroSession({ startTextAnimation = false }: HeroSessionProps) {
               alt="masz-africa logotype"
               width={370}
               height={100}
+              priority
               className="w-full h-auto lg:h-auto lg:w-[500] xl:w-[550]"
             />
           </div>

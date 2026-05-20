@@ -12,6 +12,27 @@ import AutoplayVideo from "@/app/components/AutoplayVideo";
 import { MoveDown, MoveUp } from "lucide-react";
 import Button from "@/app/components/button";
 
+function useInView(
+  ref: React.RefObject<Element | null>,
+  setState: React.Dispatch<React.SetStateAction<boolean>>,
+) {
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setState(true);
+          io.disconnect();
+        }
+      },
+      { threshold: 0.1 }
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, [ref, setState]);
+}
+
 /** Split description at the double-<br /> paragraph boundary */
 function splitDescription(text: string): [string, string] {
   const parts = text.split(/<br\s*\/?>\s*<br\s*\/?>/i);
@@ -33,72 +54,10 @@ export default function ServiceDetailContent({
   const [startBannerText, setStartBannerText] = useState(false);
   const [activeBenefitId, setActiveBenefitId] = useState<string | null>(null);
 
-  useEffect(() => {
-    const el = benefitsBannerRef.current;
-    if (!el) return;
-    const io = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setStartBannerText(true);
-          io.disconnect();
-        }
-      },
-      { threshold: 0.1 }
-    );
-    io.observe(el);
-    return () => io.disconnect();
-  }, []);
-
-  // IntersectionObserver for the description LineByLineText
-  useEffect(() => {
-    const el = descRef.current;
-    if (!el) return;
-    const io = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setStartDescText(true);
-          io.disconnect();
-        }
-      },
-      { threshold: 0.1 }
-    );
-    io.observe(el);
-    return () => io.disconnect();
-  }, []);
-
-  // IntersectionObserver for the hero LineByLineText
-  useEffect(() => {
-    const el = heroTextRef.current;
-    if (!el) return;
-    const io = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setStartHeroText(true);
-          io.disconnect();
-        }
-      },
-      { threshold: 0.1 }
-    );
-    io.observe(el);
-    return () => io.disconnect();
-  }, []);
-
-  // IntersectionObserver for the benefits LineByLineText
-  useEffect(() => {
-    const el = benefitsTextRef.current;
-    if (!el) return;
-    const io = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setStartBenefitsText(true);
-          io.disconnect();
-        }
-      },
-      { threshold: 0.1 }
-    );
-    io.observe(el);
-    return () => io.disconnect();
-  }, []);
+  useInView(benefitsBannerRef, setStartBannerText);
+  useInView(descRef,           setStartDescText);
+  useInView(heroTextRef,       setStartHeroText);
+  useInView(benefitsTextRef,   setStartBenefitsText);
   return (
     <section className="">
       <div className="main-section-content-container">
