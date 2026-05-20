@@ -811,7 +811,7 @@ useEffect(() => {
               <>
                 {/* Logo + name */}
                 <div className="flex items-center gap-2">
-                  <div className="w-[22px] h-[22px] rounded-full bg-[#016BF2] flex items-center justify-center">
+                  <div className="w-[22px] h-[22px] rounded-full text-white bg-[#016BF2] flex items-center justify-center">
                     <AiStarIcon className="w-3 h-3" />
                   </div>
                   <span className="text-sm font-semibold text-[#016BF2]">
