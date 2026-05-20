@@ -812,9 +812,9 @@ function AboutUSPage() {
           </div>
         </div> */}
 
-        <ScrollReveal direction="up" duration={0.4} start="top 85%" scale once>
+        {/* <ScrollReveal direction="up" duration={0.4} start="top 85%" scale once>
           <TeamMembersSection />
-        </ScrollReveal>
+        </ScrollReveal> */}
 
         <div
           className="gallery-container lg:py-[100]"
