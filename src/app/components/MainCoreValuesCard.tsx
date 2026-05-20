@@ -23,7 +23,7 @@ const GAP = 32; // gap-8 = 2rem = 32px
 // Desktop resting state
 const D = {
   number:      { x: 30, y: 30 },
-  title:       { rotation: 90, x: 40, y: 55, fontSize: '1.25rem', fontWeight: 600, padding: 0 },
+  title:       { rotation: 90, x: 40, y: 55, fontSize: '1.6rem', fontWeight: 600, padding: 0 },
   description: { autoAlpha: 0, x: 0, y: 230 },
   card:        { width: BASE_WIDTH, height: 550 },
 } as const;
@@ -101,7 +101,7 @@ const CoreValueCard: React.FC<CoreValueCardProps> = ({ card }) => {
       const titleH = title?.offsetHeight ?? 22;
       gsap.set(title, {
         rotation: D.title.rotation,
-        left: '50%', top: 30 + numH + 12,
+        left: '50%', top: 50 + numH + 12,
         xPercent: 0, yPercent: 0,
         x: titleH / 2, y: 0,
         fontSize: D.title.fontSize, fontWeight: D.title.fontWeight,
@@ -194,7 +194,7 @@ const CoreValueCard: React.FC<CoreValueCardProps> = ({ card }) => {
         .to(number,  { left: '50%', top: 30, xPercent: -50, yPercent: 0, x: 0, y: 0, rotation: 0, fontSize: D.title.fontSize,   duration: 0.35, ease: 'power3.in' }, 0)
         .to(title,   {
           rotation: D.title.rotation,
-          left: '50%', top: 70, xPercent: 0, yPercent: 0,
+          left: '50%', top: 90, xPercent: 0, yPercent: 0,
           x: (title?.offsetHeight ?? 22) / 2, y: 0,
           fontSize: D.title.fontSize, fontWeight: D.title.fontWeight,
           padding: D.title.padding,
@@ -270,7 +270,7 @@ const CoreValueCard: React.FC<CoreValueCardProps> = ({ card }) => {
 
       {/* Content — absolutely positioned, coordinates set entirely by GSAP */}
       <div className="relative z-10  h-full">
-        <p ref={numberRef} className="text-[22px] font-semibold absolute" >
+        <p ref={numberRef} className="text-[22px] lg:text-[24px] font-semibold absolute" >
           {card.number}.
         </p>
 

@@ -4,6 +4,19 @@
 @import url('https://fonts.googleapis.com/css2?family=Monument+Extended&display=swap');
 @import "tailwindcss";
 
+/* ── iOS input zoom prevention ───────────────────────────────────────────────
+   iOS Safari zooms into any focused input whose computed font-size is below
+   16px. The bare element selector loses to Tailwind utility classes (class
+   selectors have higher specificity), so !important is required to win.
+   max(16px, 1em) is safe: inputs already ≥ 16px keep their size (1em wins);
+   only sub-16px inputs are bumped up just enough to suppress the zoom.
+   ────────────────────────────────────────────────────────────────────────── */
+input,
+textarea,
+select {
+  font-size: max(16px, 1em) !important;
+}
+
 /* Navbar initial state — CSS variables so the correct width/left are set
    from the very first paint, before any JS hydration runs.
    GSAP takes over these properties after mount. */
@@ -838,6 +851,12 @@ section {
 /* Title color change on hover */
 .service-item:hover .service-title {
   color: #2563eb; /* blue-600 */
+  
+}
+@media (min-width: 1280px) {
+    .service-item:hover .service-title {
+max-width: 800px;    }
+  
 }
 
 /* Number color change and scale on hover */

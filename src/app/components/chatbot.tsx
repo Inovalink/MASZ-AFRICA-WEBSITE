@@ -2,9 +2,7 @@
 
 import React, { useState, useRef, useEffect, useCallback } from "react";
 import {
-  MessageCircle,
   X,
-  Sparkles,
   Phone,
   FileText,
   Layers,
@@ -19,9 +17,152 @@ import {
 import clsx from "clsx";
 import gsap from "gsap";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import NextLink from "next/link";
+import { DotLottieReact } from "@lottiefiles/dotlottie-react";
+import type { DotLottie } from "@lottiefiles/dotlottie-react";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
+
+// ─── AI star static SVG icon ──────────────────────────────────────────────────
+
+function AiStarIcon({ className }: { className?: string }) {
+  return (
+    <svg
+      className={className}
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 38 38"
+      fill="none"
+    >
+      <path
+        d="M23.3042 13.9796L17.0904 11.6494L23.3042 9.31691L25.6343 3.10547L27.9667 9.31691L34.1783 11.6494L27.9667 13.9796L25.6343 20.1934L23.3042 13.9796ZM10.8766 26.4072L3.10938 23.3003L10.8766 20.1934L13.9835 12.4262L17.0904 20.1934L24.8576 23.3003L17.0904 26.4072L13.9835 34.1744L10.8766 26.4072Z"
+        fill="currentColor"
+      />
+    </svg>
+  );
+}
+
+// ─── Pill-style link used inside chat responses ───────────────────────────────
+
+function ChatLink({
+  href,
+  children,
+  onClick,
+}: {
+  href?: string;
+  children: React.ReactNode;
+  onClick?: () => void;
+}) {
+  const ArrowIcon = () => (
+    <svg width="11" height="11" viewBox="0 0 11 11" fill="none" aria-hidden="true" className="shrink-0">
+      <path d="M2 9L9 2M9 2H3.5M9 2V7.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+
+  const pillClass =
+    "inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full " +
+    "bg-[#016BF2]/10 text-[#016BF2] font-medium " +
+    "border border-[#016BF2]/25 " +
+    "hover:bg-[#016BF2]/20 transition-colors duration-150 " +
+    "text-[0.8em] leading-relaxed align-baseline";
+
+  if (onClick) {
+    return (
+      <button type="button" onClick={onClick} className={pillClass}>
+        {children}
+        <ArrowIcon />
+      </button>
+    );
+  }
+
+  const isExternal =
+    href?.startsWith("http") || href?.startsWith("mailto:") || href?.startsWith("tel:");
+
+  if (isExternal) {
+    return (
+      <a href={href} target="_blank" rel="noopener noreferrer" className={pillClass}>
+        {children}
+        <ArrowIcon />
+      </a>
+    );
+  }
+
+  return (
+    <NextLink href={href ?? "/"} className={pillClass}>
+      {children}
+      <ArrowIcon />
+    </NextLink>
+  );
+}
+
+// ─── Markdown renderer for bot responses ─────────────────────────────────────
+
+function MarkdownContent({ content }: { content: string }) {
+  return (
+    <div className="space-y-1.5 text-sm">
+      <ReactMarkdown
+        remarkPlugins={[remarkGfm]}
+        components={{
+          a({ href, children }) {
+            return <ChatLink href={href}>{children}</ChatLink>;
+          },
+          strong({ children }) {
+            return <strong className="font-semibold text-[#0D0D0D]">{children}</strong>;
+          },
+          em({ children }) {
+            return <em className="italic">{children}</em>;
+          },
+          p({ children }) {
+            return <p className="leading-relaxed">{children}</p>;
+          },
+          ul({ children }) {
+            return <ul className="space-y-0.5 my-0.5">{children}</ul>;
+          },
+          ol({ children }) {
+            return <ol className="space-y-0.5 my-0.5 list-decimal list-inside">{children}</ol>;
+          },
+          li({ children, ordered, ...rest }: any) {
+            if (ordered) return <li className="pl-1">{children}</li>;
+            return (
+              <li className="flex gap-2 list-none">
+                <span className="text-[#016BF2] mt-0.5 shrink-0 select-none">•</span>
+                <span className="flex-1">{children}</span>
+              </li>
+            );
+          },
+          h1({ children }) {
+            return <p className="font-semibold text-[#0D0D0D] mt-2 mb-0.5">{children}</p>;
+          },
+          h2({ children }) {
+            return <p className="font-semibold text-[#0D0D0D] mt-2 mb-0.5">{children}</p>;
+          },
+          h3({ children }) {
+            return <p className="font-medium text-[#0D0D0D] mt-1.5 mb-0.5">{children}</p>;
+          },
+          code({ children }) {
+            return (
+              <code className="px-1 py-0.5 rounded bg-[#F2F2F2] text-[0.85em] font-mono">
+                {children}
+              </code>
+            );
+          },
+          blockquote({ children }) {
+            return (
+              <blockquote className="border-l-2 border-[#016BF2]/40 pl-3 text-[#555] italic my-1">
+                {children}
+              </blockquote>
+            );
+          },
+        }}
+      >
+        {content}
+      </ReactMarkdown>
+    </div>
+  );
+}
 
 const MAX_INPUT_LENGTH = 500;
+
+const SAMPLE_PROMPT = "What services does MASZ-Africa offer?";
 const LONG_PRESS_MS = 500;
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:5001";
 
@@ -153,7 +294,19 @@ const Chatbot: React.FC = () => {
   const [speechError, setSpeechError] = useState<string | null>(null);
   const [speechSupported, setSpeechSupported] = useState(false);
   const [isTyping, setIsTyping] = useState(false);
-  const router = useRouter();
+
+  // Lottie refs for trigger button and welcome screen
+  const triggerLottieRef = useRef<DotLottie | null>(null);
+  const [isTriggerLottieReady, setIsTriggerLottieReady] = useState(false);
+  const welcomeLottieRef = useRef<DotLottie | null>(null);
+
+  const handleTriggerLottieRef = (dl: DotLottie | null) => {
+    triggerLottieRef.current = dl;
+    if (dl) setIsTriggerLottieReady(true);
+  };
+  const handleWelcomeLottieRef = (dl: DotLottie | null) => {
+    welcomeLottieRef.current = dl;
+  };
 
   const sessionIdRef = useRef(
     `session-${Date.now()}-${Math.random().toString(36).slice(2)}`
@@ -260,6 +413,7 @@ useEffect(() => {
     typeof window !== "undefined" &&
     window.matchMedia("(max-width: 767px)").matches;
 
+
   // Auto-resize textarea
   useEffect(() => {
     const t = textareaRef.current;
@@ -302,11 +456,13 @@ useEffect(() => {
 
     const update = () => {
       if (!el || !isMobile()) return;
-      // height = visible area above keyboard; top = browser chrome offset
-      el.style.height = `${vv.height}px`;
+      // Fallback for older browsers where position:fixed is relative to the
+      // layout viewport rather than the visual viewport. On modern iOS/Android,
+      // inset-0 already does the right thing and these values are a no-op.
       el.style.top = `${vv.offsetTop}px`;
       el.style.left = `${vv.offsetLeft}px`;
       el.style.width = `${vv.width}px`;
+      el.style.height = `${vv.height}px`;
     };
 
     update();
@@ -566,9 +722,11 @@ useEffect(() => {
 
   return (
     <>
-      {/* ── Trigger button — Inovalink pulse rings, MASZ blue ── */}
+      {/* ── Trigger button ── */}
       <button
         onClick={() => setIsOpen(!isOpen)}
+        onMouseEnter={() => triggerLottieRef.current?.play()}
+        onMouseLeave={() => triggerLottieRef.current?.pause()}
         className={clsx(
           "fixed bottom-6 right-6 z-[110] max-lg:bottom-[90px]",
           "w-[64px] h-[64px] rounded-full",
@@ -579,51 +737,73 @@ useEffect(() => {
         )}
         aria-label={isOpen ? "Close chat" : "Open chat"}
       >
-       {isOpen ? (
-  <div className="w-[42px] h-[42px] bg-[#016BF2] rounded-full flex items-center justify-center shadow-lg transition-transform duration-300 rotate-90 hover:bg-[#0150B6]">
-    <X className="w-5 h-5 text-white" />
-  </div>
-) : (
-  <div className="relative w-full h-full flex items-center justify-center">
-    {/* GSAP ripple ring 1 */}
-    <div
-      ref={ring1Ref}
-      className="absolute rounded-full bg-[#016BF2]/40"
-      style={{ width: 42, height: 42 }}
-    />
-    {/* GSAP ripple ring 2 */}
-    <div
-      ref={ring2Ref}
-      className="absolute rounded-full bg-[#016BF2]/25"
-      style={{ width: 42, height: 42 }}
-    />
-    {/* Center blue button */}
-    <div className="relative z-10 w-[42px] h-[42px] bg-[#016BF2] rounded-full flex items-center justify-center shadow-lg hover:bg-[#0150B6] transition-colors">
-      <MessageCircle className="w-5 h-5 text-white" />
-    </div>
-  </div>
-)}
+        {isOpen ? (
+          <div className="w-[42px] h-[42px] bg-[#016BF2] rounded-full flex items-center justify-center shadow-lg transition-transform duration-300 rotate-90 hover:bg-[#0150B6]">
+            <X className="w-5 h-5 text-white" />
+          </div>
+        ) : (
+          <div className="relative w-full h-full flex items-center justify-center">
+            {/* GSAP ripple ring 1 */}
+            <div
+              ref={ring1Ref}
+              className="absolute rounded-full bg-[#016BF2]/40"
+              style={{ width: 42, height: 42 }}
+            />
+            {/* GSAP ripple ring 2 */}
+            <div
+              ref={ring2Ref}
+              className="absolute rounded-full bg-[#016BF2]/25"
+              style={{ width: 42, height: 42 }}
+            />
+            {/* Center blue button with Lottie + SVG fallback */}
+            <div className="relative z-10 w-[42px] h-[42px] bg-[#016BF2] rounded-full flex items-center justify-center shadow-lg hover:bg-[#0150B6] transition-colors">
+              {/* SVG fallback — visible until Lottie initialises */}
+              <AiStarIcon
+                className={clsx(
+                  "absolute w-5 h-5 transition-opacity duration-300",
+                  isTriggerLottieReady ? "opacity-0" : "opacity-100"
+                )}
+              />
+              {/* Lottie — fades in when ready */}
+              <DotLottieReact
+                className={clsx(
+                  "absolute w-5 h-5 transition-opacity duration-300",
+                  isTriggerLottieReady ? "opacity-100" : "opacity-0"
+                )}
+                src="/animations/ai star.json"
+                loop
+                autoplay
+                dotLottieRefCallback={handleTriggerLottieRef}
+              />
+            </div>
+          </div>
+        )}
       </button>
 
       {/* ── Chat window ── */}
       {isOpen && (
         <div
+          className="fixed top-0 left-0 w-full h-screen z-[109] bg-white md:[display:contents]"
+          aria-hidden="true"
+        >
+        <div
           ref={chatWindowRef}
           className={clsx(
-            "fixed z-[110] flex flex-col overflow-hidden bg-white shadow-2xl",
-            // Mobile: full screen — JS sets exact height+top via visualViewport so keyboard doesn't leave a gap
-            "inset-0 w-full h-full max-w-none rounded-none",
+            // Mobile: absolute inside white shell — JS sizes it to visual viewport
+            "absolute inset-0 flex flex-col overflow-hidden bg-white",
             "pt-[env(safe-area-inset-top)] pb-[env(safe-area-inset-bottom)]",
             "pl-[env(safe-area-inset-left)] pr-[env(safe-area-inset-right)]",
-            // Tablet/Desktop: Inovalink floating panel shape
+            // Desktop: shell has display:contents, so this becomes viewport-fixed
+            "md:fixed md:shadow-2xl md:z-[110]",
             "md:pt-0 md:pb-0 md:pl-0 md:pr-0",
-            "md:inset-auto md:bottom-28 md:right-4 md:left-auto md:top-auto md:min-h-0",
+            "md:bottom-28 md:right-4 md:left-auto md:top-auto md:min-h-0",
             "md:w-[550px] md:h-[668px] md:rounded-[31px]",
             "chatbot-window"
           )}
           role="dialog"
           aria-modal="true"
           aria-label="Maszbot"
+          onWheel={(e) => e.stopPropagation()}
         >
           {/* ── Header — Inovalink layout, MASZ blue ── */}
           <header className="shrink-0 flex items-center justify-between px-4 md:px-7 py-3 md:py-5 bg-white md:rounded-t-[31px]">
@@ -631,8 +811,8 @@ useEffect(() => {
               <>
                 {/* Logo + name */}
                 <div className="flex items-center gap-2">
-                  <div className="w-[22px] h-[22px] rounded-full bg-[#016BF2]/10 flex items-center justify-center">
-                    <Sparkles className="w-3 h-3 text-[#016BF2]" />
+                  <div className="w-[22px] h-[22px] rounded-full bg-[#016BF2] flex items-center justify-center">
+                    <AiStarIcon className="w-3 h-3" />
                   </div>
                   <span className="text-sm font-semibold text-[#016BF2]">
                     Maszbot
@@ -712,20 +892,23 @@ useEffect(() => {
           </header>
 
           {/* ── Scrollable content ── */}
-          <div className="flex-1 min-h-0 overflow-y-auto flex flex-col no-scrollbar">
+          <div className="flex-1 min-h-0 overflow-hidden flex flex-col">
             {messages.length === 0 ? (
               /* Welcome screen */
-              <div className="flex-1 flex flex-col items-center justify-center px-4 md:px-7 overflow-y-auto">
+              <div className="flex-1 flex flex-col items-center justify-center px-4 md:px-7 overflow-y-auto no-scrollbar">
                 <div className="text-center">
-                  {/* Blue orb — static Sparkles */}
+                  {/* Blue orb — Lottie animation */}
                   <div className="flex justify-center mb-[35px]">
                     <div className="relative inline-flex justify-center">
                       <div className="absolute inset-0 rounded-full bg-[#016BF2]/20 blur-xl scale-150" />
                       <div className="absolute rounded-full bg-[#016BF2]/10 blur-lg w-16 h-16 scale-125" />
-                      <div className="relative w-[94px] h-[94px] rounded-full bg-[#016BF2] flex items-center justify-center shadow-lg">
-                        <Sparkles
-                          className="w-[46px] h-[46px] text-white"
-                          strokeWidth={2}
+                      <div className="relative w-[94px] h-[94px] rounded-full bg-[#016BF2] flex items-center justify-center shadow-lg [box-shadow:0_4px_17px_0_rgba(235,235,235,0.3)_inset] [filter:drop-shadow(0_4px_24.7px_rgba(0,0,0,0.21))]">
+                        <DotLottieReact
+                          className="w-[50px] h-[50px]"
+                          src="/animations/ai star.json"
+                          loop
+                          autoplay
+                          dotLottieRefCallback={handleWelcomeLottieRef}
                         />
                       </div>
                     </div>
@@ -742,7 +925,7 @@ useEffect(() => {
               </div>
             ) : (
               /* Messages */
-              <div className="flex-1 px-4 py-4 space-y-5 overflow-y-auto overscroll-contain">
+              <div className="flex-1 min-h-0 px-4 py-4 space-y-5 overflow-y-auto overscroll-contain no-scrollbar">
                 {messages.map((message) =>
                   message.sender === "user" ? (
                     <AnimatedMessageRow
@@ -809,8 +992,8 @@ useEffect(() => {
                       isUser={false}
                     >
                       <div className="max-w-[80%]">
-                        <div className="rounded-[20px] px-4 py-2.5 bg-[#F2F2F2] text-[#0D0D0D] text-sm transition-transform duration-200 hover:scale-[1.02] will-change-transform">
-                          <p>{message.text}</p>
+                        <div className="rounded-[20px] px-4 py-2.5 bg-[#F2F2F2] text-[#0D0D0D] transition-transform duration-200 hover:scale-[1.02] will-change-transform">
+                          <MarkdownContent content={message.text} />
                         </div>
                         <div
                           data-bot-actions
@@ -928,15 +1111,15 @@ useEffect(() => {
               {/* Top row: spark icon + textarea */}
               <div className="flex items-start gap-2">
               <div className="shrink-0 mt-0.5" aria-hidden>
-  {isListening ? (
-   <Mic
-   className="w-[18px] h-[18px] text-red-500"
-   style={{ transform: `scale(${voiceScale})`, willChange: 'transform' }}
- />
-  ) : (
-    <Sparkles className="w-[18px] h-[18px] text-[#016BF2]" />
-  )}
-</div>
+                {isListening ? (
+                  <Mic
+                    className="w-[18px] h-[18px] text-red-500"
+                    style={{ transform: `scale(${voiceScale})`, willChange: "transform" }}
+                  />
+                ) : (
+                  <AiStarIcon className="w-[18px] h-[18px] text-[#016BF2]" />
+                )}
+              </div>
                 <textarea
                   ref={textareaRef}
                   value={inputValue}
@@ -960,13 +1143,13 @@ useEffect(() => {
                 <button
                   type="button"
                   onClick={() => {
-                    setInputValue("Tell me more about your services");
+                    setInputValue(SAMPLE_PROMPT);
                     textareaRef.current?.focus();
                   }}
                   className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-[8px] border border-[#D1D8E0] bg-white text-xs text-[#777] hover:bg-[#F2F2F2] transition-colors cursor-pointer"
                 >
-                  <FileText className="w-3.5 h-3.5" />
-                  Sample Prompt
+                  <FileText className="w-3.5 h-3.5 shrink-0" />
+                  <span>Sample Prompt</span>
                 </button>
 
                 <div className="flex items-center gap-2">
@@ -1042,6 +1225,7 @@ useEffect(() => {
               )}
             </div>
           </div>
+        </div>
         </div>
       )}
     </>
