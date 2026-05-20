@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, memo, useCallback } from "react";
+import React, { useState, memo, useCallback, useEffect } from "react";
 import HeroSession from "./sessions/HeroSession";
 import AboutSession from "./sessions/AboutSession";
 import ServiceSession from "./sessions/ServiceSession";
@@ -57,7 +57,17 @@ export default function Page() {
    * Without useCallback: New function created on every render → ScrollReveal sees new prop → re-renders
    * With useCallback: Same function reference → ScrollReveal doesn't re-render → better performance
    */
-  const onHeroReveal = useCallback(() => setHeroRevealNearlyComplete(true), []);
+  // Hero text waits for the page transition overlay to exit before starting.
+  useEffect(() => {
+    const w = window as unknown as Record<string, unknown>;
+    const start = () => setHeroRevealNearlyComplete(true);
+    if (!w.__masz_transitioning) {
+      const id = requestAnimationFrame(() => requestAnimationFrame(start));
+      return () => cancelAnimationFrame(id as number);
+    }
+    window.addEventListener('masz:page-ready', start, { once: true });
+    return () => window.removeEventListener('masz:page-ready', start);
+  }, []);
   const onAboutReveal = useCallback(
     () => setAboutRevealNearlyComplete(true),
     []
@@ -96,7 +106,6 @@ export default function Page() {
         start="top 60%"
         once
         staggerChildren={0.08}
-        onRevealNearlyComplete={onHeroReveal}
       >
         <MemoHeroSession startTextAnimation={heroRevealNearlyComplete} />
       </ScrollReveal>

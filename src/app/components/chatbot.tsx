@@ -447,15 +447,33 @@ useEffect(() => {
     const vv = window.visualViewport;
 
     if (!vv) {
-      if (el && isMobile()) {
-        el.style.height = `${window.innerHeight}px`;
-        el.style.top = "0px";
+      if (el) {
+        if (isMobile()) {
+          el.style.height = `${window.innerHeight}px`;
+          el.style.top = "0px";
+        } else {
+          el.style.height = "";
+          el.style.top = "";
+        }
       }
       return;
     }
 
+    const clearMobileStyles = () => {
+      if (!el) return;
+      el.style.height = "";
+      el.style.top = "";
+      el.style.left = "";
+      el.style.width = "";
+    };
+
     const update = () => {
-      if (!el || !isMobile()) return;
+      if (!el) return;
+      if (!isMobile()) {
+        // Desktop: clear any stale mobile inline styles so Tailwind classes take over
+        clearMobileStyles();
+        return;
+      }
       // Fallback for older browsers where position:fixed is relative to the
       // layout viewport rather than the visual viewport. On modern iOS/Android,
       // inset-0 already does the right thing and these values are a no-op.
@@ -472,12 +490,7 @@ useEffect(() => {
     return () => {
       vv.removeEventListener("resize", update);
       vv.removeEventListener("scroll", update);
-      if (el && isMobile()) {
-        el.style.height = "";
-        el.style.top = "";
-        el.style.left = "";
-        el.style.width = "";
-      }
+      clearMobileStyles();
     };
   }, [isOpen]);
 
@@ -728,8 +741,8 @@ useEffect(() => {
         onMouseEnter={() => triggerLottieRef.current?.play()}
         onMouseLeave={() => triggerLottieRef.current?.pause()}
         className={clsx(
-          "fixed bottom-6 right-6 z-[110] max-lg:bottom-[90px]",
-          "w-[64px] h-[64px] rounded-full",
+          "fixed bottom-6 right-6 z-[110] max-lg:bottom-[90px] lg:right-[114px] lg:bottom-26",
+          "w-[64px] h-[64px] lg:w-[106px] lg:h-[106px] rounded-full",
           "flex items-center justify-center",
           "transition-all duration-300 ease-in-out",
           "hover:scale-105 active:scale-95 cursor-pointer",
@@ -738,36 +751,34 @@ useEffect(() => {
         aria-label={isOpen ? "Close chat" : "Open chat"}
       >
         {isOpen ? (
-          <div className="w-[42px] h-[42px] bg-[#016BF2] rounded-full flex items-center justify-center shadow-lg transition-transform duration-300 rotate-90 hover:bg-[#0150B6]">
-            <X className="w-5 h-5 text-white" />
+          <div className="w-[42px] h-[42px] lg:w-[70px] lg:h-[70px] bg-[#016BF2] rounded-full flex items-center justify-center shadow-lg transition-transform duration-300 rotate-90 hover:bg-[#0150B6]">
+            <X className="w-5 h-5 lg:w-[38px] lg:h-[38px] text-white" />
           </div>
         ) : (
           <div className="relative w-full h-full flex items-center justify-center">
             {/* GSAP ripple ring 1 */}
             <div
               ref={ring1Ref}
-              className="absolute rounded-full bg-[#016BF2]/40"
-              style={{ width: 42, height: 42 }}
+              className="absolute rounded-full bg-[#016BF2]/40 w-[42px] h-[42px] lg:w-[86px] lg:h-[86px]"
             />
             {/* GSAP ripple ring 2 */}
             <div
               ref={ring2Ref}
-              className="absolute rounded-full bg-[#016BF2]/25"
-              style={{ width: 42, height: 42 }}
+              className="absolute rounded-full bg-[#016BF2]/25 w-[42px] h-[42px] lg:w-[86px] lg:h-[86px]"
             />
             {/* Center blue button with Lottie + SVG fallback */}
-            <div className="relative z-10 w-[42px] h-[42px] bg-[#016BF2] rounded-full flex items-center justify-center shadow-lg hover:bg-[#0150B6] transition-colors">
+            <div className="relative z-10 w-[42px] h-[42px] lg:w-[70px] lg:h-[70px] bg-[#016BF2] rounded-full flex items-center justify-center shadow-lg hover:bg-[#0150B6] transition-colors">
               {/* SVG fallback — visible until Lottie initialises */}
               <AiStarIcon
                 className={clsx(
-                  "absolute w-5 h-5 transition-opacity duration-300",
+                  "absolute w-5 h-5 lg:w-[38px] lg:h-[38px] transition-opacity duration-300",
                   isTriggerLottieReady ? "opacity-0" : "opacity-100"
                 )}
               />
               {/* Lottie — fades in when ready */}
               <DotLottieReact
                 className={clsx(
-                  "absolute w-5 h-5 transition-opacity duration-300",
+                  "absolute w-5 h-5 lg:w-[38px] lg:h-[38px] transition-opacity duration-300",
                   isTriggerLottieReady ? "opacity-100" : "opacity-0"
                 )}
                 src="/animations/ai star.json"

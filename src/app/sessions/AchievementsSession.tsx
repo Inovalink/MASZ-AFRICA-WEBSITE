@@ -108,7 +108,7 @@ function AchievementsSession({ startTextAnimation: externalTrigger }: Achievemen
 
         <div className="md:flex gap-[50px] md:mb-[80] md:justify-between">
         {/* Header */}
-        <div className="section-header uppercase text-xl-semibold leading-[110%] lg:text-4xl-semibold mb-[20px]">
+        <div className="section-header uppercase text-xl-semibold leading-[110%] tracking-tight lg:text-4xl-semibold mb-[20px]">
           <HeaderLineByLineAnimation
             startAnimation={startTextAnimation}
             onComplete={onHeaderComplete}
@@ -124,7 +124,7 @@ function AchievementsSession({ startTextAnimation: externalTrigger }: Achievemen
         </div>
 
         {/* Subtext */}
-        <div className="subtext mb-[60px] lg:mb-[0px] max-w-[484px]  ">
+        <div className="subtext mb-[60px] lg:mb-[0px] max-w-[484px] w-full">
           <LineByLineText
             startAnimation={startSubtextAnimation}
             duration={0.13}

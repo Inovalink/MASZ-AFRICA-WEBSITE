@@ -56,8 +56,19 @@ export default function ServiceDetailContent({
 
   useInView(benefitsBannerRef, setStartBannerText);
   useInView(descRef,           setStartDescText);
-  useInView(heroTextRef,       setStartHeroText);
   useInView(benefitsTextRef,   setStartBenefitsText);
+
+  // Hero text waits for the page transition overlay to exit before starting.
+  useEffect(() => {
+    const w = window as unknown as Record<string, unknown>;
+    const start = () => setStartHeroText(true);
+    if (!w.__masz_transitioning) {
+      const id = requestAnimationFrame(() => requestAnimationFrame(start));
+      return () => cancelAnimationFrame(id as number);
+    }
+    window.addEventListener('masz:page-ready', start, { once: true });
+    return () => window.removeEventListener('masz:page-ready', start);
+  }, []);
   return (
     <section className="">
       <div className="main-section-content-container">
@@ -85,7 +96,7 @@ export default function ServiceDetailContent({
                   delay={0.5}
                   duration={0.4}
                   stagger={0.05}
-                  className="description text-default-heading leading-[110%] text-2xl-semibold lg:text-4xl-semibold "
+                  className="description text-default-heading leading-[110%] text-2xl-semibold tracking-tight lg:text-4xl-semibold "
                 >
                   CONSUMABLES THAT KEEP YOUR MINE
                   <br />
@@ -105,10 +116,6 @@ export default function ServiceDetailContent({
                 className="mt-[85px]"
               >
                 <AutoplayVideo src={service.video} fullWidth={false} />
-              </div>
-              <div className="flex justify-between text-[13.4px] leading-[140%] text-[#777777] mx-2 mt-4.5 ">
-                <span>Concept 1.0</span>
-                <span>Brand Identity Animation</span>
               </div>
             </div>
           </div>

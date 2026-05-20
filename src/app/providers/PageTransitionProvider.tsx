@@ -67,6 +67,8 @@ export default function PageTransitionProvider({
               isNavigatingRef.current = false;
               pageReadyRef.current = false;
               halfwayDoneRef.current = false;
+              (window as unknown as Record<string, unknown>).__masz_transitioning = false;
+              window.dispatchEvent(new CustomEvent('masz:page-ready'));
             },
           });
         },
@@ -78,6 +80,7 @@ export default function PageTransitionProvider({
     const overlay = overlayRef.current;
     if (!overlay) return;
 
+    (window as unknown as Record<string, unknown>).__masz_transitioning = true;
     pageReadyRef.current = false;
     halfwayDoneRef.current = false;
     setLogoVisible(false);
@@ -197,7 +200,7 @@ export default function PageTransitionProvider({
             className="absolute inset-0 flex items-center justify-center z-10 pointer-events-none"
             style={{ opacity: 0 }}
           >
-            <div className="w-[140px] lg:w-[300px]">
+            <div className="w-35 lg:w-75">
               <Lottie
                 animationData={lottieData}
                 loop={true}

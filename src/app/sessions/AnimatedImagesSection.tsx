@@ -111,7 +111,7 @@ export default function AnimatedImagesSection() {
 
   const images = [
     {
-      src: "/homeAssets/Image-1.jpg",
+      src: "/homeAssets/Image-1.webp",
       title: "High Performance",
       subtext: [
         "Delivering exceptional quality mining equipment",
@@ -131,7 +131,7 @@ export default function AnimatedImagesSection() {
       ],
     },
     {
-      src: "/homeAssets/Image-3.jpg",
+      src: "/homeAssets/Image-3.webp",
       title: "Expert Engineering",
       subtext: [
         "Designed by experienced engineers",
@@ -141,7 +141,7 @@ export default function AnimatedImagesSection() {
       ],
     },
     {
-      src: "/homeAssets/Image-4.jpg",
+      src: "/homeAssets/Image-4.webp",
       title: "Quality Assurance",
       subtext: [
         "Rigorous quality control processes",
@@ -151,7 +151,7 @@ export default function AnimatedImagesSection() {
       ],
     },
     {
-      src: "/homeAssets/Image-5.jpg",
+      src: "/homeAssets/Image-5.webp",
       title: "Innovation Driven",
       subtext: [
         "Cutting-edge technology solutions",
@@ -161,7 +161,7 @@ export default function AnimatedImagesSection() {
       ],
     },
     {
-      src: "/homeAssets/Image-6.jpg",
+      src: "/homeAssets/Image-6.webp",
       title: "Global Reach",
       subtext: [
         "Serving clients across continents",

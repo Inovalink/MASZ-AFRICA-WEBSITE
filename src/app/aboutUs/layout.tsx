@@ -24,7 +24,7 @@ export const metadata: Metadata = {
     url: 'https://maszgh.com/aboutUs',
     images: [
       {
-        url: '/homeAssets/Image-4.jpg',
+        url: '/homeAssets/Image-4.webp',
         width: 1200,
         height: 630,
         alt: 'MASZ-Africa — About Us',
@@ -36,7 +36,7 @@ export const metadata: Metadata = {
     title: 'About MASZ-Africa | Mining Supply & Services Experts, Ghana',
     description:
       'MASZ-Africa is a trusted mining supply and services company headquartered in Tarkwa, Western Region, Ghana.',
-    images: ['/homeAssets/Image-4.jpg'],
+    images: ['/homeAssets/Image-4.webp'],
   },
 };
 

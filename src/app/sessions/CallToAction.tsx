@@ -10,7 +10,7 @@ function CallToAction() {
       <div className="relative h-screen h-[600px] lg:h-screen overflow-hidden">
         {/* BACKGROUND IMAGE */}
         <Image
-          src="/homeAssets/cta-image-4.png"
+          src="/homeAssets/cta-image-4.webp"
           alt="cta image"
           fill
           priority

@@ -496,7 +496,7 @@ function SustainabilitySession({
             {/* Intro heading + body */}
             {currentSlide === 0 && (
               <div className="flex flex-col gap-[32px] max-w-[485px] lg:max-w-[751px]">
-                <div className="text-xl-semibold lg:text-3xl-semibold xl:text-[44px] uppercase text-white leading-[1.15]">
+                <div className="text-xl-semibold lg:text-3xl-semibold xl:text-[44px] uppercase tracking-tight text-white leading-[1.15]">
                   <HeaderLineByLineAnimation
                     startAnimation={startTextAnimation}
                     onComplete={onHeaderComplete}
@@ -534,7 +534,7 @@ function SustainabilitySession({
             {/* Card title + body */}
             {card && (
               <div className="flex flex-col gap-[32px]  max-w-[485px] lg:max-w-[751px] ">
-                <h3 className="text-xl-semibold lg:text-nowrap lg:text-3xl-semibold xl:text-[44px] uppercase text-white leading-[1.15] m-0">
+                <h3 className="text-xl-semibold lg:text-nowrap lg:text-3xl-semibold tracking-tight xl:text-[44px] uppercase text-white leading-[1.15] m-0">
                   {card.title}
                 </h3>
                 <p className="text-sm-medium md:text-md-medium lg:text-lg-medium xl:text-xl-medium text-white leading-relaxed  m-0">

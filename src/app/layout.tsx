@@ -102,7 +102,7 @@ export const metadata: Metadata = {
       'Certified mining consumables, grinding media, activated carbon, steel pipes, and technical services for mines across Ghana and West Africa.',
     images: [
       {
-        url: '/homeAssets/Image-4.jpg',
+        url: '/homeAssets/Image-4.webp',
         width: 1200,
         height: 630,
         alt: 'MASZ-Africa — Mining Equipment and Services, Ghana',
@@ -114,7 +114,7 @@ export const metadata: Metadata = {
     title: 'MASZ-Africa | Mining Equipment & Services in Ghana',
     description:
       'Certified mining consumables, grinding media, activated carbon, steel pipes, and technical services for mines across Ghana and West Africa.',
-    images: ['/homeAssets/Image-4.jpg'],
+    images: ['/homeAssets/Image-4.webp'],
   },
   icons: {
     icon: '/favicon.ico',
@@ -127,7 +127,7 @@ const organizationSchema = {
   name: 'MASZ-Africa',
   url: BASE_URL,
   logo: `${BASE_URL}/maszAssets/website-logo.svg`,
-  image: `${BASE_URL}/homeAssets/Image-4.jpg`,
+  image: `${BASE_URL}/homeAssets/Image-4.webp`,
   description:
     'MASZ-Africa supplies certified mining consumables and professional services to mines across Ghana and West Africa, including grinding media, activated carbon, steel pipes, and gearbox maintenance.',
   address: {

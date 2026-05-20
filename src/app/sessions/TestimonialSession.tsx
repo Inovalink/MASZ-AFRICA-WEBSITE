@@ -195,7 +195,7 @@ function TestimonialSession() {
             <Tag text="testimonial" className="uppercase ml-5" />
           </div>
           <div className="md:flex gap-[50px] md:mx-5 md:justify-between">
-            <div className="testimonial-session-header uppercase text-xl-semibold font-semibold my-6 ml-5 md:ml-0 lg:text-4xl-semibold leading-[110%]">
+            <div className="testimonial-session-header uppercase text-xl-semibold font-semibold tracking-tight my-6 ml-5 md:ml-0 lg:text-4xl-semibold leading-[110%]">
               <LineByLineText
                 startAnimation={startTitleAnimation}
                 onComplete={handleTitleComplete}

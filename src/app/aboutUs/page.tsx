@@ -8,9 +8,9 @@ import TeamMembersSection from "../sessions/TeamMembersSection";
 import GallerySection from "../sessions/GallerySection";
 import ScrollReveal from "../components/ScrollReveal";
 import LineByLineText from "../components/LineByLineText";
+import AnimatedCardsContainer from "../animations/AnimatedCardsContainer";
 import MetricsCardAnimation from "../animations/MetricsCardAnimation";
 import ParallaxAnimation from "../animations/ParallaxAnimation";
-import AnimatedCardsContainer from "../animations/AnimatedCardsContainer";
 import dynamic from "next/dynamic";
 import Image from "next/image";
 import {
@@ -19,11 +19,9 @@ import {
   useEffect,
   useLayoutEffect,
   memo,
-  useCallback,
 } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/dist/ScrollTrigger";
-import { div } from "three/src/nodes/TSL.js";
 import AchievementsSession from "../sessions/AchievementsSession";
 import { achievements } from "../Data/achievements";
 import Lottie from "lottie-react";
@@ -87,10 +85,10 @@ const valueCards: CoreValue[] = [
 
 // Used for the line-by-line animation (no <br /> so SplitType handles it cleanly)
 const OUR_STORY_PARA_1 =
-  "MASZ-AFRICA Ltd is a Ghana-based private limited liability company that provides high-quality mining consumables, engineering support, and procurement solutions to mining and mineral processing industries across Africa. Established in September 2025 by a multidisciplinary team with more than 15 years of combined experience in metallurgy, engineering, finance, supply chain management, and business improvement, the company was created to address the lack of dependable, responsive, and technically knowledgeable supply partners within the African mining sector.";
+  "MASZ-AFRICA Ltd is a Ghana-based company delivering mining consumables, engineering support, and procurement solutions across Africa. Founded in September 2025 by a multidisciplinary team with over 15 years of experience in metallurgy, engineering, finance, and supply chain management, we were built to fill a critical gap — the need for a dependable, technically capable supply partner in African mining.";
 
 const OUR_STORY_PARA_2 =
-  "From the beginning, MASZ-Africa has focused on quality, reliability, and client satisfaction. Through strong partnerships with globally recognized manufacturers and original equipment suppliers, the company delivers world-class products supported by solid technical expertise and consistent on-time delivery. With a growing presence across West Africa, MASZ-Africa aims to become a continental leader in mining supply, logistics, and technical services. The company is committed to empowering mining operations with reliable supplies, innovative solutions, and smooth service delivery that keeps production running efficiently.";
+  "Quality, reliability, and client satisfaction define everything we do. Through partnerships with globally recognized manufacturers and original equipment suppliers, we deliver world-class products backed by technical expertise and on-time delivery. With a growing presence across West Africa, MASZ-Africa is positioned to become a continental leader in mining supply, logistics, and technical services.";
 
 // Used for the static (post-animation) display — matches the mt-4 gap in the animation phase
 const OUR_STORY_TEXT = (
@@ -359,7 +357,7 @@ function OurStorySection({
         {/* Lottie — visible on desktop beside text */}
         {lottieData && (
           <div className="hidden lg:flex bg-white lg:w-1/2 items-center justify-center">
-            <div className="w-[320px] h-[250px]">
+            <div className="w-[360px] h-[300px] xl:w-[400px] xl:h-[300px]">
               <Lottie
                 animationData={lottieData}
                 loop
@@ -404,8 +402,6 @@ function CoreValuesCardsContainer({ cards }: { cards: CoreValue[] }) {
   return (
     <AnimatedCardsContainer className="flex flex-col   lg:flex-row  gap-4 lg:gap-8">
       {cards.map((card) => (
-        // No wrapper div — card must be a direct child of the flex row
-        // so GSAP can correctly target parentElement as the container
         <CoreValueCard key={card.id} card={card} />
       ))}
     </AnimatedCardsContainer>
@@ -498,7 +494,7 @@ function AboutUSPage() {
 
             {/* TOP TEXT */}
             <div className="about-page-hero-text-container flex flex-col  items-start  mx-6  lg:mx-[24] xl:mx-[120px] min-[1920px]:mx-[200]! my-[40px] lg:my-[40px]">
-              <div className="page-header text-xl-semibold md:text-2xl-semibold uppercase lg:text-4xl-semibold">
+              <div className="page-header text-xl-semibold md:text-2xl-semibold uppercase tracking-tight lg:text-4xl-semibold">
                 We are{" "}
                 <span className="subtext text-primary-default">
                   Masz-Africa
@@ -518,10 +514,6 @@ function AboutUSPage() {
                 src="/videos/Masz Brand Identity About.mp4"
                 fullWidth={false}
               />
-            </div>
-            <div className="flex justify-between text-[13.4px] px-2 leading-[140%] text-[#777777] mx-6 mt-4.5 lg:mx-6 xl:mx-[120] min-[1920px]:mx-[200]!">
-              <span>Concept 1.0</span>
-              <span>Brand Identity Animation</span>
             </div>
           </div>
         </ScrollReveal>
@@ -714,7 +706,7 @@ function AboutUSPage() {
             <div className="core-value-section-content-wrapper  mx-[21] lg:mx-[24px] xl:mx-[120] min-[1920px]:mx-[200]!">
               <Tag text="Our core values" className="my-[60]" />
               <div className="core-values-text-wrapper md:flex md:gap-[50] justify-between md:mb-[50]">
-                <div className="section-header uppercase text-xl-semibold lg:text-4xl-semibold leading-[110%]">
+                <div className="section-header uppercase text-xl-semibold lg:text-4xl-semibold tracking-tight leading-[110%]">
                   <span className="text-primary-default">The heart </span>of our
                   work
                 </div>

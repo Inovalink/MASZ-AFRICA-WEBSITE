@@ -1,14 +1,16 @@
 'use client';
 
 import React, { useEffect, useRef, useState, useLayoutEffect, ReactNode } from 'react';
-import SplitType from 'split-type';
-import gsap from 'gsap';
+import { gsap } from 'gsap';
+import { SplitText } from 'gsap/dist/SplitText';
+
+gsap.registerPlugin(SplitText);
 
 export interface LineByLineTextProps {
   children: ReactNode;
   /** When true, the line-by-line reveal animation runs. */
   startAnimation?: boolean;
-  /** Called when the line animation completes (e.g. to then show AnimationCopy). */
+  /** Called when the line animation completes. */
   onComplete?: () => void;
   className?: string;
   /** Duration per line (seconds). */
@@ -17,17 +19,28 @@ export interface LineByLineTextProps {
   stagger?: number;
   /** Delay before first line (seconds). */
   delay?: number;
-  /** Initial y offset (px). */
+  /** Initial y offset (px). Accepted for API compatibility — not used with
+   *  the SplitText mask approach, which always starts lines at yPercent:100
+   *  so they are fully hidden behind their per-line clip masks. */
   yFrom?: number;
   /** Wrapper element. */
   as?: 'div' | 'p' | 'span';
-  /** If true, keep SplitType wrappers after animation completes (useful for hover text that stays mounted). */
+  /** If true, keep SplitText wrappers after animation completes. */
   keepSplit?: boolean;
-  /** If true, defer SplitType splitting until startAnimation becomes true.
-   *  Use for text inside ScrollReveal where the element is off-screen at mount
-   *  and font metrics may not be accurate until it's visible. */
+  /** If true, defer splitting until startAnimation becomes true. */
   deferSplit?: boolean;
 }
+
+/* ----------------------------------------------------------------------------
+   Why visibility:hidden on the initial render (same reasoning as inovalink):
+
+   The browser paints SSR HTML before React hydrates. Without pre-hiding, the
+   user sees the raw un-animated text for the few frames between first paint
+   and hydration. Rendering with visibility:hidden keeps the first paint blank;
+   the layout effect then keeps it hidden until SplitText has wrapped each line
+   in its overflow:clip mask, at which point autoAlpha:1 reveals it cleanly.
+---------------------------------------------------------------------------- */
+const HIDDEN_STYLE: React.CSSProperties = { visibility: 'hidden' };
 
 export default function LineByLineText({
   children,
@@ -37,44 +50,32 @@ export default function LineByLineText({
   duration = 0.7,
   stagger = 0.12,
   delay = 0.1,
-  yFrom = 28,
+  yFrom: _yFrom = 28, // eslint-disable-line @typescript-eslint/no-unused-vars
   as: Wrapper = 'div',
   keepSplit = false,
   deferSplit = false,
 }: LineByLineTextProps) {
   const wrapperRef = useRef<HTMLDivElement | HTMLParagraphElement | HTMLSpanElement>(null);
-  const splitRef = useRef<{ split: SplitType; lines: Element[] } | null>(null);
+  const splitRef = useRef<SplitText | null>(null);
+  const hasAnimatedRef = useRef(false);
   const [fontsReady, setFontsReady] = useState(false);
 
-  // Wait for fonts to load before splitting.
-  // In production, web fonts load async — SplitType measures line breaks using
-  // font metrics, so splitting before fonts load creates wrong line breaks.
-  // Uses document.fonts.ready with a hard 3s timeout fallback so text always
-  // appears even if fonts fail to load.
+  // Stable ref for onComplete — keeps the animation effect dependency array
+  // stable so the tween is never killed by a callback identity change.
+  const onCompleteRef = useRef(onComplete);
+  useEffect(() => { onCompleteRef.current = onComplete; });
+
   useEffect(() => {
     let cancelled = false;
-
-    const markReady = () => {
-      if (!cancelled) setFontsReady(true);
-    };
-
-    // Race: fonts.ready vs 3s timeout (whichever comes first)
+    const markReady = () => { if (!cancelled) setFontsReady(true); };
     const timeoutId = setTimeout(markReady, 3000);
-
     if (document.fonts?.ready) {
       document.fonts.ready.then(() => {
-        // Extra rAF after fonts.ready to ensure browser has reflowed with new metrics
-        requestAnimationFrame(() => {
-          requestAnimationFrame(markReady);
-        });
+        requestAnimationFrame(() => requestAnimationFrame(markReady));
       });
     } else {
-      // No font loading API — use two rAFs as fallback
-      requestAnimationFrame(() => {
-        requestAnimationFrame(markReady);
-      });
+      requestAnimationFrame(() => requestAnimationFrame(markReady));
     }
-
     return () => {
       cancelled = true;
       clearTimeout(timeoutId);
@@ -82,9 +83,6 @@ export default function LineByLineText({
     };
   }, []);
 
-  // Split text into lines AFTER fonts have loaded.
-  // When deferSplit is true, also wait for startAnimation so the element is
-  // on-screen and font metrics are accurate.
   const readyToSplit = fontsReady && (!deferSplit || startAnimation);
 
   useLayoutEffect(() => {
@@ -92,80 +90,95 @@ export default function LineByLineText({
     const el = wrapperRef.current;
     if (!el) return;
 
-    // Revert any previous split (StrictMode double-invoke safety)
     if (splitRef.current) {
-      splitRef.current.split.revert();
+      splitRef.current.revert();
       splitRef.current = null;
     }
+    hasAnimatedRef.current = false;
 
-    const split = new SplitType(el as HTMLElement, { types: 'lines' });
-    const lines = split.lines;
+    // mask:'lines' wraps each line in an overflow:clip div automatically.
+    // This is the key difference from SplitType: lines are clipped at their
+    // own boundaries, so the container needs no overflow:hidden and flex
+    // layouts never see a max-content width change on revert.
+    const split = new SplitText(el as HTMLElement, {
+      type: 'lines',
+      mask: 'lines',
+    });
 
-    if (!lines || lines.length === 0) {
-      gsap.set(el, { visibility: 'visible' });
+    const lines = split.lines as HTMLElement[];
+
+    if (!lines.length) {
+      gsap.set(el, { autoAlpha: 1 });
       return;
     }
 
-    splitRef.current = { split, lines: Array.from(lines) };
+    splitRef.current = split;
 
-    // Force line divs to full width — SplitType sets inline pixel widths based
-    // on measured content, which can be slightly off in production (subpixel
-    // rendering, fractional container widths). Full-width divs prevent distortion.
-    lines.forEach((line) => {
-      const el = line as HTMLElement;
-      el.style.width = '100%';
-      el.style.display = 'block';
-    });
+    // Reset margins/padding on lines and their mask parents so the split
+    // doesn't break inherited line-height or add unexpected spacing.
+    const masks = lines
+      .map(l => l.parentElement)
+      .filter((m): m is HTMLElement => Boolean(m));
+    gsap.set([...lines, ...masks], { lineHeight: 'inherit', margin: 0, padding: 0 });
 
-    gsap.set(lines, { opacity: 0, y: yFrom, force3D: true });
-    gsap.set(el, { visibility: 'visible' });
+    // Promote lines to their own GPU layer for the duration of the tween.
+    gsap.set(lines, { willChange: 'transform', force3D: true });
+
+    // yPercent:100 moves each line exactly one line-height below its mask —
+    // perfectly hidden. This is the approach from the inovalink hook.
+    gsap.set(lines, { yPercent: 100, opacity: 0 });
+    gsap.set(el, { autoAlpha: 1 });
 
     return () => {
       split.revert();
       splitRef.current = null;
+      gsap.set(el, { clearProps: 'visibility,opacity' });
     };
-  }, [readyToSplit, yFrom]);
+  }, [readyToSplit]);
 
-  // Start line-by-line animation when startAnimation becomes true.
-  // Also depends on fontsReady so if startAnimation was already true
-  // before fonts loaded (e.g. hover mount), the animation fires once
-  // the split is populated.
   useEffect(() => {
-    if (!startAnimation || !splitRef.current) return;
+    if (!startAnimation || !fontsReady || !splitRef.current) return;
+    if (hasAnimatedRef.current) return;
+    hasAnimatedRef.current = true;
 
-    const { lines, split } = splitRef.current;
-    gsap.to(lines, {
-      opacity: 1,
-      y: 0,
-      duration,
-      stagger,
-      ease: 'power2.out',
-      delay,
-      force3D: true,
-      onComplete: () => {
-        // Revert SplitType — restores natural DOM so text reflows cleanly.
-        // Skip revert if keepSplit is true (e.g. hover text that stays mounted).
-        if (!keepSplit) {
-          gsap.set(lines, { clearProps: 'all' });
-          split.revert();
-          splitRef.current = null;
-        }
-        onComplete?.();
-      },
+    const el = wrapperRef.current;
+    const split = splitRef.current;
+    const lines = split.lines as HTMLElement[];
+
+    const ctx = gsap.context(() => {
+      gsap.fromTo(
+        lines,
+        { yPercent: 100, opacity: 0, force3D: true },
+        {
+          yPercent: 0,
+          y: 0,
+          opacity: 1,
+          duration,
+          stagger,
+          ease: 'power2.out',
+          delay,
+          force3D: true,
+          onComplete: () => {
+            if (!keepSplit) {
+              gsap.set(lines, { willChange: 'auto', clearProps: 'all' });
+              split.revert();
+              splitRef.current = null;
+              if (el) gsap.set(el, { clearProps: 'visibility,opacity' });
+            }
+            onCompleteRef.current?.();
+          },
+        },
+      );
     });
-  }, [startAnimation, readyToSplit, duration, stagger, delay, onComplete]);
+
+    return () => { ctx.revert(); };
+  }, [startAnimation, fontsReady, readyToSplit, duration, stagger, delay, keepSplit]);
 
   return (
     <Wrapper
       ref={wrapperRef as any}
       className={className ?? undefined}
-      style={{
-        overflow: 'hidden',
-        // Hidden until fonts are loaded and SplitType has run —
-        // prevents unsplit text from flashing with wrong line breaks.
-        visibility: readyToSplit ? undefined : 'hidden',
-        willChange: startAnimation ? 'transform, opacity' : 'auto',
-      }}
+      style={HIDDEN_STYLE}
     >
       {children}
     </Wrapper>

@@ -24,7 +24,7 @@ export const metadata: Metadata = {
     url: 'https://maszgh.com/contactUs',
     images: [
       {
-        url: '/homeAssets/Image-4.jpg',
+        url: '/homeAssets/Image-4.webp',
         width: 1200,
         height: 630,
         alt: 'Contact MASZ-Africa',
@@ -36,7 +36,7 @@ export const metadata: Metadata = {
     title: 'Contact MASZ-Africa | Mining Operations Support, Ghana',
     description:
       'Based in Tarkwa, Western Region, Ghana. Email admin@maszgh.com or call +233 24 416 3975.',
-    images: ['/homeAssets/Image-4.jpg'],
+    images: ['/homeAssets/Image-4.webp'],
   },
 };
 

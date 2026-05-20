@@ -69,7 +69,7 @@ function ServiceSession({ startTextAnimation = false }: ServiceSessionProps) {
       <div className="services-section-container my-[100]">
         <Tag text="services" className="ml-[22] lg:ml-[0]" />
 
-        <div className="services-section-header flex items-start justify-between text-xl-semibold  leading-[110%] uppercase my-[30] lg:mt-[37] lg:mb-[98] lg:text-4xl-semibold">
+        <div className="services-section-header flex items-start justify-between text-xl-semibold  leading-[110%] uppercase my-[30] lg:mt-[37] lg:mb-[98] lg:text-4xl-semibold tracking-tight">
           <HeaderLineByLineAnimation
             startAnimation={startTextAnimation}
             onComplete={() => setStartListAnimation(true)}
@@ -122,7 +122,7 @@ function ServiceSession({ startTextAnimation = false }: ServiceSessionProps) {
 
                 {/* Text content */}
                 <div className="flex-1 relative service-text-content">
-                  <div className="uppercase pr-[20px] py-[20px] text-lg-semibold lg:text-3xl-semibold text-[#626262] transition-colors duration-[600ms] ease-[cubic-bezier(0.25,0.8,0.25,1)] service-title">
+                  <div className="uppercase pr-[20px] py-[20px] text-lg-semibold lg:text-3xl-semibold  tracking-tight text-[#626262] transition-colors duration-[600ms] ease-[cubic-bezier(0.25,0.8,0.25,1)] service-title">
                     <LineByLineText
                       startAnimation={startListAnimation}
                       delay={index * LIST_TITLE_STAGGER}

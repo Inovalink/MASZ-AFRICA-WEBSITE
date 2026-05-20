@@ -28,7 +28,7 @@ export const metadata: Metadata = {
     url: 'https://maszgh.com/services',
     images: [
       {
-        url: '/homeAssets/Image-4.jpg',
+        url: '/homeAssets/Image-4.webp',
         width: 1200,
         height: 630,
         alt: 'MASZ-Africa Mining Products and Services',
@@ -40,7 +40,7 @@ export const metadata: Metadata = {
     title: 'Mining Products & Services | MASZ-Africa Ghana',
     description:
       'Grinding media, activated carbon, steel pipes, gearbox servicing, and more — trusted mining services across Ghana and West Africa.',
-    images: ['/homeAssets/Image-4.jpg'],
+    images: ['/homeAssets/Image-4.webp'],
   },
 };
 

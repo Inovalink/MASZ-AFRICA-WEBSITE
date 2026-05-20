@@ -19,16 +19,16 @@ const TOOLTIP_COLORS = ['#016BF2', '#D92D20', '#51B948', '#F79009'] as const;
 
 /** Slide data: title, short description (subtitle), and image path */
 const CAROUSEL_ITEMS = [
-  { title: 'Industrial Equipment', subtitle: 'Performs consistently under demanding conditions.', image: '/homeAssets/Image-4.jpg' },
-  { title: 'Engineering Excellence', subtitle: 'Technical precision and strategic planning.', image: '/homeAssets/Image-5.jpg' },
-  { title: 'Operational Performance', subtitle: 'Coordinated logistics and field expertise.', image: '/homeAssets/Image-3.jpg' },
-  { title: 'Mining Consumables', subtitle: 'Critical for productivity, durability, safety.', image: '/homeAssets/Image-1.jpg' },
-  { title: 'Industry Partnership', subtitle: 'Dependable partners for long-term goals.', image: '/homeAssets/Image-6.jpg' },
+  { title: 'Industrial Equipment', subtitle: 'Performs consistently under demanding conditions.', image: '/homeAssets/Image-4.webp' },
+  { title: 'Engineering Excellence', subtitle: 'Technical precision and strategic planning.', image: '/homeAssets/Image-5.webp' },
+  { title: 'Operational Performance', subtitle: 'Coordinated logistics and field expertise.', image: '/homeAssets/Image-3.webp' },
+  { title: 'Mining Consumables', subtitle: 'Critical for productivity, durability, safety.', image: '/homeAssets/Image-1.webp' },
+  { title: 'Industry Partnership', subtitle: 'Dependable partners for long-term goals.', image: '/homeAssets/Image-6.webp' },
   { title: 'Technical Support', subtitle: 'Reduce downtime, maintain operational continuity.', image: '/homeAssets/Image-2.jpg' },
-  { title: 'Resource Logistics', subtitle: 'Timely procurement for uninterrupted operations.', image: '/homeAssets/Image-3.jpg' },
-  { title: 'Safety Standards', subtitle: 'Strong safety practices, workforce protection.', image: '/homeAssets/Image-4.jpg' },
-  { title: 'Sustainable Operations', subtitle: 'Sustainable practices, innovation, long-term efficiency.', image: '/homeAssets/Image-5.jpg' },
-  { title: 'Field Solutions', subtitle: 'Practical solutions for operational demands.', image: '/homeAssets/Image-6.jpg' },
+  { title: 'Resource Logistics', subtitle: 'Timely procurement for uninterrupted operations.', image: '/homeAssets/Image-3.webp' },
+  { title: 'Safety Standards', subtitle: 'Strong safety practices, workforce protection.', image: '/homeAssets/Image-4.webp' },
+  { title: 'Sustainable Operations', subtitle: 'Sustainable practices, innovation, long-term efficiency.', image: '/homeAssets/Image-5.webp' },
+  { title: 'Field Solutions', subtitle: 'Practical solutions for operational demands.', image: '/homeAssets/Image-6.webp' },
 ];
 
 type CarouselItem = (typeof CAROUSEL_ITEMS)[number];

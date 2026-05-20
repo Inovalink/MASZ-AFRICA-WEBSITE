@@ -188,6 +188,7 @@ function CountryCodeDropdown({
 }
 
 export default function ContactPage() {
+  const [startHeroAnimation, setStartHeroAnimation] = useState(false);
   const [contactType, setContactType] = useState<ContactType>("individual");
   const [selectedCountry, setSelectedCountry] = useState<Country | null>(null);
   const [locationRevealed, setLocationRevealed] = useState(false);
@@ -204,6 +205,18 @@ export default function ContactPage() {
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error' | 'validation'>('idle');
   const [submitMessage, setSubmitMessage] = useState('');
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
+
+  // Hero text waits for the page transition overlay to exit before starting.
+  useEffect(() => {
+    const w = window as unknown as Record<string, unknown>;
+    const start = () => setStartHeroAnimation(true);
+    if (!w.__masz_transitioning) {
+      const id = requestAnimationFrame(() => requestAnimationFrame(start));
+      return () => cancelAnimationFrame(id as number);
+    }
+    window.addEventListener('masz:page-ready', start, { once: true });
+    return () => window.removeEventListener('masz:page-ready', start);
+  }, []);
 
   useEffect(() => {
     const el = mapSectionRef.current;
@@ -321,7 +334,7 @@ export default function ContactPage() {
             {/* Overlay text */}
             <div className="absolute max-w-[429px]  bg-white/19  backdrop-blur-xs bottom-[39px] left-5 right-5  lg:left-[36px] lg:right-[36px] py-[22px] px-[28px]">
               <LineByLineText
-                startAnimation={true}
+                startAnimation={startHeroAnimation}
                 delay={0.2}
                 duration={0.3}
                 stagger={0.05}
@@ -330,7 +343,7 @@ export default function ContactPage() {
                 Contact Information
               </LineByLineText>
               <LineByLineText
-                startAnimation={true}
+                startAnimation={startHeroAnimation}
                 delay={0.5}
                 duration={0.3}
                 stagger={0.05}
@@ -397,16 +410,16 @@ export default function ContactPage() {
             {/* Heading */}
             <div className="mb-[24px] lg:mb-[30px]">
               <LineByLineText
-                startAnimation={true}
+                startAnimation={startHeroAnimation}
                 delay={0.2}
                 duration={0.3}
                 stagger={0.05}
-                className="text-2xl-semibold lg:text-4xl-semibold leading-[111%] uppercase text-default-heading "
+                className="text-2xl-semibold lg:text-4xl-semibold leading-[110%] tracking-tight uppercase text-default-heading "
               >
                 LET&apos;S GET IN TOUCH
               </LineByLineText>
               <LineByLineText
-                startAnimation={true}
+                startAnimation={startHeroAnimation}
                 delay={0.5}
                 duration={0.3}
                 stagger={0.05}
@@ -647,7 +660,7 @@ export default function ContactPage() {
                   delay={0.5}
                   duration={0.35}
                   stagger={0.07}
-                  className="text-2xl-regular text-[#8DBCF9] md:text-3xl-medium lg:text-4xl-medium   leading-tight mb-[32px] lg:mb-[67px]"
+                  className="text-2xl-regular text-[#8DBCF9] md:text-3xl-medium lg:text-4xl-medium tracking-tight   leading-tight mb-[32px] lg:mb-[67px]"
                 >
                   We Are Based In
                   <br />

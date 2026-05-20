@@ -211,7 +211,7 @@ function CoreValueSession({
     <section ref={sectionRef} className="lg:my-[140] my-[80]">
       <div className="core-value-section-container">
         {/* Header — line-by-line reveal */}
-        <div className="section-header uppercase text-xl-semibold lg:mx-[24] xl:mx-[120] min-[1920px]:mx-[200]! ml-[22] mt-[30] mb-[51] lg:text-4xl-semibold">
+        <div className="section-header uppercase text-xl-semibold lg:mx-[24] xl:mx-[120] min-[1920px]:mx-[200]! ml-[22] mt-[30] mb-[51] tracking-tight lg:text-4xl-semibold">
           <HeaderLineByLineAnimation
             startAnimation={shouldStart}
             onComplete={() => setStartBodyAnimation(true)}
@@ -366,7 +366,7 @@ function CoreValueSession({
         <div className="core-value-section-images flex flex-col gap-5 lg:flex">
           <div className="relative h-[300px] mx-[21px] overflow-hidden lg:hidden">
             <Image
-              src="/homeAssets/Image-3.jpg"
+              src="/homeAssets/Image-3.webp"
               alt="Core value visual"
               fill
               loading="lazy"
@@ -377,7 +377,7 @@ function CoreValueSession({
           <div className="flex gap-[20px] lg:gap-[40] mx-[21px] lg:mx-0">
             <div className="relative h-[200px] flex-1 overflow-hidden lg:h-[800] lg:hidden">
               <Image
-                src="/homeAssets/Image-4.jpg"
+                src="/homeAssets/Image-4.webp"
                 alt="Core value visual"
                 fill
                 loading="lazy"
@@ -387,7 +387,7 @@ function CoreValueSession({
             </div>
             <div className="relative h-[200px] flex-1 overflow-hidden lg:h-[800] lg:mx-0 lg:hidden">
               <Image
-                src="/homeAssets/Image-5.jpg"
+                src="/homeAssets/Image-5.webp"
                 alt="Core value visual"
                 fill
                 loading="lazy"

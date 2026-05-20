@@ -2,6 +2,8 @@
 
 import React, { useState, memo, useEffect, useRef, useCallback } from "react";
 import Image from "next/image";
+import HeaderLineByLineAnimation from "../animations/HeaderLineByLineAnimation";
+import LineByLineText from "../components/LineByLineText";
 
 // ─── Shared partner data — single source of truth for both map + marquee ─────
 // svgX / svgY are coordinates inside the SVG viewBox (0 0 1010 666),
@@ -248,42 +250,75 @@ function PartnersMarqueeInline({
 
 function PartnersMapSession() {
   const [activeId, setActiveId] = useState<number | null>(null);
-  // "locked" means a tap selected a partner (persists until tapped again)
   const [lockedId, setLockedId] = useState<number | null>(null);
+  const [startTextAnimation, setStartTextAnimation] = useState(false);
+  const [startSubtextAnimation, setStartSubtextAnimation] = useState(false);
 
-  // The visible active partner = locked selection OR hover
   const visibleId = lockedId ?? activeId;
 
   const handleTap = useCallback((id: number) => {
     setLockedId((prev) => (prev === id ? null : id));
   }, []);
 
-  // Click anywhere outside a pin / marquee item dismisses the lock
+  const onHeaderComplete = useCallback(() => {
+    setStartSubtextAnimation(true);
+  }, []);
+
   const sectionRef = useRef<HTMLElement>(null);
+
+  // Self-trigger animations when the section scrolls into view
+  useEffect(() => {
+    const el = sectionRef.current;
+    if (!el) return;
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setStartTextAnimation(true);
+          io.disconnect();
+        }
+      },
+      { threshold: 0.08 }
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
 
   useEffect(() => {
     if (lockedId === null) return;
-    const handleClickOutside = (e: MouseEvent) => {
-      // Let pin / marquee onClick handlers run first via stopPropagation;
-      // if the click reaches the document, nothing interactive was tapped.
-      setLockedId(null);
-    };
+    const handleClickOutside = () => setLockedId(null);
     document.addEventListener("click", handleClickOutside);
     return () => document.removeEventListener("click", handleClickOutside);
   }, [lockedId]);
 
   return (
-    <section className="my-[80px] lg:my-[140px]">
+    <section ref={sectionRef} className="my-[80px] lg:my-[140px]">
       {/* Header */}
-      <div className="mx-[22px] lg:mx-[24px] md:flex md:justify-between xl:mx-[120px] min-[1920px]:mx-[200px] mb-[32px] lg:mb-[72px]">
-        <h2 className="text-xl-semibold lg:text-4xl-semibold uppercase leading-[110%] text-default-heading  mb-[12px]">
-          Our <span className="text-primary-default">Partners</span>
-        </h2>
-        <p className="text-sm-medium lg:text-xl-medium text-default-body leading-[120%] max-w-[656px]">
-          Built on trusted relationships across the mining supply chain. From
-          sourcing to delivery, our partners ensure reliability at every stage.
-          Together, we drive efficiency, safety, and consistent results.
-        </p>
+      <div className="mx-[22px] lg:mx-[24px] md:flex md:justify-between md:gap-[50] xl:mx-[120px] min-[1920px]:mx-[200px] mb-[32px] lg:mb-[72px]">
+        <div className="section-header uppercase text-xl-semibold leading-[110%] lg:text-4xl-semibold tracking-tight mb-[12px]">
+          <HeaderLineByLineAnimation
+            startAnimation={startTextAnimation}
+            onComplete={onHeaderComplete}
+            lineY={28}
+            duration={0.3}
+            stagger={0.07}
+            delay={0.1}
+            style={{ overflow: 'hidden' }}
+          >
+            Our <span className="text-primary-default">Partners</span>
+          </HeaderLineByLineAnimation>
+        </div>
+        <div className="max-w-[656px] w-full">
+          <LineByLineText
+            startAnimation={startSubtextAnimation}
+            duration={0.13}
+            stagger={0.05}
+            className="text-sm-medium lg:text-xl-medium text-default-body leading-[120%]"
+          >
+            Built on trusted relationships across the mining supply chain. From
+            sourcing to delivery, our partners ensure reliability at every stage.
+            Together, we drive efficiency, safety, and consistent results.
+          </LineByLineText>
+        </div>
       </div>
 
       {/* Map — aspect-ratio locked to match SVG viewBox so % pins align */}

@@ -83,7 +83,7 @@ function HeroSession({ startTextAnimation = false }: HeroSessionProps) {
       {/* <div className="hero-image mt-[50]">
         <div className="hero-image-info h-[600] relative overflow-hidden z-0">
           <Image
-            src="/homeAssets/image-6.jpg"
+            src="/homeAssets/image-6.webp"
             alt="Hero Image"
             fill
             priority

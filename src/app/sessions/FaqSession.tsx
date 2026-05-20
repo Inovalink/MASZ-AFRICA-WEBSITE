@@ -181,7 +181,7 @@ export default function FaqSession() {
                 text="Frequently asked questions"
               />
             </div>
-            <div className="text-xl-semibold mt-[28px] leading-6 lg:text-2xl-semibold xl:text-3xl-semibold  lg:leading-13">
+            <div className="text-xl-semibold mt-[28px] leading-6 lg:text-3xl-semibold  2xl:text-4xl-semibold  lg:leading-[120%]">
               <LineByLineText
                 startAnimation={startTitleAnimation}
                 onComplete={handleTitleComplete}
@@ -190,7 +190,7 @@ export default function FaqSession() {
                 delay={0.04}
                 yFrom={24}
                 as="div"
-                className="text-white! uppercase lg:text-4xl-semibold"
+                className="text-white! uppercase "
               >
                 GOT ANY QUESTIONS? <br />
                 <span className="text-white!">WE&apos;VE GOT ANSWERS</span>

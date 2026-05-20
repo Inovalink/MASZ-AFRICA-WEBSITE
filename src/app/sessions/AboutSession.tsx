@@ -157,7 +157,7 @@ function AboutSession({ startTextAnimation = false }: AboutSessionProps) {
 <div className="about-session-container my-[100] xl:flex xl:justify-between xl:items-stretch xl:gap-[50px]">        {/* Left: Text + Button */}
         <div className="session-container xl:w-1/2" data-scroll-reveal-item>
           <Tag text="About us" className="ml-[22] lg:ml-[0]" />
-          <div className="about-us-header text-xl-semibold leading-[110%] uppercase ml-[22] lg:ml-[0] my-[30] lg:my-[37]  lg:text-4xl-semibold ">
+          <div className="about-us-header text-xl-semibold leading-[110%] uppercase ml-[22] lg:ml-[0] my-[30] lg:my-[37]  lg:text-4xl-semibold tracking-tight ">
             <HeaderLineByLineAnimation
               startAnimation={startTextAnimation}
               onComplete={() => setStartBodyAnimation(true)}

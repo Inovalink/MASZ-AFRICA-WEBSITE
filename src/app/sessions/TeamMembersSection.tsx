@@ -220,7 +220,7 @@ export default function TeamMembersAnimated() {
           <div className="  flex flex-col  justify-center lg:justify-start lg:items-start items-center  lg:mt-0 lg:text-left">
             <h2
               ref={nameRef}
-              className="uppercase text-blue-600 text-2xl-semibold  lg:text-3xl-semibold xl:text-4xl-semibold font-semibold mb-2 mx-[21] lg:mx-0"
+              className="uppercase text-blue-600 text-2xl-semibold  lg:text-3xl-semibold xl:text-4xl-semibold tracking-tight font-semibold mb-2 mx-[21] lg:mx-0"
             >
               {activeMember.name}
             </h2>

@@ -44,6 +44,7 @@ const images = [
 const GallerySection = () => {
   const sectionRef = useRef<HTMLElement>(null);
   const [startTextAnimation, setStartTextAnimation] = useState(false);
+  const [startSubtextAnimation, setStartSubtextAnimation] = useState(false);
   const imageRefs = useRef<(HTMLDivElement | null)[]>([]);
   const hasAnimatedImages = useRef(false);
 
@@ -106,9 +107,10 @@ const GallerySection = () => {
 {/* ----------------- */}
 <div className="md:flex  mx-[24] xl:mx-[120]  min-[1920px]:mx-[200]! overflow-hidden gap-[50px] md:mb-[80] md:justify-between">
         {/* Header */}
-        <div className="section-header uppercase text-xl-semibold lg:text-4xl-semibold leading-[110%] mb-[20px]">
+        <div className="section-header uppercase text-xl-semibold lg:text-4xl-semibold tracking-tight leading-[110%] mb-[20px]">
           <HeaderLineByLineAnimation
             startAnimation={startTextAnimation}
+            onComplete={() => setStartSubtextAnimation(true)}
             lineY={HEADER_LINE_Y}
             duration={HEADER_DURATION}
             stagger={HEADER_STAGGER}
@@ -121,12 +123,11 @@ const GallerySection = () => {
         </div>
 
         {/* Subtext */}
-        <div className="subtext mb-[60px] lg:mb-[0px] max-w-[484px]  ">
+        <div className="subtext mb-[60px] lg:mb-[0px] max-w-[484px] w-full">
           <LineByLineText
-            startAnimation={startTextAnimation}
+            startAnimation={startSubtextAnimation}
             duration={0.13}
             onComplete={handleHeaderComplete}
-
             delay={0.1}
             stagger={0.05}
             className="text-sm-medium lg:text-xl-medium leading-[120%] text-default-body"

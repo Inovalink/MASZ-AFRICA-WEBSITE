@@ -27,7 +27,7 @@ export interface AnimatedCardsContainerProps {
 
 /**
  * Reusable Animated Cards Container Component
- * 
+ *
  * Handles sequential animation of cards from right to left when scrolled into view.
  * Children should be wrapped in divs - the component will find all direct child divs and animate them.
  * Used for: Core Values Cards, Achievement Cards, etc.
@@ -47,7 +47,7 @@ export default function AnimatedCardsContainer({
   // Set initial states before paint to prevent layout shift
   useLayoutEffect(() => {
     if (!containerRef.current) return;
-    
+
     const cardElements = Array.from(containerRef.current.children) as HTMLElement[];
     cardElements.forEach((cardEl) => {
       gsap.set(cardEl, {
@@ -101,7 +101,7 @@ export default function AnimatedCardsContainer({
   }, [start, once, duration, stagger, ease]);
 
   return (
-    <div 
+    <div
       ref={containerRef}
       className={className || 'flex flex-col lg:flex-row gap-4 lg:gap-8'}
       style={{ overflow: 'visible' }}
