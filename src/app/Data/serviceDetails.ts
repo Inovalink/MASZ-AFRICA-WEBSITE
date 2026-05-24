@@ -142,7 +142,6 @@ export const serviceDetailsTemplate = [
     even under demanding, high-throughput gold extraction co   ditions, ensuring maximum recovery 
     efficiency with minimal carbon degradation. This makes it ideally suited for large-scale 
     operations aiming for both operational reliability and cost-effectiveness.
-    <br/><br/>
     Each batch undergoes rigorous quality testing, including assessments of moisture content, 
     iodine number, and hardness, guaranteeing uniform performance and full compliance with 
     international standards. This meticulous quality control ensures predictable adsorption 
@@ -154,7 +153,6 @@ export const serviceDetailsTemplate = [
     processing conditions—including ore characteristics, mill configurations, pulp chemistry, and 
     recovery targets—to recommend the optimal carbon type, size distribution, regeneration schedule, 
     and operational adjustments.
-    <br/><br/>
     We also focus on process efficiency and sustainability, helping plants reduce carbon loss, 
     lower energy consumption during regeneration, and maintain environmentally responsible operations. 
     By combining premium products with tailored technical support, MASZ-AFRICA ensures that every 
@@ -234,13 +232,14 @@ export const serviceDetailsTemplate = [
     water distribution, chemical processing, and heavy-duty industrial pipelines. Our products combine 
     robust material properties with precision engineering, ensuring optimal performance and minimal 
     maintenance in extreme operational environments.
-    <br/><br/>
     Each pipe is manufactured to the highest international standards, including API (American Petroleum Institute), 
     ASTM (American Society for Testing and Materials), and ISO (International Organization for Standardization) 
-    certifications. Every batch undergoes comprehensive inspection, including verification of wall thickness, 
+    certifications. 
+        <br/><br/>
+
+    Every batch undergoes comprehensive inspection, including verification of wall thickness, 
     dimensional accuracy, and weld integrity, ensuring consistency, safety, and peak performance even under the 
     harshest conditions.
-    <br/><br/>
     MASZ-AFRICA goes beyond supply by providing technical guidance and on-site consultation for pipe selection, 
     corrosion protection, and installation. Our team assists clients in determining the most suitable material, 
     diameter, and thickness based on the specific mining process, fluid properties, and environmental conditions. 
@@ -320,13 +319,13 @@ export const serviceDetailsTemplate = [
     efficiency, and extend the operational lifespan of essential machinery operating in extreme mining 
     conditions. With a focus on precision, reliability, and uptime, we help mining operations maintain 
     productivity even under the harshest conditions.
-    <br/><br/>
     Our highly trained technicians conduct comprehensive inspections and fault diagnostics using advanced 
     testing tools to identify wear, misalignment, lubrication issues, vibration irregularities, and 
-    component fatigue. Using OEM-approved replacement parts and industry-recognized servicing procedures, 
+    component fatigue.
+        <br/><br/>
+    Using OEM-approved replacement parts and industry-recognized servicing procedures, 
     we repair, rebuild, and recalibrate gearboxes to return equipment to optimal working condition while 
     minimizing the risk of recurring failures.
-    <br/><br/>
     MASZ-AFRICA’s mobile maintenance teams are equipped to provide rapid on-site response across active 
     mining locations. This minimizes downtime, reduces production losses, and ensures that critical 
     operations resume quickly and safely. Whether for planned preventative maintenance, predictive 
@@ -402,9 +401,9 @@ export const serviceDetailsTemplate = [
     video: "/videos/services/Crusher Seals Web.mp4",
 
     description: ` MASZ-AFRICA provides specialized crusher seal installation and replacement services for cone, jaw, and gyratory crushers, designed to protect critical components from contamination, leakage, and premature wear. Operating in harsh, dust-intensive mining environments, crushers require high-integrity sealing systems to maintain lubrication efficiency and mechanical stability — and that is exactly what our solutions deliver.
+    Our technicians use a precision-engineered, application-specific approach to ensure that lubrication systems remain fully protected from dust, moisture, slurry, and debris infiltration. 
     <br/><br/>
-    Our technicians use a precision-engineered, application-specific approach to ensure that lubrication systems remain fully protected from dust, moisture, slurry, and debris infiltration. By preventing oil leaks and minimizing foreign particle ingress, our sealing solutions play a critical role in extending bearing life, reducing internal component damage, and stabilizing overall crusher performance under continuous heavy loads.
-    <br/><br/>
+    By preventing oil leaks and minimizing foreign particle ingress, our sealing solutions play a critical role in extending bearing life, reducing internal component damage, and stabilizing overall crusher performance under continuous heavy loads.
     We utilize high-performance sealing materials designed for extreme pressure, temperature variation, and abrasive conditions. Combined with our proven installation techniques, strict alignment checks, and post-installation inspections, we deliver sealing systems that improve machine reliability, reduce maintenance frequency, and significantly extend equipment service intervals.`,
 
     benefitsImage: "/serviceAssets/Image-19.webp",
@@ -475,11 +474,9 @@ export const serviceDetailsTemplate = [
     video: "/videos/services/Procurement Supply Web.mp4",
 
     description: ` At MASZ-AFRICA, we deliver a fully integrated, end-to-end procurement and supply chain solution designed to meet the complex demands of the mining and industrial sectors. Our process begins with strategic sourcing and supplier vetting, ensuring that every product meets strict quality, performance, and compliance standards. We engage only with verified manufacturers and industry-approved suppliers to guarantee the reliability and authenticity of every material delivered.
-    <br/><br/>
     From international purchasing and contract negotiation to documentation, customs clearance, and regulatory compliance, our experienced procurement team manages every critical touchpoint with precision and transparency. We eliminate supply uncertainties by maintaining complete visibility across the supply chain, supported by robust tracking systems and detailed reporting.
     <br/><br/>
     Our logistics capabilities extend to secure warehousing, inventory control, and coordinated site delivery – even to the most remote project locations. With a proven 98% on-time delivery performance, we ensure that critical consumables, components, and equipment arrive exactly when needed, minimizing project delays and operational disruptions.
-    <br/><br/>
     By consolidating procurement responsibilities under one trusted partner, we help clients reduce operational risk, optimize purchasing costs, and maintain consistent production flow. MASZ-AFRICA transforms procurement into a strategic advantage – strengthening your operations through reliability, speed, and supply chain intelligence.`,
 
     benefitsImage: "/serviceAssets/Image-19.webp",
@@ -550,9 +547,9 @@ export const serviceDetailsTemplate = [
     video: "/videos/services/Technical Consultancy Web.mp4",
 
     description: ` MASZ-AFRICA provides comprehensive technical consultancy and on-site field support services designed to enhance operational efficiency, improve equipment performance, and maximize overall productivity in demanding mining environments. Our approach goes beyond supply and maintenance – we partner strategically with clients to identify opportunities for optimization, cost reduction, and long-term performance improvement across their operations.
+    Our team of experienced engineers and field specialists conducts detailed operational assessments, equipment audits, and process evaluations to identify inefficiencies, performance gaps, and potential failure points.
     <br/><br/>
-    Our team of experienced engineers and field specialists conducts detailed operational assessments, equipment audits, and process evaluations to identify inefficiencies, performance gaps, and potential failure points. Based on these insights, we develop data-driven, customized recommendations covering equipment optimization, process improvements, preventive maintenance planning, and the selection of the most suitable materials and consumables for each application.
-    <br/><br/>
+     Based on these insights, we develop data-driven, customized recommendations covering equipment optimization, process improvements, preventive maintenance planning, and the selection of the most suitable materials and consumables for each application.
     MASZ-AFRICA's field support extends directly to the site, where our specialists work side-by-side with operational and maintenance teams to implement solutions, monitor performance, and ensure that recommended adjustments deliver measurable results. From improving throughput and energy efficiency to reducing downtime and maintenance frequency, our consultancy services are focused on delivering tangible, sustainable value.`,
 
     benefitsImage: "/serviceAssets/Image-19.webp",

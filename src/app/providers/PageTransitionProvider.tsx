@@ -25,6 +25,7 @@ export default function PageTransitionProvider({
   const isNavigatingRef = useRef(false);
   const pageReadyRef = useRef(false);
   const halfwayDoneRef = useRef(false);
+  const safetyTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [logoVisible, setLogoVisible] = useState(false);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [lottieData, setLottieData] = useState<any>(null);
@@ -39,6 +40,10 @@ export default function PageTransitionProvider({
 
   const tryExit = useCallback(() => {
     if (!halfwayDoneRef.current || !pageReadyRef.current) return;
+    if (safetyTimerRef.current) {
+      clearTimeout(safetyTimerRef.current);
+      safetyTimerRef.current = null;
+    }
 
     const overlay = overlayRef.current;
     const boxes = boxRefs.current.filter(Boolean);
@@ -102,7 +107,15 @@ export default function PageTransitionProvider({
         setLogoVisible(true);
       },
     });
-  }, []);
+
+    // Safety: if Lottie JSON is slow to fetch or fails, force the overlay
+    // closed after 3 s so the page is never permanently stuck.
+    if (safetyTimerRef.current) clearTimeout(safetyTimerRef.current);
+    safetyTimerRef.current = setTimeout(() => {
+      halfwayDoneRef.current = true;
+      tryExit();
+    }, 3000);
+  }, [tryExit]);
 
   // Intercept internal link clicks
   useEffect(() => {

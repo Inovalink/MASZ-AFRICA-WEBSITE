@@ -78,7 +78,7 @@ function AutoplayVideo({ src, classname = '', fullWidth = true }: AutoplayVideoP
         playsInline
         loop
         controls={false}
-        preload="auto"
+        preload="metadata"
         className="h-full w-full object-contain"
       />
     </div>

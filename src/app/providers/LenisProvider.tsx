@@ -26,7 +26,7 @@ export default function LenisProvider({ children }: { children: ReactNode }) {
       duration: 0.6,
       easing: (t: number) => 1 - Math.pow(1 - t, 4),
       smoothWheel: true,
-      touchMultiplier: 2,
+      touchMultiplier: 1,
     });
 
     // Set Lenis scroll to 0 immediately so ScrollTrigger sees scroll at 0 when triggers are created

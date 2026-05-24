@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useRef, useCallback } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Tag from "@/app/components/tag";
 import Image from "next/image";
 import { Square3Stack3DIcon } from "@heroicons/react/16/solid";
@@ -11,27 +11,6 @@ import RelatedServicesCarousel from "@/app/components/RelatedServicesCarousel";
 import AutoplayVideo from "@/app/components/AutoplayVideo";
 import { MoveDown, MoveUp } from "lucide-react";
 import Button from "@/app/components/button";
-
-function useInView(
-  ref: React.RefObject<Element | null>,
-  setState: React.Dispatch<React.SetStateAction<boolean>>,
-) {
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    const io = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setState(true);
-          io.disconnect();
-        }
-      },
-      { threshold: 0.1 }
-    );
-    io.observe(el);
-    return () => io.disconnect();
-  }, [ref, setState]);
-}
 
 /** Split description at the double-<br /> paragraph boundary */
 function splitDescription(text: string): [string, string] {
@@ -46,17 +25,9 @@ export default function ServiceDetailContent({
 }) {
   const [startHeroText, setStartHeroText] = useState(false);
   const [startDescText, setStartDescText] = useState(false);
-  const [startBenefitsText, setStartBenefitsText] = useState(false);
   const heroTextRef = useRef<HTMLDivElement>(null);
-  const descRef = useRef<HTMLDivElement>(null);
-  const benefitsTextRef = useRef<HTMLDivElement>(null);
-  const benefitsBannerRef = useRef<HTMLDivElement>(null);
   const [startBannerText, setStartBannerText] = useState(false);
   const [activeBenefitId, setActiveBenefitId] = useState<string | null>(null);
-
-  useInView(benefitsBannerRef, setStartBannerText);
-  useInView(descRef,           setStartDescText);
-  useInView(benefitsTextRef,   setStartBenefitsText);
 
   // Hero text waits for the page transition overlay to exit before starting.
   useEffect(() => {
@@ -127,6 +98,7 @@ export default function ServiceDetailContent({
           start="top 85%"
           scale
           staggerChildren={0.1}
+          onRevealNearlyComplete={() => setStartDescText(true)}
         >
           <div className="description ">
             <div className="description-content mx-[21] lg:mx-[24] xl:mx-[120]  min-[1920px]:mx-[200]! my-[100] lg:my-[150]">
@@ -134,7 +106,7 @@ export default function ServiceDetailContent({
               {(() => {
                 const [para1, para2] = splitDescription(service.description || "");
                 return (
-                  <div ref={descRef} className="lg:grid lg:grid-cols-2 lg:gap-[80px] xl:gap-[120px] text-default-body">
+                  <div className="lg:grid lg:grid-cols-2 lg:gap-[80px] xl:gap-[120px] text-default-body">
                     <LineByLineText
                       startAnimation={startDescText}
                       duration={0.13}
@@ -173,6 +145,7 @@ export default function ServiceDetailContent({
           start="top 85%"
           scale
           staggerChildren={0.1}
+          onRevealNearlyComplete={() => setStartBannerText(true)}
         >
           <div className="benefit-section-hero relative w-full flex flex-col lg:flex-row h-[500px] lg:h-[600px] xl:h-[658px]">
             {/* Left — full-bleed image */}
@@ -250,7 +223,7 @@ export default function ServiceDetailContent({
                 </div>
 
                 {/* Heading */}
-                <div ref={benefitsBannerRef}>
+                <div>
                   <LineByLineText
                     startAnimation={startBannerText}
                     delay={0.2}

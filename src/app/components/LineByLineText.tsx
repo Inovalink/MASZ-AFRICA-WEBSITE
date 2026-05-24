@@ -68,7 +68,7 @@ export default function LineByLineText({
   useEffect(() => {
     let cancelled = false;
     const markReady = () => { if (!cancelled) setFontsReady(true); };
-    const timeoutId = setTimeout(markReady, 3000);
+    const timeoutId = setTimeout(markReady, 1500);
     if (document.fonts?.ready) {
       document.fonts.ready.then(() => {
         requestAnimationFrame(() => requestAnimationFrame(markReady));

@@ -363,8 +363,8 @@ function CoreValueSession({
         </div>
 
         {/* Mobile-only supporting images */}
-        <div className="core-value-section-images flex flex-col gap-5 lg:flex">
-          <div className="relative h-[300px] mx-[21px] overflow-hidden lg:hidden">
+        <div className="core-value-section-images flex hidden flex-col gap-5 lg:flex">
+          <div className="relative h-[300px] mx-[21px] overflow-hidden hidden">
             <Image
               src="/homeAssets/Image-3.webp"
               alt="Core value visual"

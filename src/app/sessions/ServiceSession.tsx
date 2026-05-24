@@ -57,33 +57,33 @@ const serviceList = [
     heroImage: "/serviceAssets/Image-6-1.webp",
     heroAltText: "Gear box servicing",
   },
-  {
-    id: 5,
-    slug: "crusher-seals-installation-and-equipment-protection",
-    title: "Crusher Seals Installation and Equipment Protection",
-    subtext:
-      "We provide precision crusher seal installation and replacement for cone, jaw, and gyratory crushers. Our solutions prevent contamination and leakage, extending bearing life and stabilizing crusher performance under continuous heavy loads.",
-    heroImage: "/serviceAssets/Image-20.webp",
-    heroAltText: "Crusher seals installation",
-  },
-  {
-    id: 6,
-    slug: "procurement-and-supply-chain-management",
-    title: "Procurement and Supply Chain Management",
-    subtext:
-      "We deliver fully integrated, end-to-end procurement solutions for the mining and industrial sectors. From strategic sourcing and supplier vetting to logistics and on-site delivery, we ensure critical materials arrive on time and to specification.",
-    heroImage: "/serviceAssets/Image-21.webp",
-    heroAltText: "Procurement and supply chain management",
-  },
-  {
-    id: 7,
-    slug: "technical-consultancy",
-    title: "Technical Consultancy",
-    subtext:
-      "Our experienced engineers conduct detailed operational assessments and process evaluations to identify inefficiencies and failure points. We deliver data-driven recommendations that improve equipment performance, reduce downtime, and lower operational costs.",
-    heroImage: "/serviceAssets/Image-12.webp",
-    heroAltText: "Technical consultancy",
-  },
+  // {
+  //   id: 5,
+  //   slug: "crusher-seals-installation-and-equipment-protection",
+  //   title: "Crusher Seals Installation and Equipment Protection",
+  //   subtext:
+  //     "We provide precision crusher seal installation and replacement for cone, jaw, and gyratory crushers. Our solutions prevent contamination and leakage, extending bearing life and stabilizing crusher performance under continuous heavy loads.",
+  //   heroImage: "/serviceAssets/Image-20.webp",
+  //   heroAltText: "Crusher seals installation",
+  // },
+  // {
+  //   id: 6,
+  //   slug: "procurement-and-supply-chain-management",
+  //   title: "Procurement and Supply Chain Management",
+  //   subtext:
+  //     "We deliver fully integrated, end-to-end procurement solutions for the mining and industrial sectors. From strategic sourcing and supplier vetting to logistics and on-site delivery, we ensure critical materials arrive on time and to specification.",
+  //   heroImage: "/serviceAssets/Image-21.webp",
+  //   heroAltText: "Procurement and supply chain management",
+  // },
+  // {
+  //   id: 7,
+  //   slug: "technical-consultancy",
+  //   title: "Technical Consultancy",
+  //   subtext:
+  //     "Our experienced engineers conduct detailed operational assessments and process evaluations to identify inefficiencies and failure points. We deliver data-driven recommendations that improve equipment performance, reduce downtime, and lower operational costs.",
+  //   heroImage: "/serviceAssets/Image-12.webp",
+  //   heroAltText: "Technical consultancy",
+  // },
 ] as const;
 
 function ServiceSession({ startTextAnimation = false }: ServiceSessionProps) {
@@ -94,7 +94,7 @@ function ServiceSession({ startTextAnimation = false }: ServiceSessionProps) {
   return (
     <section className="xl:mx-[120] min-[1920px]:mx-[200]! mx-[24] bg-white relative z-10">
       <div className="services-section-container my-[100]">
-        <Tag text="services" className="ml-[22] lg:ml-[0]" />
+        <Tag text="services" className=" lg:ml-[0]" />
 
         <div className="services-section-header flex items-start justify-between text-xl-semibold  leading-[110%] uppercase my-[30] lg:mt-[37] lg:mb-[98] lg:text-4xl-semibold tracking-tight">
           <HeaderLineByLineAnimation
