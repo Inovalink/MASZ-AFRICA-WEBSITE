@@ -57,6 +57,33 @@ const serviceList = [
     heroImage: "/serviceAssets/Image-6-1.webp",
     heroAltText: "Gear box servicing",
   },
+  {
+    id: 5,
+    slug: "crusher-seals-installation-and-equipment-protection",
+    title: "Crusher Seals Installation and Equipment Protection",
+    subtext:
+      "We provide precision crusher seal installation and replacement for cone, jaw, and gyratory crushers. Our solutions prevent contamination and leakage, extending bearing life and stabilizing crusher performance under continuous heavy loads.",
+    heroImage: "/serviceAssets/Image-6-1.webp",
+    heroAltText: "Crusher seals installation",
+  },
+  {
+    id: 6,
+    slug: "procurement-and-supply-chain-management",
+    title: "Procurement and Supply Chain Management",
+    subtext:
+      "We deliver fully integrated, end-to-end procurement solutions for the mining and industrial sectors. From strategic sourcing and supplier vetting to logistics and on-site delivery, we ensure critical materials arrive on time and to specification.",
+    heroImage: "/serviceAssets/Image-6-1.webp",
+    heroAltText: "Procurement and supply chain management",
+  },
+  {
+    id: 7,
+    slug: "technical-consultancy",
+    title: "Technical Consultancy",
+    subtext:
+      "Our experienced engineers conduct detailed operational assessments and process evaluations to identify inefficiencies and failure points. We deliver data-driven recommendations that improve equipment performance, reduce downtime, and lower operational costs.",
+    heroImage: "/serviceAssets/Image-6-1.webp",
+    heroAltText: "Technical consultancy",
+  },
 ] as const;
 
 function ServiceSession({ startTextAnimation = false }: ServiceSessionProps) {
@@ -138,6 +165,7 @@ function ServiceSession({ startTextAnimation = false }: ServiceSessionProps) {
                   {/* Expandable subtext */}
                   <div className="overflow-hidden max-h-0 service-subtext-container">
                     <LineByLineText
+                      key={`subtext-${list.id}-${hoveredId === list.id}`}
                       startAnimation={hoveredId === list.id}
                       duration={0.4}
                       stagger={0.1}

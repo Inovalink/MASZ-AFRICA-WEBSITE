@@ -759,12 +759,12 @@ useEffect(() => {
             {/* GSAP ripple ring 1 */}
             <div
               ref={ring1Ref}
-              className="absolute rounded-full bg-[#016BF2]/40 w-[42px] h-[42px] lg:w-[86px] lg:h-[86px]"
+              className="absolute rounded-full z-10 bg-[#016BF2]/40 w-[42px] h-[42px] lg:w-[86px] lg:h-[86px]"
             />
             {/* GSAP ripple ring 2 */}
             <div
               ref={ring2Ref}
-              className="absolute rounded-full bg-[#016BF2]/25 w-[42px] h-[42px] lg:w-[86px] lg:h-[86px]"
+              className="absolute z-10 rounded-full bg-[#016BF2]/25 w-[42px] h-[42px] lg:w-[86px] lg:h-[86px]"
             />
             {/* Center blue button with Lottie + SVG fallback */}
             <div className="relative z-10 w-[42px] h-[42px] lg:w-[70px] lg:h-[70px] bg-[#016BF2] rounded-full flex items-center justify-center shadow-lg hover:bg-[#0150B6] transition-colors">

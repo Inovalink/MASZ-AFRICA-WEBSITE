@@ -40,7 +40,7 @@ function TestimonialSession() {
       logo: "/homeAssets/Logo-1.jpg",
       subtext:
         "What sets MASZ-Africa apart is their deep understanding of mining operations. They don’t just deliver products — they deliver the right products. Their technical team helped us select the optimal grinding media for our mill, which reduced wear rates significantly and improved throughput.",
-      picture: "/homeAssets/Picture-1.jpg",
+      picture: "/homeAssets/Picture-2.jpg",
       name: "Kwame Asante",
       position: "Plant Manager, GoldFields Ghana",
     },
@@ -49,7 +49,7 @@ function TestimonialSession() {
       logo: "/homeAssets/Logo-1.jpg",
       subtext:
         "We’ve partnered with MASZ-Africa across three of our mine sites in West Africa. Their logistics team consistently meets tight delivery windows, even in remote locations. The quality of their activated carbon has been exceptional — recovery rates have remained well above our benchmarks.",
-      picture: "/homeAssets/Picture-1.jpg",
+      picture: "/homeAssets/Picture-3.jpg",
       name: "Adaeze Nwosu",
       position: "Supply Chain Director, Kinross Africa",
     },
@@ -58,7 +58,7 @@ function TestimonialSession() {
       logo: "/homeAssets/Logo-1.jpg",
       subtext:
         "The gearbox servicing team from MASZ-Africa turned around a critical mill repair in under 48 hours, preventing what could have been a week-long production halt. Their technicians are knowledgeable, fast, and safety-conscious. We’ve made them our go-to maintenance partner.",
-      picture: "/homeAssets/Picture-1.jpg",
+      picture: "/homeAssets/Picture-4.jpg",
       name: "Kofi Mensah",
       position: "Maintenance Superintendent, AngloGold Ashanti",
     },
@@ -67,7 +67,7 @@ function TestimonialSession() {
       logo: "/homeAssets/Logo-1.jpg",
       subtext:
         "Procurement has always been a pain point for us in this region, but MASZ-Africa changed that. They handle everything — sourcing, customs, delivery — with minimal input from our side. The steel pipes they supply meet international specs and arrive in perfect condition every time.",
-      picture: "/homeAssets/Picture-1.jpg",
+      picture: "/homeAssets/Picture-5.jpg",
       name: "Emeka Okafor",
       position: "Operations Manager, Barrick Gold Tanzania",
     },
@@ -76,7 +76,7 @@ function TestimonialSession() {
       logo: "/homeAssets/Logo-1.jpg",
       subtext:
         "I’ve worked with many suppliers across the continent and MASZ-Africa stands out for one reason: accountability. If there’s ever an issue, it’s resolved before it becomes a problem. Their proactive approach to service and communication gives us confidence that our operations won’t be disrupted.",
-      picture: "/homeAssets/Picture-1.jpg",
+      picture: "/homeAssets/Picture-6.jpg",
       name: "Fatima Diallo",
       position: "Head of Procurement, Endeavour Mining Senegal",
     },
@@ -85,7 +85,7 @@ function TestimonialSession() {
       logo: "/homeAssets/Logo-1.jpg",
       subtext:
         "MASZ-Africa helped us transition from multiple fragmented suppliers to a single reliable partner. The cost savings have been significant, but more importantly, we now have consistent product quality and a team that understands our site requirements. They are a true operational extension of our business.",
-      picture: "/homeAssets/Picture-1.jpg",
+      picture: "/homeAssets/Picture-7.jpg",
       name: "Bernard Tetteh",
       position: "General Manager, Perseus Mining Ivory Coast",
     },

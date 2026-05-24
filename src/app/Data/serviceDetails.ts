@@ -389,4 +389,225 @@ export const serviceDetailsTemplate = [
       },
     ],
   },
+
+  // CRUSHER SEALS
+  {
+    slug: "crusher-seals-installation-and-equipment-protection",
+    headerFirst: "consumables that keep your mine",
+    headerSecond: "moving without compromise",
+    heroImage: "/serviceAssets/Image-20.webp",
+    heroAltText: "crusher seals",
+    heroTag: "service",
+    heroTitle: "crusher seals",
+    video: "/videos/services/Crusher Seals Web.mp4",
+
+    description: ` MASZ-AFRICA provides specialized crusher seal installation and replacement services for cone, jaw, and gyratory crushers, designed to protect critical components from contamination, leakage, and premature wear. Operating in harsh, dust-intensive mining environments, crushers require high-integrity sealing systems to maintain lubrication efficiency and mechanical stability — and that is exactly what our solutions deliver.
+    <br/><br/>
+    Our technicians use a precision-engineered, application-specific approach to ensure that lubrication systems remain fully protected from dust, moisture, slurry, and debris infiltration. By preventing oil leaks and minimizing foreign particle ingress, our sealing solutions play a critical role in extending bearing life, reducing internal component damage, and stabilizing overall crusher performance under continuous heavy loads.
+    <br/><br/>
+    We utilize high-performance sealing materials designed for extreme pressure, temperature variation, and abrasive conditions. Combined with our proven installation techniques, strict alignment checks, and post-installation inspections, we deliver sealing systems that improve machine reliability, reduce maintenance frequency, and significantly extend equipment service intervals.`,
+
+    benefitsImage: "/serviceAssets/Image-19.webp",
+    benefitsAltText: "Metal and Steel Pipes",
+    benefitsTitle: " Engineered for Efficiency and Profitability.",
+    benefitsSubtitle: `Delivering reliable mining consumables and expert technical
+                support to keep your operations running smoothly, reduce
+                downtime, and maximize efficiency—helping your business save
+                costs and boost profitability. Partner with us for innovative
+                solutions and unwavering support that drive growth and success
+                in every project.`,
+
+    benefits: [
+      {
+        id: 1,
+        title: "Enhanced lubrication system protection",
+        description:
+          "Prevents dust, slurry, and debris from entering critical components, ensuring smooth operation.",
+        icon: BenefitIcons[1],
+      },
+      {
+        id: 2,
+        title: "Improved crusher reliability and operational consistency",
+        description:
+          "Precision-installed seals minimize downtime and ensure stable performance under heavy load.",
+        icon: BenefitIcons[2],
+      },
+      {
+        id: 3,
+        title: "Minimized operational interruptions",
+        description:
+          "Rapid, precise seal replacement prevents process slowdowns and maintains production flow.",
+        icon: BenefitIcons[3],
+      },
+      {
+        id: 4,
+        title: "Reduced risk of leakage and contamination",
+        description:
+          "Maintains system integrity and avoids premature component wear or failure.",
+        icon: BenefitIcons[4],
+      },
+      {
+        id: 5,
+        title: "Optimized performance under extreme conditions",
+        description:
+          "Seals are engineered to withstand high pressure, abrasive materials, and harsh mining environments.",
+        icon: BenefitIcons[5],
+      },
+      {
+        id: 6,
+        title: "Extended equipment service intervals",
+        description:
+          "High-performance sealing solutions reduce internal wear and component fatigue, significantly prolonging the time between major service events and lowering long-term maintenance costs.",
+        icon: BenefitIcons[6],
+      },
+    ],
+  },
+
+  // PROCUREMENT AND SUPPLY CHAIN MANAGEMENT
+  {
+    slug: "procurement-and-supply-chain-management",
+    headerFirst: "consumables that keep your mine",
+    headerSecond: "moving without compromise",
+    heroImage: "/serviceAssets/Image-21.webp",
+    heroAltText: "procurement and supply chain management",
+    heroTag: "service",
+    heroTitle: "procurement and supply chain management",
+    video: "/videos/services/Procurement Supply Web.mp4",
+
+    description: ` At MASZ-AFRICA, we deliver a fully integrated, end-to-end procurement and supply chain solution designed to meet the complex demands of the mining and industrial sectors. Our process begins with strategic sourcing and supplier vetting, ensuring that every product meets strict quality, performance, and compliance standards. We engage only with verified manufacturers and industry-approved suppliers to guarantee the reliability and authenticity of every material delivered.
+    <br/><br/>
+    From international purchasing and contract negotiation to documentation, customs clearance, and regulatory compliance, our experienced procurement team manages every critical touchpoint with precision and transparency. We eliminate supply uncertainties by maintaining complete visibility across the supply chain, supported by robust tracking systems and detailed reporting.
+    <br/><br/>
+    Our logistics capabilities extend to secure warehousing, inventory control, and coordinated site delivery – even to the most remote project locations. With a proven 98% on-time delivery performance, we ensure that critical consumables, components, and equipment arrive exactly when needed, minimizing project delays and operational disruptions.
+    <br/><br/>
+    By consolidating procurement responsibilities under one trusted partner, we help clients reduce operational risk, optimize purchasing costs, and maintain consistent production flow. MASZ-AFRICA transforms procurement into a strategic advantage – strengthening your operations through reliability, speed, and supply chain intelligence.`,
+
+    benefitsImage: "/serviceAssets/Image-19.webp",
+    benefitsAltText: "Procurement and Supply Chain Management",
+    benefitsTitle: " Engineered for Efficiency and Profitability.",
+    benefitsSubtitle: `Delivering reliable mining consumables and expert technical
+                support to keep your operations running smoothly, reduce
+                downtime, and maximize efficiency—helping your business save
+                costs and boost profitability. Partner with us for innovative
+                solutions and unwavering support that drive growth and success
+                in every project.`,
+
+    benefits: [
+      {
+        id: 1,
+        title: "End-to-end supply assurance",
+        description:
+          "Full control from strategic sourcing to final site delivery, ensuring materials arrive complete and on schedule.",
+        icon: BenefitIcons[1],
+      },
+      {
+        id: 2,
+        title: "Verified supplier quality",
+        description:
+          "Rigorous supplier vetting and performance monitoring reduce counterfeit risk and guarantee specification compliance.",
+        icon: BenefitIcons[2],
+      },
+      {
+        id: 3,
+        title: "High on-time delivery performance",
+        description:
+          "Proven logistics network and local expertise deliver reliably to remote sites, reducing idle time and production interruptions.",
+        icon: BenefitIcons[3],
+      },
+      {
+        id: 4,
+        title: "Optimized cost-efficiency",
+        description:
+          "Consolidated purchasing, volume leverage, and freight optimization lower total landed cost and improve procurement ROI.",
+        icon: BenefitIcons[4],
+      },
+      {
+        id: 5,
+        title: "Reliable logistics & warehousing",
+        description:
+          "Secure storage, inventory control, and coordinated distribution maintain stock integrity and support just-in-time delivery.",
+        icon: BenefitIcons[5],
+      },
+      {
+        id: 6,
+        title: "Transparent supply chain visibility",
+        description:
+          "Robust tracking systems and detailed reporting provide complete visibility across the supply chain, enabling informed decision-making and proactive issue resolution.",
+        icon: BenefitIcons[6],
+      },
+    ],
+  },
+
+  // TECHNICAL CONSULTANCY
+  {
+    slug: "technical-consultancy-and-field-support",
+    headerFirst: "consumables that keep your mine",
+    headerSecond: "moving without compromise",
+    heroImage: "/serviceAssets/Image-12.webp",
+    heroAltText: "technical consultancy",
+    heroTag: "service",
+    heroTitle: "technical consultancy",
+    video: "/videos/services/Technical Consultancy Web.mp4",
+
+    description: ` MASZ-AFRICA provides comprehensive technical consultancy and on-site field support services designed to enhance operational efficiency, improve equipment performance, and maximize overall productivity in demanding mining environments. Our approach goes beyond supply and maintenance – we partner strategically with clients to identify opportunities for optimization, cost reduction, and long-term performance improvement across their operations.
+    <br/><br/>
+    Our team of experienced engineers and field specialists conducts detailed operational assessments, equipment audits, and process evaluations to identify inefficiencies, performance gaps, and potential failure points. Based on these insights, we develop data-driven, customized recommendations covering equipment optimization, process improvements, preventive maintenance planning, and the selection of the most suitable materials and consumables for each application.
+    <br/><br/>
+    MASZ-AFRICA's field support extends directly to the site, where our specialists work side-by-side with operational and maintenance teams to implement solutions, monitor performance, and ensure that recommended adjustments deliver measurable results. From improving throughput and energy efficiency to reducing downtime and maintenance frequency, our consultancy services are focused on delivering tangible, sustainable value.`,
+
+    benefitsImage: "/serviceAssets/Image-19.webp",
+    benefitsAltText: "Technical Consultancy",
+    benefitsTitle: " Engineered for Efficiency and Profitability.",
+    benefitsSubtitle: `Delivering reliable mining consumables and expert technical
+                support to keep your operations running smoothly, reduce
+                downtime, and maximize efficiency—helping your business save
+                costs and boost profitability. Partner with us for innovative
+                solutions and unwavering support that drive growth and success
+                in every project.`,
+
+    benefits: [
+      {
+        id: 1,
+        title: "Optimized resource utilization",
+        description:
+          "Data-driven consultancy ensures labor, materials, and energy are used efficiently, lowering operational costs.",
+        icon: BenefitIcons[1],
+      },
+      {
+        id: 2,
+        title: "Reliable on-site technical support",
+        description:
+          "Field engineers provide immediate guidance, troubleshooting, and implementation, ensuring continuous operational stability.",
+        icon: BenefitIcons[2],
+      },
+      {
+        id: 3,
+        title: "Extended equipment lifespan",
+        description:
+          "Targeted advice on material selection, handling, and preventive servicing prolongs machinery life and reduces replacement frequency.",
+        icon: BenefitIcons[3],
+      },
+      {
+        id: 4,
+        title: "Enhanced operational efficiency",
+        description:
+          "Expert evaluation and process optimization improve throughput and productivity across all mining operations.",
+        icon: BenefitIcons[4],
+      },
+      {
+        id: 5,
+        title: "Reduced unplanned downtime",
+        description:
+          "Preventive maintenance planning and rapid on-site support minimize equipment failures and production stoppages.",
+        icon: BenefitIcons[5],
+      },
+      {
+        id: 6,
+        title: "Data-driven decision support",
+        description:
+          "Detailed assessments and performance data empower management with actionable insights to make informed operational, procurement, and maintenance decisions.",
+        icon: BenefitIcons[6],
+      },
+    ],
+  },
 ];

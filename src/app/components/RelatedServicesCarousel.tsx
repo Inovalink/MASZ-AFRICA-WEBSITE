@@ -50,6 +50,10 @@ export default function RelatedServicesCarousel({ currentSlug }: Props) {
   const lastDragX      = useRef(0);
   const halfRef        = useRef(0);
   const cardWidthRef   = useRef(0);
+  const animatingRef   = useRef(false);
+  const animFromRef    = useRef(0);
+  const animToRef      = useRef(0);
+  const animStartRef   = useRef(0);
   const [dotIndex, setDotIndex] = useState(0);
 
   // ── Header / subtext animation state ──────────────────────────────────────
@@ -111,6 +115,24 @@ export default function RelatedServicesCarousel({ currentSlug }: Props) {
     const tick = () => {
       if (draggingRef.current) {
         // drag handlers write posRef directly
+      } else if (animatingRef.current) {
+        const track = trackRef.current;
+        const elapsed = performance.now() - animStartRef.current;
+        const t = Math.min(elapsed / 450, 1);
+        const eased = 1 - Math.pow(1 - t, 3);
+        const newPos = animFromRef.current + (animToRef.current - animFromRef.current) * eased;
+        if (track) {
+          track.scrollLeft = newPos;
+          const cw = cardWidthRef.current;
+          if (cw > 0) setDotIndex(Math.floor(wrap(newPos) / cw) % base.length);
+        }
+        if (t >= 1) {
+          posRef.current = wrap(animToRef.current);
+          if (track) track.scrollLeft = posRef.current;
+          animatingRef.current = false;
+        } else {
+          posRef.current = newPos;
+        }
       } else if (Math.abs(velocityRef.current) > 0.1) {
         posRef.current     += velocityRef.current;
         velocityRef.current *= 0.92;
@@ -151,14 +173,25 @@ export default function RelatedServicesCarousel({ currentSlug }: Props) {
   // ── Arrow nav ─────────────────────────────────────────────────────────────
   const goPrev = () => {
     velocityRef.current = 0;
-    posRef.current = wrap(posRef.current - cardWidthRef.current);
-    applyPos();
+    let from = posRef.current;
+    if (from < cardWidthRef.current) {
+      from += halfRef.current;
+      const track = trackRef.current;
+      if (track) track.scrollLeft = from;
+      posRef.current = from;
+    }
+    animFromRef.current  = from;
+    animToRef.current    = from - cardWidthRef.current;
+    animStartRef.current = performance.now();
+    animatingRef.current = true;
   };
 
   const goNext = () => {
-    velocityRef.current = 0;
-    posRef.current = wrap(posRef.current + cardWidthRef.current);
-    applyPos();
+    velocityRef.current  = 0;
+    animFromRef.current  = posRef.current;
+    animToRef.current    = posRef.current + cardWidthRef.current;
+    animStartRef.current = performance.now();
+    animatingRef.current = true;
   };
 
   // ── Mouse ──
@@ -171,6 +204,7 @@ export default function RelatedServicesCarousel({ currentSlug }: Props) {
   };
 
   const onMouseDown = (e: React.MouseEvent) => {
+    animatingRef.current  = false;
     draggingRef.current   = true;
     pausedRef.current     = true;
     velocityRef.current   = 0;
@@ -196,6 +230,7 @@ export default function RelatedServicesCarousel({ currentSlug }: Props) {
 
   // ── Touch ──
   const onTouchStart = (e: React.TouchEvent) => {
+    animatingRef.current  = false;
     draggingRef.current   = true;
     pausedRef.current     = true;
     velocityRef.current   = 0;
