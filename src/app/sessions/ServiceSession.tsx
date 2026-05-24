@@ -63,7 +63,7 @@ const serviceList = [
     title: "Crusher Seals Installation and Equipment Protection",
     subtext:
       "We provide precision crusher seal installation and replacement for cone, jaw, and gyratory crushers. Our solutions prevent contamination and leakage, extending bearing life and stabilizing crusher performance under continuous heavy loads.",
-    heroImage: "/serviceAssets/Image-6-1.webp",
+    heroImage: "/serviceAssets/Image-20.webp",
     heroAltText: "Crusher seals installation",
   },
   {
@@ -72,7 +72,7 @@ const serviceList = [
     title: "Procurement and Supply Chain Management",
     subtext:
       "We deliver fully integrated, end-to-end procurement solutions for the mining and industrial sectors. From strategic sourcing and supplier vetting to logistics and on-site delivery, we ensure critical materials arrive on time and to specification.",
-    heroImage: "/serviceAssets/Image-6-1.webp",
+    heroImage: "/serviceAssets/Image-21.webp",
     heroAltText: "Procurement and supply chain management",
   },
   {
@@ -81,7 +81,7 @@ const serviceList = [
     title: "Technical Consultancy",
     subtext:
       "Our experienced engineers conduct detailed operational assessments and process evaluations to identify inefficiencies and failure points. We deliver data-driven recommendations that improve equipment performance, reduce downtime, and lower operational costs.",
-    heroImage: "/serviceAssets/Image-6-1.webp",
+    heroImage: "/serviceAssets/Image-12.webp",
     heroAltText: "Technical consultancy",
   },
 ] as const;
