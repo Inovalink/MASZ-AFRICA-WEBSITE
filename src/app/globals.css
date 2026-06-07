@@ -1259,7 +1259,7 @@ max-width: 800px;    }
 
 .service-image-stack {
   position: absolute;
-  right: 90px;
+  right: 100px;
   top: 50%;
   width: 220px;
   height: 235px;
