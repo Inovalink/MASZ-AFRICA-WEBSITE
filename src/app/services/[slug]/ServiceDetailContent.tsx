@@ -429,7 +429,7 @@ export default function ServiceDetailContent({
                             className={[
                               "item-icon relative z-10 p-[10px] transition-colors duration-500",
                               "bg-[#016BF2] text-white",
-                              "group-hover:text-[#016BF2] group-hover:bg-white",
+                              "lg:group-hover:text-[#016BF2] lg:group-hover:bg-white",
                               isActive ? "!text-[#016BF2] !bg-white" : "",
                             ].join(" ")}
                           >
@@ -438,7 +438,7 @@ export default function ServiceDetailContent({
                           <div
                             className={[
                               "mt-2 item-text relative z-10 text-center flex flex-col items-center justify-center transition-colors duration-500",
-                              "group-hover:text-white",
+                              "lg:group-hover:text-white",
                               isActive ? "!text-white" : "",
                             ].join(" ")}
                           >

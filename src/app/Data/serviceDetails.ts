@@ -310,7 +310,7 @@ export const serviceDetailsTemplate = [
     heroImage: "/serviceAssets/Image-6-1.webp",
     heroAltText: "activated carbon",
     heroTag: "service",
-    heroTitle: "metal and steel pipes",
+    heroTitle: "gearbox servicing and heavy equipment maintenance",
     video: "/videos/services/Gearbox Servicing Web.mp4",
 
     description: ` MASZ-AFRICA delivers professional gearbox servicing, diagnostics, and heavy-machine 

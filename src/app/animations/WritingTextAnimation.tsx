@@ -85,7 +85,7 @@ export default function AnimationCopy({
         ({ charSplit }) => charSplit.chars
       );
 
-      gsap.set(allChars, { color: colorInitial });
+      allChars.forEach((char: HTMLElement) => { char.style.color = colorInitial; });
 
       if (animateOnMount) {
         gsap.to(container, {
@@ -114,26 +114,23 @@ export default function AnimationCopy({
         return;
       }
 
-      const scheduleFinalTransition = (char: any, index: number) => {
+      // Direct DOM write — avoids GSAP tween machinery overhead in the scroll hot path
+      const setCharColor = (char: HTMLElement, color: string) => {
+        char.style.color = color;
+      };
+
+      const scheduleFinalTransition = (char: HTMLElement, index: number) => {
         if (colorTransitionTimers.current.has(index)) {
           clearTimeout(colorTransitionTimers.current.get(index));
         }
-
         const timer = setTimeout(() => {
           if (!completedChars.current.has(index)) {
-            gsap.to(char, {
-              duration: 0.1,
-              ease: "none",
-              color: colorFinal,
-              overwrite: true, // prevent reverse gsap.set from being overridden
-              onComplete: () => {
-                completedChars.current.add(index);
-              },
-            });
+            setCharColor(char, colorFinal);
+            lastCharColor.current.set(index, colorFinal);
+            completedChars.current.add(index);
           }
           colorTransitionTimers.current.delete(index);
         }, 100);
-
         colorTransitionTimers.current.set(index, timer);
       };
 
@@ -146,22 +143,22 @@ export default function AnimationCopy({
           const currentCharIndex = Math.floor(progress * totalChars);
           const lastColor = lastCharColor.current;
 
-          // On the very first fire after mount, skip the green wave and jump
-          // straight to the correct resting state so chars never flash green/gray
-          // when AnimationCopy mounts while the scroll zone is already active.
+          // On the very first fire after mount, jump straight to the correct resting
+          // state — no green wave — so chars never flash when AnimationCopy mounts
+          // while the scroll zone is already active.
           if (isFirstUpdate) {
             isFirstUpdate = false;
-            allChars.forEach((char: any, index: number) => {
+            allChars.forEach((char: HTMLElement, index: number) => {
               const targetColor = index < currentCharIndex ? colorFinal : colorInitial;
               if (index < currentCharIndex) completedChars.current.add(index);
               lastColor.set(index, targetColor);
-              gsap.set(char, { color: targetColor });
+              setCharColor(char, targetColor);
             });
             lastScrollProgress.current = progress;
             return;
           }
 
-          allChars.forEach((char: any, index: number) => {
+          allChars.forEach((char: HTMLElement, index: number) => {
             let targetColor: string;
             if (!isScrollDown && index >= currentCharIndex) {
               if (colorTransitionTimers.current.has(index)) {
@@ -169,7 +166,6 @@ export default function AnimationCopy({
                 colorTransitionTimers.current.delete(index);
               }
               completedChars.current.delete(index);
-              gsap.killTweensOf(char);
               targetColor = colorInitial;
             } else if (completedChars.current.has(index)) {
               return;
@@ -182,7 +178,7 @@ export default function AnimationCopy({
             }
             if (lastColor.get(index) !== targetColor) {
               lastColor.set(index, targetColor);
-              gsap.set(char, { color: targetColor });
+              setCharColor(char, targetColor);
             }
           });
           lastScrollProgress.current = progress;

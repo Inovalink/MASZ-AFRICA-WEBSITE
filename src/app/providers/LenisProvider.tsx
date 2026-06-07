@@ -56,9 +56,11 @@ export default function LenisProvider({ children }: { children: ReactNode }) {
       smoothWheel: true,
     });
 
-    // Sync Lenis to the GSAP ticker — single RAF loop, no drift
+    // Sync Lenis to the GSAP ticker — single RAF loop, no drift.
+    // Store the ticker function reference so it can be removed exactly on cleanup.
+    const lenisTickerFn = (time: number) => { lenis.raf(time * 1000); };
     lenis.on('scroll', ScrollTrigger.update);
-    gsap.ticker.add((time) => { lenis.raf(time * 1000); });
+    gsap.ticker.add(lenisTickerFn);
     gsap.ticker.lagSmoothing(0);
 
     lenisRef.current = lenis;
@@ -133,7 +135,7 @@ export default function LenisProvider({ children }: { children: ReactNode }) {
       window.removeEventListener('resize', debouncedRefresh);
       clearTimeout(refreshTid);
       refreshTids.forEach((id) => clearTimeout(id));
-      gsap.ticker.remove((time) => { lenis.raf(time * 1000); });
+      gsap.ticker.remove(lenisTickerFn);
       lenisRef.current = null;
       lenis.destroy();
     };
