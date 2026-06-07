@@ -218,7 +218,7 @@ function ServiceSession({ startTextAnimation = false }: ServiceSessionProps) {
   label="learn more"
   variant="primary"
   size="large"
-  className="hidden lg:flex absolute right-0 inset-y-0 my-auto service-button"
+  className="hidden lg:flex absolute right-0 inset-y-0 my-auto service-button z-10"
   icon={<MoveRight size={16} strokeWidth={3} />}
 />
               </li>
