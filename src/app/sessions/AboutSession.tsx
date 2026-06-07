@@ -54,6 +54,7 @@ function AboutSession({ startTextAnimation = false }: AboutSessionProps) {
   const [lineByLineComplete, setLineByLineComplete] = useState(false);
   const [showAnimationCopy, setShowAnimationCopy] = useState(false);
   const [startBodyAnimation, setStartBodyAnimation] = useState(false);
+  const [startPara2Animation, setStartPara2Animation] = useState(false);
   const sectionRef = useRef<HTMLElement>(null);
   const hasLeftSectionRef = useRef(false);
   const prevInViewRef = useRef(false);
@@ -181,15 +182,15 @@ function AboutSession({ startTextAnimation = false }: AboutSessionProps) {
                 startAnimation={startBodyAnimation}
                 duration={DESCRIPTION_DURATION}
                 stagger={DESCRIPTION_STAGGER}
+                onComplete={() => setStartPara2Animation(true)}
                 className="about-us-text text-lg-medium lg:text-xl-medium 2xl:text-[24px] lg:leading-8 lg:tracking-tight text-default-body"
               >
                 {ABOUT_PARA_1}
               </LineByLineText>
               <LineByLineText
-                startAnimation={startBodyAnimation}
+                startAnimation={startPara2Animation}
                 duration={DESCRIPTION_DURATION}
                 stagger={DESCRIPTION_STAGGER}
-                delay={DESCRIPTION_STAGGER * 8}
                 onComplete={() => setLineByLineComplete(true)}
                 className="about-us-text text-lg-medium lg:text-xl-medium 2xl:text-[24px] lg:leading-8 lg:tracking-tight text-default-body"
               >

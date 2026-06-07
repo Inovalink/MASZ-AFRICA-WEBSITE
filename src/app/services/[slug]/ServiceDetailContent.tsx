@@ -97,6 +97,7 @@ export default function ServiceDetailContent({
           duration={0.75}
           start="top 85%"
           scale
+          once
           staggerChildren={0.1}
           onRevealNearlyComplete={() => setStartDescText(true)}
         >
@@ -254,7 +255,7 @@ export default function ServiceDetailContent({
                   iconClassName="lg:group-hover/btn:text-[#016BF2]! text-[#016BF2]!"
                   icon={
                     <svg
-                      className="size-6 "
+                      className="size-4 lg:size-6 "
                       xmlns="http://www.w3.org/2000/svg"
                       width="200"
                       height="200"

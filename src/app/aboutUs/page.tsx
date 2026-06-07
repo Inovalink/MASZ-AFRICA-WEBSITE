@@ -1,6 +1,7 @@
 "use client";
 import Tag from "../components/tag";
 import AnimationCopy from "../animations/WritingTextAnimation";
+import HeaderLineByLineAnimation from "../animations/HeaderLineByLineAnimation";
 import TiltCard from "../animations/TiltCard";
 import CoreValueCard from "../components/MainCoreValuesCard";
 import { IconAwardFilled } from "@tabler/icons-react";
@@ -451,8 +452,23 @@ function ParallaxTextTrigger({ onTrigger }: { onTrigger: () => void }) {
 }
 
 function AboutUSPage() {
+  const [heroRevealNearlyComplete, setHeroRevealNearlyComplete] =
+    useState(false);
+  const [startHeroDescription, setStartHeroDescription] = useState(false);
   const [ourStoryRevealNearlyComplete, setOurStoryRevealNearlyComplete] =
     useState(false);
+
+  // Hero text waits for the page transition overlay to exit before starting.
+  useEffect(() => {
+    const w = window as unknown as Record<string, unknown>;
+    const start = () => setHeroRevealNearlyComplete(true);
+    if (!w.__masz_transitioning) {
+      const id = requestAnimationFrame(() => requestAnimationFrame(start));
+      return () => cancelAnimationFrame(id as number);
+    }
+    window.addEventListener('masz:page-ready', start, { once: true });
+    return () => window.removeEventListener('masz:page-ready', start);
+  }, []);
   const [
     parallaxTextRevealNearlyComplete,
     setParallaxTextRevealNearlyComplete,
@@ -494,15 +510,29 @@ function AboutUSPage() {
 
             {/* TOP TEXT */}
             <div className="about-page-hero-text-container flex flex-col  items-start  mx-6  lg:mx-[24] xl:mx-[120px] min-[1920px]:mx-[200]! my-[40px] lg:my-[40px]">
-              <div className="page-header text-xl-semibold md:text-2xl-semibold uppercase tracking-tight lg:text-4xl-semibold">
-                We are{" "}
-                <span className="subtext text-primary-default">
-                  Masz-Africa
-                </span>
+              <div className="page-header text-xl-semibold md:text-2xl-semibold uppercase tracking-tight lg:text-4xl-semibold" style={{ overflow: 'hidden' }}>
+                <HeaderLineByLineAnimation
+                  startAnimation={heroRevealNearlyComplete}
+                  onComplete={() => setStartHeroDescription(true)}
+                  lineY={28}
+                  duration={0.2}
+                  stagger={0.07}
+                  delay={0.1}
+                >
+                  We are{" "}
+                  <span className="subtext text-primary-default">
+                    Masz-Africa
+                  </span>
+                </HeaderLineByLineAnimation>
               </div>
-              <div className="  text-default-body subtext text-sm-medium md:text-md-medium lg:text-lg-medium">
+              <LineByLineText
+                startAnimation={startHeroDescription}
+                duration={0.13}
+                stagger={0.05}
+                className="text-default-body subtext text-sm-medium md:text-md-medium lg:text-lg-medium"
+              >
                 General Mining & procurement services limited
-              </div>
+              </LineByLineText>
             </div>
 
             {/* PARALLAX IMAGE */}

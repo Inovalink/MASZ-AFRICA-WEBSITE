@@ -190,7 +190,7 @@ function ServicesCardsSection(): React.JSX.Element {
       {cardsData.map((card: CardData, index: number) => (
         <div
           key={card.id}
-          className="sc-wrapper md:sticky md:h-screen flex justify-center items-center px-9  md:px-0 lg:px-[200px] mb-9 md:mb-0"
+          className="sc-wrapper md:sticky md:h-screen flex justify-center items-center px-6   md:px-0  mb-9 md:mb-0"
           style={{
             ["--sc-top" as string]: `${index * 15}px`,
             zIndex: index + 1,

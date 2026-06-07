@@ -127,12 +127,7 @@ export default function AnimationCopy({
         colorTransitionTimers.current.set(index, timer);
       };
 
-      ScrollTrigger.create({
-        trigger: container,
-        start: "top 80%",
-        end: "top 35%",
-        scrub: 1,
-        onUpdate: (self) => {
+      const onUpdate = (self: ScrollTrigger) => {
           const progress = self.progress;
           const totalChars = allChars.length;
           const isScrollDown = progress >= lastScrollProgress.current;
@@ -146,7 +141,7 @@ export default function AnimationCopy({
                 colorTransitionTimers.current.delete(index);
               }
               completedChars.current.delete(index);
-              gsap.killTweensOf(char); // kill any in-flight colorFinal tween
+              gsap.killTweensOf(char);
               targetColor = colorInitial;
             } else if (completedChars.current.has(index)) {
               return;
@@ -163,7 +158,14 @@ export default function AnimationCopy({
             }
           });
           lastScrollProgress.current = progress;
-        },
+        };
+
+      const mm = gsap.matchMedia();
+      mm.add("(max-width: 1023px)", () => {
+        ScrollTrigger.create({ trigger: container, start: "top 85%", end: "bottom 55%", scrub: 1, onUpdate });
+      });
+      mm.add("(min-width: 1024px)", () => {
+        ScrollTrigger.create({ trigger: container, start: "top 80%", end: "top 35%", scrub: 1, onUpdate });
       });
 
       // Fade in after SplitText + ScrollTrigger — GPU layer for smooth reveal

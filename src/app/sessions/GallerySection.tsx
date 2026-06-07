@@ -194,7 +194,7 @@ const GallerySection = () => {
           return (
             <div
               key={rowIndex}
-              className="flex  lg:flex-nowrap justify-center gap-2 lg:gap-4"
+              className="flex flex-col lg:flex-row  lg:flex-nowrap justify-center gap-2 lg:gap-4"
             >
               <ImageBlock
                 images={rowImages.slice(0, 3)}
