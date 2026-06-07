@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useRef, useEffect, memo } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import gsap from 'gsap';
 import Tag from '../components/tag';
 import Button from '../components/button';
@@ -52,106 +52,66 @@ const DESCRIPTION_STAGGER = 0.05;
 
 function AboutSession({ startTextAnimation = false }: AboutSessionProps) {
   const [lineByLineComplete, setLineByLineComplete] = useState(false);
-  const [showAnimationCopy, setShowAnimationCopy] = useState(false);
   const [startBodyAnimation, setStartBodyAnimation] = useState(false);
   const [startPara2Animation, setStartPara2Animation] = useState(false);
   const sectionRef = useRef<HTMLElement>(null);
-  const hasLeftSectionRef = useRef(false);
-  const prevInViewRef = useRef(false);
-  const hasScrolledDownFromTopRef = useRef(false);
-  const hasReturnedToTopRef = useRef(false);
-  const pendingCopyRef = useRef<{ idleId: number; timeoutId: ReturnType<typeof setTimeout> } | null>(null);
   const overlayRef = useRef<HTMLDivElement>(null);
+  const showAnimationCopyRef = useRef(false);
+  const sectionExitedRef = useRef(false);
+  const pendingCopyRafRef = useRef<number | null>(null);
 
-  // Only run AnimationCopy on second scroll down from top (not on first load/first scroll)
+  // ── AnimationCopy scroll-reveal (mirrors OurStory pattern) ──────────────────
   useEffect(() => {
+    if (!lineByLineComplete) return;
     const section = sectionRef.current;
     if (!section) return;
 
     const clearPending = () => {
-      const p = pendingCopyRef.current;
-      if (p) {
-        cancelIdleCallback(p.idleId);
-        clearTimeout(p.timeoutId);
-        pendingCopyRef.current = null;
+      if (pendingCopyRafRef.current !== null) {
+        cancelAnimationFrame(pendingCopyRafRef.current);
+        pendingCopyRafRef.current = null;
       }
     };
 
-    // Track scroll position to detect "second scroll down from top"
-    let lastScrollY = typeof window !== 'undefined' ? window.scrollY : 0;
-    const TOP_THRESHOLD = 150; // Consider "at top" if within 150px
-    let wasAtTop = lastScrollY <= TOP_THRESHOLD;
+    const revealOverlay = () => {
+      clearPending();
+      if (showAnimationCopyRef.current) return;
+      showAnimationCopyRef.current = true;
+      const overlay = overlayRef.current;
+      if (!overlay) return;
+      const staticText = overlay.previousElementSibling as HTMLElement | null;
+      if (staticText) { staticText.style.visibility = 'hidden'; staticText.style.pointerEvents = 'none'; }
+      gsap.set(overlay, { visibility: 'visible', pointerEvents: 'auto' });
+      requestAnimationFrame(() => {
+        gsap.fromTo(overlay,
+          { opacity: 0, force3D: true },
+          { opacity: 1, duration: 0.5, ease: 'power2.out', force3D: true },
+        );
+      });
+    };
 
     const handleScroll = () => {
-      const currentScrollY = window.scrollY;
-      const isAtTop = currentScrollY <= TOP_THRESHOLD;
-      const isScrollingDown = currentScrollY > lastScrollY;
-      const justLeftTop = wasAtTop && !isAtTop && isScrollingDown;
+      if (showAnimationCopyRef.current) return;
+      const rect = section.getBoundingClientRect();
+      const isInView = rect.top < window.innerHeight && rect.bottom > 0;
 
-      // If user scrolled back to top, mark that they've returned
-      if (isAtTop && hasScrolledDownFromTopRef.current && !hasReturnedToTopRef.current) {
-        hasReturnedToTopRef.current = true;
+      if (!isInView) {
+        sectionExitedRef.current = true;
+        return;
       }
 
-      // Detect second scroll down from top: was at top, now scrolling down and leaving top
-      if (justLeftTop && hasReturnedToTopRef.current && !showAnimationCopy) {
+      if (isInView && sectionExitedRef.current) {
         clearPending();
-        const runCopy = () => {
-          clearPending();
-          setShowAnimationCopy(true);
-          // Smooth fade-in after state update — use GSAP for GPU-accelerated transition
-          requestAnimationFrame(() => {
-            const overlay = overlayRef.current;
-            if (overlay) {
-              gsap.fromTo(overlay, 
-                { opacity: 0, force3D: true },
-                { opacity: 1, duration: 0.5, ease: 'power2.out', force3D: true }
-              );
-            }
-          });
-        };
-        // Triple rAF for ultra-smooth transition — ensures all layout is settled
-        requestAnimationFrame(() => {
-          requestAnimationFrame(() => {
-            requestAnimationFrame(() => {
-              const idleId = requestIdleCallback(runCopy, { timeout: 500 });
-              const timeoutId = setTimeout(runCopy, 500);
-              pendingCopyRef.current = { idleId, timeoutId };
-            });
-          });
-        });
+        pendingCopyRafRef.current = requestAnimationFrame(revealOverlay);
       }
-
-      // Track first scroll down from top
-      if (justLeftTop && !hasScrolledDownFromTopRef.current) {
-        hasScrolledDownFromTopRef.current = true;
-      }
-
-      wasAtTop = isAtTop;
-      lastScrollY = currentScrollY;
     };
 
-    const io = new IntersectionObserver(
-      (entries) => {
-        const [e] = entries;
-        if (!e) return;
-        const inView = e.isIntersecting;
-        if (prevInViewRef.current && !inView) hasLeftSectionRef.current = true;
-        prevInViewRef.current = inView;
-      },
-      { root: null, rootMargin: '50px', threshold: [0, 0.1, 0.5] }
-    );
-    io.observe(section);
-
-    // Listen to scroll events to detect "scroll down from top"
     window.addEventListener('scroll', handleScroll, { passive: true });
-    
     return () => {
-      io.disconnect();
       window.removeEventListener('scroll', handleScroll);
       clearPending();
     };
-  }, [showAnimationCopy]);
+  }, [lineByLineComplete]);
 
   return (
     <section ref={sectionRef} className=" lg:mx-[24] xl:mx-[120] min-[1920px]:mx-[200]! relative lg:my-[100] xl:my-[150]">
@@ -172,11 +132,11 @@ function AboutSession({ startTextAnimation = false }: AboutSessionProps) {
             </HeaderLineByLineAnimation>
           </div>
 
-          {/* Phase 1: line-by-line reveal. Phase 2: static text stays visible. Phase 3 (optional): AnimationCopy overlay on second scroll from top. */}
+          {/* Phase 1: line-by-line reveal.
+              Phase 2: AnimationCopy mounts immediately after — overlay starts
+              visibility:hidden via useLayoutEffect so ScrollTrigger runs silently.
+              Revealed via GSAP on re-entry with no DOM swap (no scroll break). */}
           {!lineByLineComplete ? (
-            // Two separate LineByLineText blocks so the gap between paragraphs
-            // lives outside the DOM that SplitType touches — spacing is preserved
-            // during animation, in static state, and in the AnimationCopy phase.
             <div className="flex flex-col gap-5 mx-[25] lg:ml-[0]">
               <LineByLineText
                 startAnimation={startBodyAnimation}
@@ -197,12 +157,10 @@ function AboutSession({ startTextAnimation = false }: AboutSessionProps) {
                 {ABOUT_PARA_2}
               </LineByLineText>
             </div>
-          ) : showAnimationCopy ? (
+          ) : (
             <div className="relative overflow-hidden" style={{ contain: 'layout style paint' }}>
               <div
                 className="flex flex-col gap-5 mx-[25] lg:ml-[0] about-us-text text-lg-medium lg:text-xl-medium 2xl:text-[24px] lg:leading-8 lg:tracking-tight text-default-body"
-                style={{ visibility: 'hidden', pointerEvents: 'none' }}
-                aria-hidden
               >
                 <p>{ABOUT_PARA_1}</p>
                 <p>{ABOUT_PARA_2}</p>
@@ -210,12 +168,7 @@ function AboutSession({ startTextAnimation = false }: AboutSessionProps) {
               <div
                 ref={overlayRef}
                 className="absolute top-0 left-0 right-0"
-                style={{
-                  visibility: 'visible',
-                  pointerEvents: 'auto',
-                  contain: 'layout style paint',
-                  isolation: 'isolate',
-                }}
+                style={{ opacity: 0, visibility: 'hidden', pointerEvents: 'none', contain: 'layout style paint', isolation: 'isolate' }}
               >
                 <AnimationCopy colorAccent='#41E932'>
                   <div className="flex flex-col gap-5 mx-[25] lg:ml-[0] about-us-text text-default-body text-lg-medium lg:text-xl-medium 2xl:text-[24px] lg:leading-8 lg:tracking-tight">
@@ -224,15 +177,6 @@ function AboutSession({ startTextAnimation = false }: AboutSessionProps) {
                   </div>
                 </AnimationCopy>
               </div>
-            </div>
-          ) : (
-            /* After line-by-line completes: always show static text */
-            <div
-              className="flex flex-col gap-5 mx-[25] lg:ml-[0] about-us-text text-lg-medium lg:text-xl-medium 2xl:text-[24px] lg:leading-8 lg:tracking-tight text-default-body"
-              style={{ visibility: 'visible' }}
-            >
-              <p>{ABOUT_PARA_1}</p>
-              <p>{ABOUT_PARA_2}</p>
             </div>
           )}
 

@@ -94,13 +94,23 @@ export default function AnimationCopy({
           ease: "power2.out",
           force3D: true,
         });
-        gsap.to(allChars, {
-          color: colorFinal,
-          duration: 0.12,
-          stagger: 0.02,
-          ease: "none",
-          overwrite: "auto",
-        });
+        // Green wave sweeps left-to-right, black follows close behind —
+        // matches the scroll-driven effect but plays time-based (no scrub)
+        // so it's never distorted regardless of scroll direction.
+        const staggerAmount = Math.min(2.0, allChars.length * 0.018);
+        gsap.timeline()
+          .to(allChars, {
+            color: colorAccent,
+            duration: 0.06,
+            stagger: { amount: staggerAmount },
+            ease: "none",
+          })
+          .to(allChars, {
+            color: colorFinal,
+            duration: 0.08,
+            stagger: { amount: staggerAmount },
+            ease: "none",
+          }, `<${(staggerAmount * 0.2).toFixed(3)}`);
         return;
       }
 
@@ -127,12 +137,30 @@ export default function AnimationCopy({
         colorTransitionTimers.current.set(index, timer);
       };
 
+      let isFirstUpdate = true;
+
       const onUpdate = (self: ScrollTrigger) => {
           const progress = self.progress;
           const totalChars = allChars.length;
           const isScrollDown = progress >= lastScrollProgress.current;
           const currentCharIndex = Math.floor(progress * totalChars);
           const lastColor = lastCharColor.current;
+
+          // On the very first fire after mount, skip the green wave and jump
+          // straight to the correct resting state so chars never flash green/gray
+          // when AnimationCopy mounts while the scroll zone is already active.
+          if (isFirstUpdate) {
+            isFirstUpdate = false;
+            allChars.forEach((char: any, index: number) => {
+              const targetColor = index < currentCharIndex ? colorFinal : colorInitial;
+              if (index < currentCharIndex) completedChars.current.add(index);
+              lastColor.set(index, targetColor);
+              gsap.set(char, { color: targetColor });
+            });
+            lastScrollProgress.current = progress;
+            return;
+          }
+
           allChars.forEach((char: any, index: number) => {
             let targetColor: string;
             if (!isScrollDown && index >= currentCharIndex) {

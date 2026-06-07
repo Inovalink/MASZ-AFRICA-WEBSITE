@@ -411,6 +411,7 @@ mm.add("(min-width: 1919px)", () => {
             <div className="contact-us-cta flex justify-between items-center mr-[10px]">
               <Link
                 href="/contactUs"
+                onClick={() => setMenuOpen(false)}
                 className="font-medium bg-transparent border-[1.5px] border-button-primary-default text-button-primary-default px-[8px] py-[7px] flex"
               >
                 Contact Us

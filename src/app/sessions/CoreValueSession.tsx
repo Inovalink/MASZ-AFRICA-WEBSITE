@@ -10,7 +10,6 @@ import React, {
 } from "react";
 import gsap from "gsap";
 import AnimationCopy from "../animations/WritingTextAnimation";
-import { useScrollToTopTrigger } from "../hooks/useScrollToTopTrigger";
 import AnimatedMetricCard from "../components/AnimatedMetricCard";
 import HeaderLineByLineAnimation from "../animations/HeaderLineByLineAnimation";
 import Image from "next/image";
@@ -81,7 +80,6 @@ function CoreValueSession({
 
   const [lineByLineComplete, setLineByLineComplete] = useState(false);
   const [startBodyAnimation, setStartBodyAnimation] = useState(false);
-  const showAnimationCopy = useScrollToTopTrigger(lineByLineComplete);
   const [startMetricsAnimation, setStartMetricsAnimation] = useState(false);
   const [startContentPhase, setStartContentPhase] = useState(false);
   const [imageVisible, setImageVisible] = useState(false);
@@ -93,6 +91,9 @@ function CoreValueSession({
   const metricsRef = useRef<HTMLDivElement>(null);
   const sectionRef = useRef<HTMLElement>(null);
   const overlayRef = useRef<HTMLDivElement>(null);
+  const showAnimationCopyRef = useRef(false);
+  const sectionExitedRef = useRef(false);
+  const pendingCopyRafRef = useRef<number | null>(null);
   const carouselTimerRef = useRef<ReturnType<typeof setInterval> | null>(null);
   // True once the image/metrics block has entered the viewport at least once
   const imageInViewRef = useRef(false);
@@ -118,17 +119,60 @@ function CoreValueSession({
     return () => io.disconnect();
   }, []);
 
-  // ── Fade in AnimationCopy overlay after React mounts it ─────────────────────
+  // ── AnimationCopy scroll-reveal (mirrors OurStory pattern) ──────────────────
+  // Watches scroll after lineByLineComplete: once the section exits the viewport
+  // and then re-enters, reveals the overlay via GSAP with no DOM swap.
   useEffect(() => {
-    if (!showAnimationCopy) return;
-    const overlay = overlayRef.current;
-    if (!overlay) return;
-    gsap.fromTo(
-      overlay,
-      { opacity: 0, force3D: true },
-      { opacity: 1, duration: 0.5, ease: "power2.out", force3D: true }
-    );
-  }, [showAnimationCopy]);
+    if (!lineByLineComplete) return;
+    const section = sectionRef.current;
+    if (!section) return;
+
+    const clearPending = () => {
+      if (pendingCopyRafRef.current !== null) {
+        cancelAnimationFrame(pendingCopyRafRef.current);
+        pendingCopyRafRef.current = null;
+      }
+    };
+
+    const revealOverlay = () => {
+      clearPending();
+      if (showAnimationCopyRef.current) return;
+      showAnimationCopyRef.current = true;
+      const overlay = overlayRef.current;
+      if (!overlay) return;
+      const staticText = overlay.previousElementSibling as HTMLElement | null;
+      if (staticText) { staticText.style.visibility = 'hidden'; staticText.style.pointerEvents = 'none'; }
+      gsap.set(overlay, { visibility: 'visible', pointerEvents: 'auto' });
+      requestAnimationFrame(() => {
+        gsap.fromTo(overlay,
+          { opacity: 0, force3D: true },
+          { opacity: 1, duration: 0.5, ease: 'power2.out', force3D: true },
+        );
+      });
+    };
+
+    const handleScroll = () => {
+      if (showAnimationCopyRef.current) return;
+      const rect = section.getBoundingClientRect();
+      const isInView = rect.top < window.innerHeight && rect.bottom > 0;
+
+      if (!isInView) {
+        sectionExitedRef.current = true;
+        return;
+      }
+
+      if (isInView && sectionExitedRef.current) {
+        clearPending();
+        pendingCopyRafRef.current = requestAnimationFrame(revealOverlay);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      clearPending();
+    };
+  }, [lineByLineComplete]);
 
   // ── Image viewport gate + GSAP fade-in ─────────────────────────────────────
   // Calls GSAP directly from trigger() to avoid an extra React render cycle
@@ -239,20 +283,21 @@ function CoreValueSession({
           >
             {CORE_VALUE_BODY_TEXT}
           </LineByLineText>
-        ) : showAnimationCopy ? (
-          /* Phase 3: AnimationCopy overlay — only mounts after scroll-to-top trigger */
+        ) : (
+          /* Phase 2: AnimationCopy mounts immediately after line-by-line completes.
+             Overlay starts visibility:hidden via inline style so ScrollTrigger
+             runs silently with correct char state. Revealed via GSAP on re-entry —
+             no DOM swap, no scroll break. */
           <div className="relative overflow-hidden" style={{ contain: "layout style paint" }}>
             <div
               className="core-value-section-subtext xl:mx-[120] min-[1920px]:mx-[200]! text-lg-medium mx-6.25 lg:text-2xl-medium lg:leading-8 lg:tracking-tight text-default-body"
-              style={{ visibility: "hidden", pointerEvents: "none" }}
-              aria-hidden
             >
               {CORE_VALUE_BODY_TEXT}
             </div>
             <div
               ref={overlayRef}
               className="absolute top-0 left-0 right-0"
-              style={{ contain: "layout style paint", isolation: "isolate" }}
+              style={{ opacity: 0, visibility: "hidden", pointerEvents: "none", contain: "layout style paint", isolation: "isolate" }}
             >
               <AnimationCopy>
                 <div className="core-value-section-subtext xl:mx-[120] min-[1920px]:mx-[200]! text-lg-medium mx-6.25 lg:text-2xl-medium lg:leading-8 lg:tracking-tight">
@@ -260,11 +305,6 @@ function CoreValueSession({
                 </div>
               </AnimationCopy>
             </div>
-          </div>
-        ) : (
-          /* Phase 2: static text — AnimationCopy not in DOM */
-          <div className="core-value-section-subtext xl:mx-[120] min-[1920px]:mx-[200]! text-lg-medium mx-6.25 lg:text-2xl-medium lg:leading-8 lg:tracking-tight text-default-body">
-            {CORE_VALUE_BODY_TEXT}
           </div>
         )}
 

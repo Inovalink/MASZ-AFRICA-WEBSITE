@@ -201,7 +201,7 @@ export default function PageTransitionProvider({
             <div
               key={i}
               ref={(el) => { boxRefs.current[i] = el; }}
-              className="page-transition-overlay__box"
+              className={`page-transition-overlay__box${i >= 3 ? ' max-lg:hidden' : ''}`}
             />
           ))}
         </div>

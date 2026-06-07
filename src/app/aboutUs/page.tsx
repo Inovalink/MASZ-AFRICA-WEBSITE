@@ -122,6 +122,7 @@ function OurStorySection({
 }: {
   startTextAnimation?: boolean;
 }) {
+  const [pageReady, setPageReady] = useState(false);
   const [lineByLineComplete, setLineByLineComplete] = useState(false);
   const [para1Complete, setPara1Complete] = useState(false);
   const [showAnimationCopy, setShowAnimationCopy] = useState(false);
@@ -133,10 +134,19 @@ function OurStorySection({
   const metricsRef = useRef<HTMLDivElement>(null);
   const hasScrolledDownFromTopRef = useRef(false);
   const hasReturnedToTopRef = useRef(false);
-  const pendingCopyRef = useRef<{
-    idleId: number;
-    timeoutId: ReturnType<typeof setTimeout>;
-  } | null>(null);
+  const pendingCopyRef = useRef<number | null>(null);
+
+  // Gate animation on page transition completing — same pattern as hero
+  useEffect(() => {
+    const w = window as unknown as Record<string, unknown>;
+    const start = () => setPageReady(true);
+    if (!w.__masz_transitioning) {
+      const id = requestAnimationFrame(() => requestAnimationFrame(start));
+      return () => cancelAnimationFrame(id as number);
+    }
+    window.addEventListener('masz:page-ready', start, { once: true });
+    return () => window.removeEventListener('masz:page-ready', start);
+  }, []);
 
   // Load lottie animation data
   useEffect(() => {
@@ -201,10 +211,8 @@ function OurStorySection({
     if (!section) return;
 
     const clearPending = () => {
-      const p = pendingCopyRef.current;
-      if (p) {
-        cancelIdleCallback(p.idleId);
-        clearTimeout(p.timeoutId);
+      if (pendingCopyRef.current !== null) {
+        cancelAnimationFrame(pendingCopyRef.current);
         pendingCopyRef.current = null;
       }
     };
@@ -254,15 +262,7 @@ function OurStorySection({
             });
           });
         };
-        requestAnimationFrame(() => {
-          requestAnimationFrame(() => {
-            requestAnimationFrame(() => {
-              const idleId = requestIdleCallback(runCopy, { timeout: 500 });
-              const timeoutId = setTimeout(runCopy, 500);
-              pendingCopyRef.current = { idleId, timeoutId };
-            });
-          });
-        });
+        pendingCopyRef.current = requestAnimationFrame(runCopy);
       }
 
       if (justLeftTop && !hasScrolledDownFromTopRef.current) {
@@ -299,7 +299,7 @@ function OurStorySection({
                 duration={0.13}
                 stagger={0.07}
                 delay={0}
-                startAnimation={startTextAnimation}
+                startAnimation={startTextAnimation && pageReady}
                 deferSplit
                 onComplete={() => setPara1Complete(true)}
                 className=" text-md-medium lg:text-xl-medium 2xl:text-2xl-medium lg:mt-[10] lg:leading-8 lg:tracking-tight text-[#777777]"

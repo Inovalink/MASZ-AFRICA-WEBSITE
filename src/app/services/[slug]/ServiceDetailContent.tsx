@@ -1,12 +1,14 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
+import gsap from "gsap";
 import Tag from "@/app/components/tag";
 import Image from "next/image";
 import { Square3Stack3DIcon } from "@heroicons/react/16/solid";
 import ScrollReveal from "@/app/components/ScrollReveal";
 import type { serviceDetails } from "@/app/Data/serviceDetails";
 import LineByLineText from "@/app/components/LineByLineText";
+import AnimationCopy from "@/app/animations/WritingTextAnimation";
 import RelatedServicesCarousel from "@/app/components/RelatedServicesCarousel";
 import AutoplayVideo from "@/app/components/AutoplayVideo";
 import { MoveDown, MoveUp } from "lucide-react";
@@ -25,9 +27,19 @@ export default function ServiceDetailContent({
 }) {
   const [startHeroText, setStartHeroText] = useState(false);
   const [startDescText, setStartDescText] = useState(false);
+  const [para1Complete, setPara1Complete] = useState(false);
+  const [para2Complete, setPara2Complete] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
   const heroTextRef = useRef<HTMLDivElement>(null);
+  const descRef = useRef<HTMLDivElement>(null);
+  const overlayRef = useRef<HTMLDivElement>(null);
+  const showAnimationCopyRef = useRef(false);
+  const sectionExitedRef = useRef(false);
+  const pendingCopyRafRef = useRef<number | null>(null);
   const [startBannerText, setStartBannerText] = useState(false);
   const [activeBenefitId, setActiveBenefitId] = useState<string | null>(null);
+
+  const lineByLineComplete = para1Complete && para2Complete;
 
   // Hero text waits for the page transition overlay to exit before starting.
   useEffect(() => {
@@ -40,6 +52,61 @@ export default function ServiceDetailContent({
     window.addEventListener('masz:page-ready', start, { once: true });
     return () => window.removeEventListener('masz:page-ready', start);
   }, []);
+
+  // Detect mobile vs desktop (< 1024px = mobile/column layout)
+  useEffect(() => {
+    const mq = window.matchMedia('(max-width: 1023px)');
+    setIsMobile(mq.matches);
+    const handler = (e: MediaQueryListEvent) => setIsMobile(e.matches);
+    mq.addEventListener('change', handler);
+    return () => mq.removeEventListener('change', handler);
+  }, []);
+
+  // Mobile-only AnimationCopy scroll reveal (same pattern as About/CoreValue sections)
+  useEffect(() => {
+    if (!lineByLineComplete || !isMobile) return;
+    const section = descRef.current;
+    if (!section) return;
+
+    const clearPending = () => {
+      if (pendingCopyRafRef.current !== null) {
+        cancelAnimationFrame(pendingCopyRafRef.current);
+        pendingCopyRafRef.current = null;
+      }
+    };
+
+    const revealOverlay = () => {
+      clearPending();
+      if (showAnimationCopyRef.current) return;
+      showAnimationCopyRef.current = true;
+      const overlay = overlayRef.current;
+      if (!overlay) return;
+      const staticText = overlay.previousElementSibling as HTMLElement | null;
+      if (staticText) { staticText.style.visibility = 'hidden'; staticText.style.pointerEvents = 'none'; }
+      gsap.set(overlay, { visibility: 'visible', pointerEvents: 'auto' });
+      requestAnimationFrame(() => {
+        gsap.fromTo(overlay,
+          { opacity: 0, force3D: true },
+          { opacity: 1, duration: 0.5, ease: 'power2.out', force3D: true },
+        );
+      });
+    };
+
+    const handleScroll = () => {
+      if (showAnimationCopyRef.current) return;
+      const rect = section.getBoundingClientRect();
+      const isInView = rect.top < window.innerHeight && rect.bottom > 0;
+      if (!isInView) { sectionExitedRef.current = true; return; }
+      if (isInView && sectionExitedRef.current) {
+        clearPending();
+        pendingCopyRafRef.current = requestAnimationFrame(revealOverlay);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => { window.removeEventListener('scroll', handleScroll); clearPending(); };
+  }, [lineByLineComplete, isMobile]);
+
   return (
     <section className="">
       <div className="main-section-content-container">
@@ -101,36 +168,76 @@ export default function ServiceDetailContent({
           staggerChildren={0.1}
           onRevealNearlyComplete={() => setStartDescText(true)}
         >
-          <div className="description ">
-            <div className="description-content mx-[21] lg:mx-[24] xl:mx-[120]  min-[1920px]:mx-[200]! my-[100] lg:my-[150]">
+          <div className="description">
+            <div ref={descRef} className="description-content mx-[21] lg:mx-[24] xl:mx-[120] min-[1920px]:mx-[200]! my-[100] lg:my-[150]">
               <Tag text="details" className="mb-[40] lg:mb-[50]" />
               {(() => {
                 const [para1, para2] = splitDescription(service.description || "");
-                return (
-                  <div className="lg:grid lg:grid-cols-2 lg:gap-[80px] xl:gap-[120px] text-default-body">
-                    <LineByLineText
-                      startAnimation={startDescText}
-                      duration={0.13}
-                      stagger={0.05}
-                      delay={0}
-                      yFrom={16}
-                      as="div"
-                      className="description text-md-medium lg:text-xl-medium lg:leading-8 lg:tracking-tight"
-                    >
-                      {para1}
-                    </LineByLineText>
-                    {para2 && (
+                if (!lineByLineComplete) {
+                  return (
+                    // Phase 1: line-by-line reveal.
+                    // Mobile: para1 then para2 sequentially.
+                    // Desktop: both start together (para2 has a slight delay).
+                    <div className="lg:grid lg:grid-cols-2 lg:gap-[80px] xl:gap-[120px] text-default-body">
                       <LineByLineText
                         startAnimation={startDescText}
                         duration={0.13}
                         stagger={0.05}
-                        delay={0.2}
+                        delay={0}
                         yFrom={16}
                         as="div"
-                        className="description mt-6 lg:mt-0 text-md-medium lg:text-xl-medium lg:leading-8 lg:tracking-tight"
+                        className="description text-md-medium lg:text-xl-medium lg:leading-8 lg:tracking-tight"
+                        onComplete={() => setPara1Complete(true)}
                       >
-                        {para2}
+                        {para1}
                       </LineByLineText>
+                      {para2 && (
+                        <LineByLineText
+                          startAnimation={isMobile ? para1Complete : startDescText}
+                          duration={0.13}
+                          stagger={0.05}
+                          delay={isMobile ? 0 : 0.2}
+                          yFrom={16}
+                          as="div"
+                          className="description mt-6 lg:mt-0 text-md-medium lg:text-xl-medium lg:leading-8 lg:tracking-tight"
+                          onComplete={() => setPara2Complete(true)}
+                        >
+                          {para2}
+                        </LineByLineText>
+                      )}
+                    </div>
+                  );
+                }
+                // Phase 2: static text + AnimationCopy overlay (mobile only).
+                // Desktop keeps two-column static text, no AnimationCopy.
+                return (
+                  <div className="lg:grid lg:grid-cols-2 lg:gap-[80px] xl:gap-[120px] text-default-body">
+                    {isMobile ? (
+                      // Mobile: relative wrapper with hidden spacer + overlay
+                      <div className="relative overflow-hidden col-span-2" style={{ contain: 'layout style paint' }}>
+                        <div className="text-md-medium lg:text-xl-medium lg:leading-8 lg:tracking-tight">
+                          <p>{para1}</p>
+                          {para2 && <p className="mt-6">{para2}</p>}
+                        </div>
+                        <div
+                          ref={overlayRef}
+                          className="absolute top-0 left-0 right-0"
+                          style={{ opacity: 0, visibility: 'hidden', pointerEvents: 'none', contain: 'layout style paint', isolation: 'isolate' }}
+                        >
+                          <AnimationCopy>
+                            <div className="text-md-medium lg:text-xl-medium lg:leading-8 lg:tracking-tight">
+                              <p>{para1}</p>
+                              {para2 && <p className="mt-6">{para2}</p>}
+                            </div>
+                          </AnimationCopy>
+                        </div>
+                      </div>
+                    ) : (
+                      // Desktop: two columns, static text only
+                      <>
+                        <div className="description text-md-medium lg:text-xl-medium lg:leading-8 lg:tracking-tight">{para1}</div>
+                        {para2 && <div className="description mt-6 lg:mt-0 text-md-medium lg:text-xl-medium lg:leading-8 lg:tracking-tight">{para2}</div>}
+                      </>
                     )}
                   </div>
                 );
