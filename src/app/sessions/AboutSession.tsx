@@ -17,8 +17,8 @@ const ABOUT_PARA_1 =
   'consumables, certified equipment, and practical technical services ' +
   'backed by real hands-on industry experience. Through trusted ' +
   'global sourcing and strong technical understanding, we ensure ' +
-  'every product we deliver performs exactly as required in demanding ' +
-  'mining environments.';
+  'every fit for purpose product we deliver performs exactly as required in a demanding ' +
+  'mining environment.';
 
 const ABOUT_PARA_2 =
   'Our team works closely with clients to understand their ' +

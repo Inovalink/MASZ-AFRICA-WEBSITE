@@ -9,6 +9,7 @@ import Button from "../components/button";
 import HeaderLineByLineAnimation from "../animations/HeaderLineByLineAnimation";
 import AnimatedListContainer from "../animations/AnimatedListContainer";
 import LineByLineText from "../components/LineByLineText";
+import { serviceDetailsTemplate } from "../Data/serviceDetails";
 
 const HEADER_LINE_Y = 28;
 const HEADER_STAGGER = 0.07;
@@ -86,10 +87,28 @@ const serviceList = [
   // },
 ] as const;
 
+function stripHtml(html: string): string {
+  return html.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim();
+}
+
+function truncateText(text: string, maxChars: number): string {
+  if (text.length <= maxChars) return text;
+  const cut = text.lastIndexOf(" ", maxChars);
+  return text.slice(0, cut > 0 ? cut : maxChars) + "…";
+}
+
+const serviceListFromData = serviceDetailsTemplate.slice(0, 4).map((s, i) => ({
+  id: i + 1,
+  slug: s.slug,
+  title: s.heroTitle,
+  subtext: truncateText(stripHtml(s.description), 260),
+  heroImage: s.heroImage,
+  heroAltText: s.heroAltText,
+}));
+
 function ServiceSession({ startTextAnimation = false }: ServiceSessionProps) {
   const [startListAnimation, setStartListAnimation] = useState(false);
-  const [hoveredId, setHoveredId] = useState<number | null>(null);
-  const memoizedServiceList = useMemo(() => serviceList, []);
+  const memoizedServiceList = useMemo(() => serviceListFromData, []);
 
   return (
     <section className="xl:mx-[120] min-[1920px]:mx-[200]! mx-[24] bg-white relative z-10">
@@ -137,10 +156,6 @@ function ServiceSession({ startTextAnimation = false }: ServiceSessionProps) {
                 key={list.id}
                 tabIndex={0}
                 className="relative mx-[22px] flex cursor-pointer border-b border-gray-300 outline-none service-item"
-                onMouseEnter={() => setHoveredId(list.id)}
-                onMouseLeave={() => setHoveredId(null)}
-                onFocus={() => setHoveredId(list.id)}
-                onBlur={() => setHoveredId(null)}
               >
                 {/* Number */}
                 <p className="pr-[40px] lg:pr-[80px] py-[20px] text-lg-semibold lg:text-2xl-semibold text-gray-700 flex items-center justify-center transition-all duration-[600ms] ease-[cubic-bezier(0.25,0.8,0.25,1)] transform-gpu origin-center service-number">
@@ -164,18 +179,9 @@ function ServiceSession({ startTextAnimation = false }: ServiceSessionProps) {
 
                   {/* Expandable subtext */}
                   <div className="overflow-hidden max-h-0 service-subtext-container">
-                    <LineByLineText
-                      key={`subtext-${list.id}-${hoveredId === list.id}`}
-                      startAnimation={hoveredId === list.id}
-                      duration={0.4}
-                      stagger={0.1}
-                      delay={0.45}
-                      yFrom={12}
-                      as="div"
-                      className="list-subtext text-sm-medium pr-[20px] lg:text-xl-medium lg:w-[500] lg:leading-7 lg:tracking-tight"
-                    >
+                    <p className="list-subtext text-sm-medium pr-5 lg:text-xl-medium lg:w-[500] lg:leading-7 lg:tracking-tight">
                       {list.subtext}
-                    </LineByLineText>
+                    </p>
                     <div className="lg:hidden flex items-center bg-white my-[20px] pr-[20px]">
                       <Link
                         href={`/services/${list.slug}`}

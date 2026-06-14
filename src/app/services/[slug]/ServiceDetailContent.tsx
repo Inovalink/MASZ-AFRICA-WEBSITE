@@ -17,7 +17,7 @@ import Button from "@/app/components/button";
 /** Split description at the double-<br /> paragraph boundary */
 function splitDescription(text: string): [string, string] {
   const parts = text.split(/<br\s*\/?>\s*<br\s*\/?>/i);
-  return [(parts[0] ?? '').trim(), (parts[1] ?? '').trim()];
+  return [(parts[0] ?? "").trim(), (parts[1] ?? "").trim()];
 }
 
 export default function ServiceDetailContent({
@@ -49,17 +49,17 @@ export default function ServiceDetailContent({
       const id = requestAnimationFrame(() => requestAnimationFrame(start));
       return () => cancelAnimationFrame(id as number);
     }
-    window.addEventListener('masz:page-ready', start, { once: true });
-    return () => window.removeEventListener('masz:page-ready', start);
+    window.addEventListener("masz:page-ready", start, { once: true });
+    return () => window.removeEventListener("masz:page-ready", start);
   }, []);
 
   // Detect mobile vs desktop (< 1024px = mobile/column layout)
   useEffect(() => {
-    const mq = window.matchMedia('(max-width: 1023px)');
+    const mq = window.matchMedia("(max-width: 1023px)");
     setIsMobile(mq.matches);
     const handler = (e: MediaQueryListEvent) => setIsMobile(e.matches);
-    mq.addEventListener('change', handler);
-    return () => mq.removeEventListener('change', handler);
+    mq.addEventListener("change", handler);
+    return () => mq.removeEventListener("change", handler);
   }, []);
 
   // Mobile-only AnimationCopy scroll reveal (same pattern as About/CoreValue sections)
@@ -82,12 +82,16 @@ export default function ServiceDetailContent({
       const overlay = overlayRef.current;
       if (!overlay) return;
       const staticText = overlay.previousElementSibling as HTMLElement | null;
-      if (staticText) { staticText.style.visibility = 'hidden'; staticText.style.pointerEvents = 'none'; }
-      gsap.set(overlay, { visibility: 'visible', pointerEvents: 'auto' });
+      if (staticText) {
+        staticText.style.visibility = "hidden";
+        staticText.style.pointerEvents = "none";
+      }
+      gsap.set(overlay, { visibility: "visible", pointerEvents: "auto" });
       requestAnimationFrame(() => {
-        gsap.fromTo(overlay,
+        gsap.fromTo(
+          overlay,
           { opacity: 0, force3D: true },
-          { opacity: 1, duration: 0.5, ease: 'power2.out', force3D: true },
+          { opacity: 1, duration: 0.5, ease: "power2.out", force3D: true }
         );
       });
     };
@@ -96,15 +100,21 @@ export default function ServiceDetailContent({
       if (showAnimationCopyRef.current) return;
       const rect = section.getBoundingClientRect();
       const isInView = rect.top < window.innerHeight && rect.bottom > 0;
-      if (!isInView) { sectionExitedRef.current = true; return; }
+      if (!isInView) {
+        sectionExitedRef.current = true;
+        return;
+      }
       if (isInView && sectionExitedRef.current) {
         clearPending();
         pendingCopyRafRef.current = requestAnimationFrame(revealOverlay);
       }
     };
 
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => { window.removeEventListener('scroll', handleScroll); clearPending(); };
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      clearPending();
+    };
   }, [lineByLineComplete, isMobile]);
 
   return (
@@ -153,7 +163,11 @@ export default function ServiceDetailContent({
                 }}
                 className="mt-[85px]"
               >
-                <AutoplayVideo src={service.video} fullWidth={false} />
+                <AutoplayVideo
+                  src={service.video}
+                  showPauseButton
+                  fullWidth={false}
+                />
               </div>
             </div>
           </div>
@@ -169,10 +183,15 @@ export default function ServiceDetailContent({
           onRevealNearlyComplete={() => setStartDescText(true)}
         >
           <div className="description">
-            <div ref={descRef} className="description-content mx-[21] lg:mx-[24] xl:mx-[120] min-[1920px]:mx-[200]! my-[100] lg:my-[150]">
+            <div
+              ref={descRef}
+              className="description-content mx-[21] lg:mx-[24] xl:mx-[120] min-[1920px]:mx-[200]! my-[100] lg:my-[150]"
+            >
               <Tag text="details" className="mb-[40] lg:mb-[50]" />
               {(() => {
-                const [para1, para2] = splitDescription(service.description || "");
+                const [para1, para2] = splitDescription(
+                  service.description || ""
+                );
                 if (!lineByLineComplete) {
                   return (
                     // Phase 1: line-by-line reveal.
@@ -193,7 +212,9 @@ export default function ServiceDetailContent({
                       </LineByLineText>
                       {para2 && (
                         <LineByLineText
-                          startAnimation={isMobile ? para1Complete : startDescText}
+                          startAnimation={
+                            isMobile ? para1Complete : startDescText
+                          }
                           duration={0.13}
                           stagger={0.05}
                           delay={isMobile ? 0 : 0.2}
@@ -214,7 +235,10 @@ export default function ServiceDetailContent({
                   <div className="lg:grid lg:grid-cols-2 lg:gap-[80px] xl:gap-[120px] text-default-body">
                     {isMobile ? (
                       // Mobile: relative wrapper with hidden spacer + overlay
-                      <div className="relative overflow-hidden col-span-2" style={{ contain: 'layout style paint' }}>
+                      <div
+                        className="relative overflow-hidden col-span-2"
+                        style={{ contain: "layout style paint" }}
+                      >
                         <div className="text-md-medium lg:text-xl-medium lg:leading-8 lg:tracking-tight">
                           <p>{para1}</p>
                           {para2 && <p className="mt-6">{para2}</p>}
@@ -222,7 +246,13 @@ export default function ServiceDetailContent({
                         <div
                           ref={overlayRef}
                           className="absolute top-0 left-0 right-0"
-                          style={{ opacity: 0, visibility: 'hidden', pointerEvents: 'none', contain: 'layout style paint', isolation: 'isolate' }}
+                          style={{
+                            opacity: 0,
+                            visibility: "hidden",
+                            pointerEvents: "none",
+                            contain: "layout style paint",
+                            isolation: "isolate",
+                          }}
                         >
                           <AnimationCopy>
                             <div className="text-md-medium lg:text-xl-medium lg:leading-8 lg:tracking-tight">
@@ -235,8 +265,14 @@ export default function ServiceDetailContent({
                     ) : (
                       // Desktop: two columns, static text only
                       <>
-                        <div className="description text-md-medium lg:text-xl-medium lg:leading-8 lg:tracking-tight">{para1}</div>
-                        {para2 && <div className="description mt-6 lg:mt-0 text-md-medium lg:text-xl-medium lg:leading-8 lg:tracking-tight">{para2}</div>}
+                        <div className="description text-md-medium lg:text-xl-medium lg:leading-8 lg:tracking-tight">
+                          {para1}
+                        </div>
+                        {para2 && (
+                          <div className="description mt-6 lg:mt-0 text-md-medium lg:text-xl-medium lg:leading-8 lg:tracking-tight">
+                            {para2}
+                          </div>
+                        )}
                       </>
                     )}
                   </div>
@@ -416,7 +452,13 @@ export default function ServiceDetailContent({
                       return (
                         <div
                           key={item.id}
-                          onClick={() => setActiveBenefitId((prev) => prev === item.id.toString() ? null : item.id.toString())}
+                          onClick={() =>
+                            setActiveBenefitId((prev) =>
+                              prev === item.id.toString()
+                                ? null
+                                : item.id.toString()
+                            )
+                          }
                           className={[
                             "item-list group relative overflow-hidden bg-white flex flex-col",
                             "max-w-[400px] lg:max-w-full lg:min-h-[350px] items-center",

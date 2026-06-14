@@ -314,7 +314,7 @@ function PartnersMapSession() {
             stagger={0.05}
             className="text-sm-medium lg:text-xl-medium text-default-body leading-[120%]"
           >
-            Built on trusted relationships across the mining supply chain. From
+            Built on trusted relationships across the mining value chain. From
             sourcing to delivery, our partners ensure reliability at every stage.
             Together, we drive efficiency, safety, and consistent results.
           </LineByLineText>

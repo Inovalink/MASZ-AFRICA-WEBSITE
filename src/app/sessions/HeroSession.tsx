@@ -171,6 +171,7 @@ function HeroSession({ startTextAnimation = false }: HeroSessionProps) {
         <AutoplayVideo
           src="/videos/Masz Brand Identity compressed 1080p 2.mp4"
           fullWidth={false}
+          showPauseButton
         />
       </div>
     </div>

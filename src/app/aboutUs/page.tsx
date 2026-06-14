@@ -541,6 +541,7 @@ function AboutUSPage() {
               className=" mx-6 xl:mx-[120] min-[1920px]:mx-[200]!"
             >
               <AutoplayVideo
+                        showPauseButton
                 src="/videos/Masz Brand Identity About.mp4"
                 fullWidth={false}
               />

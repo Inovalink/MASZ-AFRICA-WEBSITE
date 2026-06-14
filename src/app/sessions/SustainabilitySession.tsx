@@ -5,8 +5,8 @@ import Image from "next/image";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import HeaderLineByLineAnimation from "../animations/HeaderLineByLineAnimation";
 import LineByLineText from "../components/LineByLineText";
-import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/dist/ScrollTrigger';
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/dist/ScrollTrigger";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -109,7 +109,7 @@ const CARDS = [
     id: 2,
     title: "Durability",
     description:
-      "Engineered for long-term performance in harsh mining conditions.Reduced wear and fewer replacements lower operational disruptions.Helping cut waste while improving equipment lifecycle value.",
+      "Engineered for long-term performance in harsh mining conditions.Reduced wear and fewer replacements leading to lower/minimum operational disruptions.Helping cut waste while improving overall equipment lifecycle value.",
     image: "/homeAssets/Image-19.webp",
     Icon: IconStar,
   },
@@ -117,7 +117,7 @@ const CARDS = [
     id: 3,
     title: "Environmental Protection",
     description:
-      "Designed to minimize emissions, leaks, and site contamination risks.Supporting cleaner operations through reliable and tested solutions.Helping protect surrounding ecosystems throughout mining activities.",
+      "Our optimized products help to minimize emissions, leaks, and site contamination risks.Supporting cleaner operations through reliable and tested solutions.Helping protect surrounding ecosystems throughout mining activities.",
     image: "/homeAssets/Image-20.webp",
     Icon: IconShield,
   },
@@ -125,7 +125,7 @@ const CARDS = [
     id: 4,
     title: "Safety & Compliance",
     description:
-      "Built to meet industry standards and regulatory requirements.Enhancing worker safety through reliable and proven products.Supporting compliance while maintaining consistent operations.",
+      "Built to meet industry standards and regulatory requirements.Enhancing worker safety through reliable and proven products.Supporting governance and compliance while maintaining consistent operations.",
     image: "/homeAssets/Image-21.webp",
     Icon: IconPlus,
   },
@@ -152,7 +152,9 @@ const IndicatorButtons = memo(function IndicatorButtons({
         aria-label="Go to Introduction"
         className={[
           "flex items-center justify-center text-[#51B948] bg-white/2 backdrop-blur-sm w-[65px] h-[65px] lg:w-[115px] lg:h-[99px] border transition-all duration-200 cursor-pointer",
-          currentSlide === 0 ? "border-white" : "border-white/24 hover:border-white",
+          currentSlide === 0
+            ? "border-white"
+            : "border-white/24 hover:border-white",
         ].join(" ")}
       >
         <div className="bg-white w-[42px] h-[42px] lg:w-[67px] lg:h-[59px] flex items-center justify-center">
@@ -256,15 +258,17 @@ function SustainabilitySession({
     if (timerRef.current) clearInterval(timerRef.current);
     timerRef.current = setInterval(() => {
       if (!isHoveredRef.current) {
-        setSlideDirection('right');
-        setCurrentSlide(prev => (prev + 1) % TOTAL_SLIDES);
+        setSlideDirection("right");
+        setCurrentSlide((prev) => (prev + 1) % TOTAL_SLIDES);
       }
     }, AUTOSLIDE_MS);
   }, []);
 
   useEffect(() => {
     startTimer();
-    return () => { if (timerRef.current) clearInterval(timerRef.current); };
+    return () => {
+      if (timerRef.current) clearInterval(timerRef.current);
+    };
   }, [startTimer]);
 
   const navigate = useCallback(
@@ -296,7 +300,9 @@ function SustainabilitySession({
   const touchEndX = useRef<number>(0);
   const sectionRef = useRef<HTMLElement>(null);
   const introParallaxRef = useRef<HTMLDivElement>(null);
-  const cardParallaxRefs = useRef<Array<HTMLDivElement | null>>(Array(CARDS.length).fill(null));
+  const cardParallaxRefs = useRef<Array<HTMLDivElement | null>>(
+    Array(CARDS.length).fill(null)
+  );
 
   const onTouchStart = useCallback((e: React.TouchEvent) => {
     touchStartX.current = e.touches[0].clientX;
@@ -336,18 +342,18 @@ function SustainabilitySession({
       if (!sectionRef.current) return;
       mm = gsap.matchMedia();
       ctx = gsap.context(() => {
-        mm!.add('(max-width: 1023px)', () => {
+        mm!.add("(max-width: 1023px)", () => {
           gsap.fromTo(
             allImages,
             { y: 0 },
             {
-              y: '15%',
-              ease: 'none',
+              y: "15%",
+              ease: "none",
               force3D: true,
               scrollTrigger: {
                 trigger: section,
-                start: 'top bottom',
-                end: 'bottom top',
+                start: "top bottom",
+                end: "bottom top",
                 scrub: 1.2,
                 invalidateOnRefresh: true,
               },
@@ -355,18 +361,18 @@ function SustainabilitySession({
           );
         });
 
-        mm!.add('(min-width: 1024px)', () => {
+        mm!.add("(min-width: 1024px)", () => {
           gsap.fromTo(
             allImages,
             { y: 0 },
             {
-              y: '20%',
-              ease: 'none',
+              y: "20%",
+              ease: "none",
               force3D: true,
               scrollTrigger: {
                 trigger: section,
-                start: 'top bottom',
-                end: 'bottom top',
+                start: "top bottom",
+                end: "bottom top",
                 scrub: 1.2,
                 invalidateOnRefresh: true,
               },
@@ -388,8 +394,12 @@ function SustainabilitySession({
     <section
       ref={sectionRef}
       className=" my-[80px]  lg:my-[140px]"
-      onMouseEnter={() => { isHoveredRef.current = true; }}
-      onMouseLeave={() => { isHoveredRef.current = false; }}
+      onMouseEnter={() => {
+        isHoveredRef.current = true;
+      }}
+      onMouseLeave={() => {
+        isHoveredRef.current = false;
+      }}
     >
       <div
         className="relative w-full h-[700px] lg:h-[800px] overflow-hidden"
@@ -414,12 +424,19 @@ function SustainabilitySession({
             <div
               ref={introParallaxRef}
               style={{
-                position: 'absolute',
-                inset: '-15% 0',
-                willChange: 'transform',
+                position: "absolute",
+                inset: "-15% 0",
+                willChange: "transform",
               }}
             >
-              <Image src="/homeAssets/Image-17.webp" alt="Sustainability" fill priority sizes="100vw" className="object-cover" />
+              <Image
+                src="/homeAssets/Image-17.webp"
+                alt="Sustainability"
+                fill
+                priority
+                sizes="100vw"
+                className="object-cover"
+              />
             </div>
             <div
               className="absolute inset-0 pointer-events-none"
@@ -441,14 +458,22 @@ function SustainabilitySession({
               }}
             >
               <div
-                ref={(el) => { cardParallaxRefs.current[i] = el; }}
+                ref={(el) => {
+                  cardParallaxRefs.current[i] = el;
+                }}
                 style={{
-                  position: 'absolute',
-                  inset: '-15% 0',
-                  willChange: 'transform',
+                  position: "absolute",
+                  inset: "-15% 0",
+                  willChange: "transform",
                 }}
               >
-                <Image src={c.image} alt={c.title} fill sizes="100vw" className="object-cover" />
+                <Image
+                  src={c.image}
+                  alt={c.title}
+                  fill
+                  sizes="100vw"
+                  className="object-cover"
+                />
               </div>
               <div
                 className="absolute inset-0 pointer-events-none"
@@ -521,12 +546,12 @@ function SustainabilitySession({
                   as="p"
                   className="text-sm-medium md:text-md-medium lg:text-lg-medium xl:text-xl-medium text-white leading-relaxed  m-0"
                 >
-                  Our products are engineered to reduce environmental impact
-                  while improving operational efficiency. From durable materials
-                  to optimized performance, we help minimize waste, energy use,
-                  and downtime across mining operations. Helping our partners
-                  operate more efficiently while minimizing their environmental
-                  footprint.
+                  Our products are designed to help minimize environmental
+                  impact while improving operational efficiency. From durable
+                  materials to optimized performance, we help minimize waste,
+                  energy use, and downtime across mining operations. Helping our
+                  partners operate more efficiently while minimizing their
+                  environmental footprint.
                 </LineByLineText>
               </div>
             )}
