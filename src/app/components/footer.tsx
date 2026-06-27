@@ -51,15 +51,21 @@ function Footer() {
         <div className="flex flex-col">
           <Link
             className="hover:text-[#016BF2] focus:text-[#016BF2]"
-            href="tel:+233244163975"
+            href="tel:+233507256956"
           >
-            +233 24 416 3975
+            +233 50 725 6956
           </Link>
           <Link
             className="hover:text-[#016BF2] focus:text-[#016BF2]"
-            href="tel:+233540953033"
+            href="tel:+233556164749"
           >
-            +233 54 095 3033
+            +233 55 616 4749
+          </Link>
+          <Link
+            className="hover:text-[#016BF2] focus:text-[#016BF2]"
+            href="tel:+233244171179"
+          >
+            +233 24 417 1179
           </Link>
         </div>
       ),

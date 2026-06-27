@@ -721,12 +721,14 @@ export default function ContactPage() {
                         stagger={0.06}
                         className="text-sm-medium text-white flex flex-col md:text-md-medium lg:text-lg-medium"
                       >
-                        <Link href="tel:+233244163975" className="group-hover:text-[#016BF2] group-focus:text-[#016BF2] hover:underline block">
-                          +233 24 416 3975
+                        <Link href="tel:+233507256956" className="group-hover:text-[#016BF2] group-focus:text-[#016BF2] hover:underline block">
+                        +233 50 725 6956
+                        </Link>                   
+                        <Link href="tel:+233556164749" className="group-hover:text-[#016BF2] group-focus:text-[#016BF2] hover:underline block">
+                        +233 55 616 4749
                         </Link>
-                   
-                        <Link href="tel:+233540953033" className="group-hover:text-[#016BF2] group-focus:text-[#016BF2] hover:underline block">
-                          +233 54 095 3033
+                        <Link href="tel:+233244171179" className="group-hover:text-[#016BF2] group-focus:text-[#016BF2] hover:underline block">
+                        +233 24 417 1179
                         </Link>
                       </LineByLineText>
                     </div>
