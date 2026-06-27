@@ -8,7 +8,7 @@ interface ButtonProps {
   label: string;
   href?: string;                // when provided, renders as <Link> (uses page transition)
   onClick?: (event: React.MouseEvent<HTMLButtonElement | HTMLAnchorElement>) => void;
-  variant?: 'primary' | 'primaryWhite' | 'secondary' | 'outline';
+  variant?: 'primary' | 'primaryWhite' | 'secondary' | 'outline' | 'tertiary';
   size?: 'small' | 'medium' | 'large' | 'extraLarge';
   disabled?: boolean;
   icon?: React.ReactNode;
@@ -40,6 +40,7 @@ const Button: React.FC<ButtonProps> = ({
     primaryWhite:
       'bg-white text-[#016BF2] border border-[#016BF2] hover:bg-[#f5f9ff]',
     secondary: 'bg-gray-500 text-white hover:bg-gray-600',
+    tertiary: 'hover:bg-[#016BF2] text-white bg-blue-600 lg:border-2 lg:border-blue-600  ',
     outline: 'border border-gray-500 text-gray-500 hover:bg-gray-100',
   };
 

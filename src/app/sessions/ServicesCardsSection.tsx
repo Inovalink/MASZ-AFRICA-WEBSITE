@@ -7,8 +7,29 @@ import Tag from "../components/tag";
 import Link from "next/link";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { serviceDetailsTemplate } from "../Data/serviceDetails";
 
 gsap.registerPlugin(ScrollTrigger);
+
+function stripHtml(html: string): string {
+  return html
+    .replace(/<[^>]*>/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function truncateText(text: string, maxChars: number): string {
+  if (text.length <= maxChars) return text;
+  const cut = text.lastIndexOf(" ", maxChars);
+  return text.slice(0, cut > 0 ? cut : maxChars) + "…";
+}
+
+const serviceDescriptions = new Map(
+  serviceDetailsTemplate.map((s) => [
+    s.slug,
+    truncateText(stripHtml(s.description), 260),
+  ])
+);
 
 /** Pure function: progress 0–1 through section, card index → scale (no React state) */
 function getCardScale(progress: number, index: number): number {
@@ -190,15 +211,16 @@ function ServicesCardsSection(): React.JSX.Element {
       {cardsData.map((card: CardData, index: number) => (
         <div
           key={card.id}
-          className="sc-wrapper md:sticky md:h-screen flex justify-center items-center px-6   md:px-0  mb-9 md:mb-0"
+          className="sc-wrapper md:sticky md:h-screen flex justify-center items-center px-6   xl:px-[100px]  mb-9 md:mb-0"
           style={{
             ["--sc-top" as string]: `${index * 15}px`,
             zIndex: index + 1,
           }}
         >
-          <div
+          <Link
+            href={`/services/${card.slug}`}
             ref={(el) => {
-              cardRefs.current[index] = el;
+              cardRefs.current[index] = el as HTMLDivElement | null;
             }}
             className="card-content w-[100%] md:w-[90%] mx-auto lg:mx-0 lg:w-[78%]  lg:h-[580px] cursor-pointer overflow-hidden shadow-2xl transition-transform duration-300 ease-out hover:scale-[1.02]"
             style={{
@@ -218,12 +240,9 @@ function ServicesCardsSection(): React.JSX.Element {
                   className="py-[4.5px] px-2 rounded-[42px]"
                   text={card.category}
                 />
-                <Link
-                  href={`/services/${card.slug}`}
-                  className="text-[#8CA2C0] text-[10.4px] font-medium tracking-widest uppercase hover:underline"
-                >
+                <span className="text-[#8CA2C0] text-[10.4px] font-medium tracking-widest uppercase hover:underline">
                   Details
-                </Link>
+                </span>
               </div>
               <div className="relative w-full h-full">
                 <Image
@@ -234,19 +253,19 @@ function ServicesCardsSection(): React.JSX.Element {
                   sizes="(max-width: 768px) 100vw, 550px"
                 />
 
-{/* Blur layer with gradient mask — blends in from top, full blur at bottom */}
-<div
-  className="absolute inset-0 backdrop-blur-[4px] "
-
-  style={{
-    maskImage: 'linear-gradient(to bottom, transparent 0%, black 50%)',
-    WebkitMaskImage: 'linear-gradient(to bottom, transparent 0%, black 50%)',
-  }}
-/>
+                {/* Blur layer with gradient mask — blends in from top, full blur at bottom */}
+                <div
+                  className="absolute inset-0 backdrop-blur-[4px] "
+                  style={{
+                    maskImage:
+                      "linear-gradient(to bottom, transparent 0%, black 50%)",
+                    WebkitMaskImage:
+                      "linear-gradient(to bottom, transparent 0%, black 50%)",
+                  }}
+                />
 
                 {/* gradient darkens bottom for text legibility */}
                 <div className="absolute inset-0 bg-black/20" />
-
               </div>
 
               {/* Bottom content */}
@@ -258,32 +277,25 @@ function ServicesCardsSection(): React.JSX.Element {
                   {card.title}
                 </h3>
                 <p className="text-white text-[10.4px] font-medium leading-relaxed line-clamp-4">
-                  {card.description}
+                  {serviceDescriptions.get(card.slug) ?? card.description}
                 </p>
-                <Link
-                  href={`/services/${card.slug}`}
-                  className="mt-2 inline-flex items-center gap-2 bg-[#016BF2] hover:bg-[#0057cc]
-                             text-white text-[10.4px]   font-medium tracking-wide px-2.5 rounded-[56px] py-2.5 w-fit transition-colors"
-                >
-                  MORE ABOUT US <MoveRight size={13} strokeWidth={2.5} />
-                </Link>
+                <span className="mt-2 inline-flex items-center gap-2 bg-[#016BF2] text-white text-[10.4px] font-medium tracking-wide px-2.5 rounded-[56px] py-2.5 w-fit">
+                  Explore our services <MoveRight size={13} strokeWidth={2.5} />
+                </span>
               </div>
             </div>
 
             {/* ── DESKTOP CARD (md+) — original layout unchanged ── */}
             <div className="hidden md:block">
               {/* Upper Section */}
-              <div className="upper-section flex justify-between items-center p-6 lg:p-8 bg-white">
+              <div className="upper-section flex justify-between items-center p-6 lg:p-8 2xl:py-8 2xl:px-16 bg-white">
                 <div className="left-section">
                   <Tag text={card.category} />
                 </div>
                 <div className="right-section">
-                  <Link
-                    href={`/services/${card.slug}`}
-                    className="text-sm lg:text-base font-medium hover:underline transition-all"
-                  >
+                  <span className="text-sm lg:text-base font-medium hover:underline transition-all">
                     Details
-                  </Link>
+                  </span>
                 </div>
               </div>
 
@@ -298,7 +310,7 @@ function ServicesCardsSection(): React.JSX.Element {
                     sizes="(max-width: 768px) 100vw, 550px"
                   />
                   <div className="absolute inset-0 bg-black/20"></div>
-                  <div className="absolute inset-0 flex justify-between gap-4 items-center p-6 lg:p-12">
+                  <div className="absolute inset-0 flex justify-between gap-4 items-center p-6 lg:p-8 2xl:py-8 2xl:px-16">
                     <div className="text-white text-3xl sm:text-5xl lg:text-8xl font-bold opacity-100">
                       {card.number}
                     </div>
@@ -307,36 +319,35 @@ function ServicesCardsSection(): React.JSX.Element {
                         {card.title}
                       </h3>
                       <p className="text-xs sm:text-sm lg:text-md-regular text-white/90 mb-3 lg:mb-6 leading-relaxed line-clamp-3 lg:line-clamp-none">
-                        {card.description}
+                        {serviceDescriptions.get(card.slug) ?? card.description}
                       </p>
-                      <Link href={`/services/${card.slug}`}>
-                        <Button
-                          label="Explore our services"
-                          variant="primary"
-                          size="large"
-                          icon={
-                            <>
-                              <span className="lg:hidden">
-                                <MoveRight size={16} strokeWidth={2} />
-                              </span>
-                              <span className="hidden lg:inline-block">
-                                <MoveRight
-                                  size={16}
-                                  strokeWidth={3}
-                                  width={50}
-                                />
-                              </span>
-                            </>
-                          }
-                          className="mt-[25]"
-                        />
-                      </Link>
+                      <Button
+                        label="Explore our services"
+                        variant="tertiary"
+                        size="large"
+                        iconClassName="lg:group-hover/btn:text-white! text-white!"
+                        icon={
+                          <>
+                            <span className="lg:hidden">
+                              <MoveRight size={16} strokeWidth={2} />
+                            </span>
+                            <span className="hidden lg:inline-block">
+                              <MoveRight
+                                size={16}
+                                strokeWidth={3}
+                                width={50}
+                              />
+                            </span>
+                          </>
+                        }
+                        className="mt-[25]"
+                      />
                     </div>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
+          </Link>
         </div>
       ))}
 

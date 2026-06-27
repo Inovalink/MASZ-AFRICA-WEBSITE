@@ -38,9 +38,8 @@ const CORE_VALUE_BODY_TEXT = (
     empower your team to perform at their best. Our clients trust us not only
     for the quality of our supplies but for our commitment to safety,
     sustainability, and innovation, ensuring that every decision we make
-    enhances the value of your operations. With MASZ-Africa, you gain a partner
-    who is as invested in your success as you are, driving measurable results,
-    minimizing downtime, and unlocking new levels of operational excellence.
+    enhances the value of your operations. When you work with MASZ-Africa, you
+    gain a partner that is as invested in your operational success as you are.
   </>
 );
 
@@ -141,12 +140,16 @@ function CoreValueSession({
       const overlay = overlayRef.current;
       if (!overlay) return;
       const staticText = overlay.previousElementSibling as HTMLElement | null;
-      if (staticText) { staticText.style.visibility = 'hidden'; staticText.style.pointerEvents = 'none'; }
-      gsap.set(overlay, { visibility: 'visible', pointerEvents: 'auto' });
+      if (staticText) {
+        staticText.style.visibility = "hidden";
+        staticText.style.pointerEvents = "none";
+      }
+      gsap.set(overlay, { visibility: "visible", pointerEvents: "auto" });
       requestAnimationFrame(() => {
-        gsap.fromTo(overlay,
+        gsap.fromTo(
+          overlay,
           { opacity: 0, force3D: true },
-          { opacity: 1, duration: 0.5, ease: 'power2.out', force3D: true },
+          { opacity: 1, duration: 0.5, ease: "power2.out", force3D: true }
         );
       });
     };
@@ -167,9 +170,9 @@ function CoreValueSession({
       }
     };
 
-    window.addEventListener('scroll', handleScroll, { passive: true });
+    window.addEventListener("scroll", handleScroll, { passive: true });
     return () => {
-      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener("scroll", handleScroll);
       clearPending();
     };
   }, [lineByLineComplete]);
@@ -288,16 +291,23 @@ function CoreValueSession({
              Overlay starts visibility:hidden via inline style so ScrollTrigger
              runs silently with correct char state. Revealed via GSAP on re-entry —
              no DOM swap, no scroll break. */
-          <div className="relative overflow-hidden" style={{ contain: "layout style paint" }}>
-            <div
-              className="core-value-section-subtext xl:mx-[120] min-[1920px]:mx-[200]! text-lg-medium mx-6.25 lg:text-2xl-medium lg:leading-8 lg:tracking-tight text-default-body"
-            >
+          <div
+            className="relative overflow-hidden"
+            style={{ contain: "layout style paint" }}
+          >
+            <div className="core-value-section-subtext xl:mx-[120] min-[1920px]:mx-[200]! text-lg-medium mx-6.25 lg:text-2xl-medium lg:leading-8 lg:tracking-tight text-default-body">
               {CORE_VALUE_BODY_TEXT}
             </div>
             <div
               ref={overlayRef}
               className="absolute top-0 left-0 right-0"
-              style={{ opacity: 0, visibility: "hidden", pointerEvents: "none", contain: "layout style paint", isolation: "isolate" }}
+              style={{
+                opacity: 0,
+                visibility: "hidden",
+                pointerEvents: "none",
+                contain: "layout style paint",
+                isolation: "isolate",
+              }}
             >
               <AnimationCopy>
                 <div className="core-value-section-subtext xl:mx-[120] min-[1920px]:mx-[200]! text-lg-medium mx-6.25 lg:text-2xl-medium lg:leading-8 lg:tracking-tight">
@@ -386,7 +396,10 @@ function CoreValueSession({
           </div>
 
           {/* Metrics */}
-          <div ref={metricsRef} className="metrics-container py-8 gap-4 flex flex-col mx-[21] lg:mx-[34] md:grid grid-cols-2 2xl:grid-cols-4">
+          <div
+            ref={metricsRef}
+            className="metrics-container py-8 gap-4 flex flex-col mx-[21] lg:mx-[34] md:grid grid-cols-2 2xl:grid-cols-4"
+          >
             {memoizedMetrics.map((metric, index) => (
               <AnimatedMetricCard
                 key={index}

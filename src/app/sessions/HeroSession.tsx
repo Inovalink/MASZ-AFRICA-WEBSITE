@@ -169,7 +169,7 @@ function HeroSession({ startTextAnimation = false }: HeroSessionProps) {
       {/* Full viewport hero video */}
       <div className="hero-video-wrapper mx-[21px] lg:mx-[24] xl:mx-[120px] min-[1920px]:mx-[200]!">
         <AutoplayVideo
-          src="/videos/Masz Brand Identity compressed 1080p 2.mp4"
+          src="/videos/homePageVid.mp4"
           fullWidth={false}
           showPauseButton
         />

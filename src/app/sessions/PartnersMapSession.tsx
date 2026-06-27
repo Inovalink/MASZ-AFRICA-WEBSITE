@@ -9,10 +9,16 @@ import LineByLineText from "../components/LineByLineText";
 // svgX / svgY are coordinates inside the SVG viewBox (0 0 1010 666),
 // derived from each country's SVG path centroid + city-level offset.
 export const PARTNERS = [
-  { id: 1,  name: "Asantegold Bibiani",  address: "No. 19 Abidjan Avenue East Legon, Accra - Ghana",             svgX: 478, svgY: 431, logo: "/partnerLogos/Asante_Gold_Bibiani_logo.png", logoHeight: 90 },
-  { id: 2,  name: "Damang Goldfields",  address: "16 Amber Street, Roman Ridge, Ghana",                          svgX: 474, svgY: 435, logo: "/partnerLogos/Damang_Gold_Fields_Logo.png",  logoHeight: 90 },
-  { id: 3,  name: "Asanko Mines",       address: "#4 Sir Arku Korsah Road, Airport Residential Area, Accra, Ghana", svgX: 476, svgY: 433, logo: "/partnerLogos/Asanko_Mines_logo.png",      logoHeight: 48 },
-  ];
+  { id: 1,  name: "Asantegold Bibiani",   address: "No. 19 Abidjan Avenue East Legon, Accra - Ghana",                svgX: 478, svgY: 431, logo: "/partnerLogos/Asante_Gold_Bibiani_logo.png",           logoHeight: 120 },
+  { id: 2,  name: "Damang Goldfields",    address: "16 Amber Street, Roman Ridge, Ghana",                             svgX: 474, svgY: 435, logo: "/partnerLogos/Damang_Gold_Fields_Logo.png",            logoHeight: 90  },
+  { id: 3,  name: "Asanko Mines",         address: "#4 Sir Arku Korsah Road, Airport Residential Area, Accra, Ghana", svgX: 476, svgY: 433, logo: "/partnerLogos/Asanko_Mines_logo.png",                logoHeight: 48  },
+  { id: 4,  name: "Asantegold Chirano",   address: "Chirano, Western North Region, Ghana",                            svgX: 474, svgY: 430, logo: "/partnerLogos/Asante_Gold_Bibiani_logo.png",           logoHeight: 120 },
+  { id: 5,  name: "Adamus Resources",     address: "Accra, Ghana",                                                   svgX: 474, svgY: 431, logo: "/partnerLogos/Adamus_Resources_Limited_logo.png",      logoHeight: 120  },
+  { id: 6,  name: "Perseus Mining",       address: "Assin, Central Region, Ghana",                                    svgX: 475, svgY: 431, logo: "/partnerLogos/Perseus_Mining_Limited_logo.png",        logoHeight: 60  },
+  { id: 7,  name: "Zijin Golden Ridge",   address: "Eastern Region, Ghana",                                           svgX: 479, svgY: 432, logo: "/partnerLogos/Zijin_Golden_Ridge_Limited_logo.png",    logoHeight: 150  },
+  { id: 8,  name: "Golden Star Resources",address: "Wassa, Western Region, Ghana",                                    svgX: 476, svgY: 434, logo: "/partnerLogos/Golden_Star_Resources_Limited_logo.png", logoHeight: 45  },
+  { id: 9,  name: "Newmont Ahafo",        address: "Kenyasi, Ahafo Region, Ghana",                                    svgX: 476, svgY: 429, logo: "/partnerLogos/Newmont_Coporation_Ahafo_logo.webp",      logoHeight: 60  },
+];
 
 
 const SVG_W = 1010;
@@ -221,9 +227,10 @@ function PartnersMarqueeInline({
                   <Image
                     src={partner.logo}
                     alt={partner.name}
-                    width={120}
-                    height={partner.logoHeight ?? 48}
-                    style={{ height: `${partner.logoHeight ?? 48}px`, width: "auto" }}
+                    width={0}
+                    height={0}
+                    sizes="200px"
+                    style={{ height: `${partner.logoHeight ?? 48}px`, width: "auto", maxWidth: "180px" }}
                     className="object-contain brightness-0 invert"
                     loading="lazy"
                   />

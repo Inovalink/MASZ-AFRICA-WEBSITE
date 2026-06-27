@@ -17,6 +17,6 @@ export const achievements = [
   },
   {
     id: 5,
-    title: '5+ Major clients served with repeated contracts.',
+    title: '15+ Years of combined working experience.',
   },
 ];
