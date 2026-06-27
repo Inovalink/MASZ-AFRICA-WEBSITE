@@ -43,18 +43,19 @@ const valueCards: CoreValue[] = [
   {
     id: 1,
     number: "01",
-    title: "Innovation",
-    image: "/aboutAssets/M-1.webp",
-    description:
-      "We are driven by a culture of creativity, curiosity, and continuous improvement. By embracing new ideas, modern technologies, and unconventional thinking, we consistently challenge the status quo to design smarter, more efficient, and future-ready solutions. Our approach to innovation enables us to adapt quickly to change, solve complex problems, and create long-term value for our clients and partners.",
-  },
-  {
-    id: 2,
-    number: "02",
     title: "Integrity",
     image: "/aboutAssets/M-2.webp",
     description:
       "Integrity is the foundation of everything we do. We operate with honesty, transparency, and accountability in every interaction, ensuring that our decisions and actions are guided by strong ethical principles. By keeping our commitments and maintaining open communication, we build trust, credibility, and lasting relationships with our clients, partners, and stakeholders.",
+  },
+  
+  {
+    id: 2,
+    number: "02",
+    title: "Customer Partnership",
+    image: "/aboutAssets/M-4.webp",
+    description:
+      "We believe that true success is built through strong, collaborative partnerships. By deeply understanding our clients’ objectives, challenges, and environments, we tailor solutions that are both practical and strategic. Through trust, open dialogue, and shared goals, we foster long-term relationships that generate sustainable growth and mutual success.",
   },
   {
     id: 3,
@@ -67,10 +68,10 @@ const valueCards: CoreValue[] = [
   {
     id: 4,
     number: "04",
-    title: "Customer Partnership",
-    image: "/aboutAssets/M-4.webp",
+    title: "Innovation",
+    image: "/aboutAssets/M-1.webp",
     description:
-      "We believe that true success is built through strong, collaborative partnerships. By deeply understanding our clients’ objectives, challenges, and environments, we tailor solutions that are both practical and strategic. Through trust, open dialogue, and shared goals, we foster long-term relationships that generate sustainable growth and mutual success.",
+      "We are driven by a culture of creativity, curiosity, and continuous improvement. By embracing new ideas, modern technologies, and unconventional thinking, we consistently challenge the status quo to design smarter, more efficient, and future-ready solutions. Our approach to innovation enables us to adapt quickly to change, solve complex problems, and create long-term value for our clients and partners.",
   },
   {
     id: 5,
@@ -742,10 +743,18 @@ function AboutUSPage() {
                   work
                 </div>
                 <div className="subtext text-sm-medium lg:text-xl-medium text-default-body leading-[120%] my-[20] md:my-0 max-w-[484]">
-                  Our core values guide how we operate, shaping our decisions,
-                  relationships, and the standard we deliver every day, ensuring
-                  we remain consistent, trustworthy, and committed to excellence
-                  across all our operations.
+                  Our work is guided by{" "}
+                  <span className="text-primary-default font-semibold">I</span>
+                  <span className="text-primary-default font-semibold">C</span>
+                  <span className="text-primary-default font-semibold">E</span>
+                  <span className="text-primary-default font-semibold">I</span>
+                  <span className="text-primary-default font-semibold">S</span>
+                  {" "}—{" "}
+                  <span className="text-primary-default font-semibold">I</span>ntegrity,{" "}
+                  <span className="text-primary-default font-semibold">C</span>ustomer Partnership,{" "}
+                  <span className="text-primary-default font-semibold">E</span>xcellence,{" "}
+                  <span className="text-primary-default font-semibold">I</span>nnovation, and{" "}
+                  <span className="text-primary-default font-semibold">S</span>afety and Sustainability — five values that shape every decision we make and every standard we uphold.
                 </div>
               </div>
               <div className="core-value-core-content-wrapper lg:pb-[200] lg:pt-[80] overflow-visible">
