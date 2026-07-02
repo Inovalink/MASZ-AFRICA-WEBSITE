@@ -33,6 +33,9 @@ const CSP = [
 const nextConfig: NextConfig = {
   reactStrictMode: true,
 
+  // amCharts 5 geodata ships as CJS — transpile so Turbopack/webpack can tree-shake it
+  transpilePackages: ["@amcharts/amcharts5", "@amcharts/amcharts5-geodata"],
+
   // Strip the X-Powered-By: Next.js header — no need to advertise the stack
   poweredByHeader: false,
 

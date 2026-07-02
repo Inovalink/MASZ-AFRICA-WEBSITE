@@ -6,6 +6,7 @@ import Image from "next/image";
 import LineByLineText from "../components/LineByLineText";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { TESTIMONIALS } from "../Data/partners";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -25,81 +26,8 @@ function TestimonialSession() {
   const scrollSpeedPxPerSec = 45;
   const hasAnimatedRef = useRef(false);
 
-  const testimonialDetails = [
-    {
-      id: 1,
-      logo: "/partnerLogos/Asante_Gold_Bibiani_logo.png",
-      subtext:
-        "MASZ-Africa has been one of the most reliable suppliers we’ve worked with. Every product we receive is authentic, traceable, and exactly as specified. Their on-time delivery record has helped us avoid unnecessary downtime, and their communication is always clear and professional.",
-      picture: "/homeAssets/Picture-1.jpg",
-      name: "Samuel Okwabeng",
-      company: "Asantegold Bibiani",
-      position: "CEO",
-    },
-    {
-      id: 2,
-      logo: "/partnerLogos/Damang_Gold_Fields_Logo.png",
-      subtext:
-        "What sets MASZ-Africa apart is their deep understanding of mining operations. They don’t just deliver products — they deliver the right products. Their technical team helped us select the optimal grinding media for our mill, which reduced wear rates significantly and improved throughput.",
-      picture: "/homeAssets/Picture-2.jpg",
-      name: "Kwame Asante",
-      company: "Damang Goldfields",
-      position: "Plant Manager",
-    },
-    {
-      id: 3,
-      logo: "/partnerLogos/Asanko_Mines_logo.png",
-      subtext:
-        "We’ve partnered with MASZ-Africa across several of our operations in Ghana. Their logistics team consistently meets tight delivery windows, even in remote locations. The quality of their activated carbon has been exceptional — recovery rates have remained well above our benchmarks.",
-      picture: "/homeAssets/Picture-3.jpg",
-      name: "Adaeze Nwosu",
-      company: "Asanko Mines",
-      position: "Supply Chain Director",
-    },
-    {
-      id: 4,
-      logo: "/partnerLogos/Adamus_Resources_Limited_logo.png",
-      subtext:
-        "The gearbox servicing team from MASZ-Africa turned around a critical mill repair in under 48 hours, preventing what could have been a week-long production halt. Their technicians are knowledgeable, fast, and safety-conscious. We’ve made them our go-to maintenance partner.",
-      picture: "/homeAssets/Picture-4.jpg",
-      name: "Kofi Mensah",
-      company: "Adamus Resources",
-      position: "Maintenance Superintendent",
-    },
-    {
-      id: 5,
-      logo: "/partnerLogos/Golden_Star_Resources_Limited_logo.png",
-      subtext:
-        "Procurement has always been a pain point for us in this region, but MASZ-Africa changed that. They handle everything — sourcing, customs, delivery — with minimal input from our side. The steel pipes they supply meet international specs and arrive in perfect condition every time.",
-      picture: "/homeAssets/Picture-5.jpg",
-      name: "Emeka Okafor",
-      company: "Golden Star Resources",
-      position: "Operations Manager",
-    },
-    {
-      id: 6,
-      logo: "/partnerLogos/Newmont_Coporation_Ahafo_logo.png",
-      subtext:
-        "I’ve worked with many suppliers across the continent and MASZ-Africa stands out for one reason: accountability. If there’s ever an issue, it’s resolved before it becomes a problem. Their proactive approach to service and communication gives us confidence that our operations won’t be disrupted.",
-      picture: "/homeAssets/Picture-6.jpg",
-      name: "Fatima Diallo",
-      company: "Newmont Ahafo",
-      position: "Head of Procurement",
-    },
-    {
-      id: 7,
-      logo: "/partnerLogos/Perseus_Mining_Limited_logo.png",
-      subtext:
-        "MASZ-Africa helped us transition from multiple fragmented suppliers to a single reliable partner. The cost savings have been significant, but more importantly, we now have consistent product quality and a team that understands our site requirements. They are a true operational extension of our business.",
-      picture: "/homeAssets/Picture-7.jpg",
-      name: "Bernard Tetteh",
-      company: "Perseus Mining",
-      position: "General Manager",
-    },
-  ];
 
-
-  const scrollingItems = [...testimonialDetails, ...testimonialDetails];
+  const scrollingItems = [...TESTIMONIALS, ...TESTIMONIALS];
 
   // Initial state: tag and cards hidden (tag from right, cards from right). Re-run when resetKey changes so remounted content is hidden again.
   useLayoutEffect(() => {
@@ -260,22 +188,21 @@ function TestimonialSession() {
                     <div className="h-14 mb-4 flex items-center">
                       <Image
                         src={item.logo}
-                        alt={item.company}
+                        alt={item.name}
                         width={300}
                         height={100}
-                        style={{ height: "56px", width: "auto", maxWidth: "180px" }}
+                        style={{ height: `${item.cardLogoHeight}px`, width: "auto" }}
                         className="object-contain"
                         loading="eager"
-                        
                       />
                     </div>
                     <p className="text-sm-medium text-default-body lg:my-[40]">
-                      {item.subtext}
+                      {item.testimonial.subtext}
                     </p>
                     <div className="flex gap-3 mt-auto items-center">
-                      <div className="relative size-10 shrink-0  rounded-full overflow-hidden border border-gray-400">
+                      <div className="relative size-10 shrink-0 rounded-full overflow-hidden border border-gray-400">
                         <Image
-                          src={item.picture}
+                          src={item.testimonial.picture}
                           alt=""
                           fill
                           className="object-cover w-full h-full"
@@ -286,10 +213,10 @@ function TestimonialSession() {
                       </div>
                       <div>
                         <div className="text-sm-bold text-default-body">
-                          {item.company}
+                          {item.name}
                         </div>
                         <div className="text-sm-regular text-default-body">
-                          {item.position}
+                          {item.testimonial.position}
                         </div>
                       </div>
                     </div>

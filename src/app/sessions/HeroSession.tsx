@@ -55,7 +55,7 @@ function HeroSession({ startTextAnimation = false }: HeroSessionProps) {
             </LineByLineText>
 
             {/* Button now shows correctly */}
-            <Link href="/services">
+            <Link  href="/services">
               <Button
                 label="Explore our services"
                 variant="primary"
