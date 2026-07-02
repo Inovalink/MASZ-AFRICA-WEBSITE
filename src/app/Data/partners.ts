@@ -33,7 +33,7 @@ export const PARTNERS: Partner[] = [
     address: "No. 19 Abidjan Avenue East Legon, Accra - Ghana",
     logo: "/partnerLogos/Asante_Gold_Bibiani_logo.png",
     logoHeight: 45,
-    cardLogoHeight: 80,
+    cardLogoHeight: 40,
     noInvert: false,
     lat: 5.636277733719174, lon: -0.1612652082713351,
     testimonial: {
@@ -81,7 +81,7 @@ export const PARTNERS: Partner[] = [
     address: "No. 19 Abidjan Avenue East Legon, Accra - Ghana",
     logo: "/partnerLogos/Asante_Gold_Bibiani_logo.png",
     logoHeight: 45,
-    cardLogoHeight: 80,
+    cardLogoHeight: 40,
     noInvert: false,
     lat: 5.636277733719174, lon: -0.1612652082713351,
     testimonial: null,
