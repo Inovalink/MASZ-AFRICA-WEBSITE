@@ -108,7 +108,7 @@ export const PARTNERS: Partner[] = [
     address: "4 Chancery Court, 147A Giffard Road, East Cantonments, Accra",
     logo: "/partnerLogos/Perseus_Mining_Limited_logo.png",
     logoHeight: 45,
-    cardLogoHeight: 35,
+    cardLogoHeight: 45,
     noInvert: false,
     lat: 5.616422690357834, lon: -0.17913601382660338,
     testimonial: {
