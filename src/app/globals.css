@@ -1081,8 +1081,156 @@ max-width: 800px;    }
 .navbar--expanded .main-nav-container a:not([class*="bg-"]):hover {
   color: #fff;
 }
+/* Mobile navbar menu — staggered slide + fade (delays set inline on each row) */
+@keyframes mobile-nav-link-enter {
+  from {
+    opacity: 0;
+    transform: translate3d(-8px, 6px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+.mobile-nav-link-enter {
+  opacity: 0;
+  animation: mobile-nav-link-enter 0.48s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mobile-nav-link-enter {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Nav row chevrons / arrows — gentle idle wiggle */
+@keyframes nav-icon-wiggle {
+  0%,
+  100% {
+    transform: rotate(0deg);
+  }
+  20% {
+    transform: rotate(-7deg);
+  }
+  40% {
+    transform: rotate(7deg);
+  }
+  60% {
+    transform: rotate(-4deg);
+  }
+  80% {
+    transform: rotate(4deg);
+  }
+}
+
+.nav-icon-wiggle {
+  display: inline-flex;
+  animation: nav-icon-wiggle 2.4s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nav-icon-wiggle {
+    animation: none;
+  }
+}
+
+/* Desktop nav dropdown animation */
+@keyframes dropdown-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.dropdown-enter {
+  animation: dropdown-fade-in 0.2s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
 .navbar--expanded .menu-icon span {
   background-color: #fff !important;
+}
+
+/* Mobile menu — scale out from hamburger, scale in on close */
+.mobile-menu-backdrop {
+  transition: opacity 0.55s cubic-bezier(0.22, 1, 0.36, 1),
+    visibility 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.mobile-menu-backdrop--closed {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.mobile-menu-backdrop--open {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+
+.mobile-menu-panel {
+  --menu-origin-x: calc(100% - 1.5rem);
+  --menu-origin-y: -2.75rem;
+  transform-origin: var(--menu-origin-x) var(--menu-origin-y);
+  transition: transform 0.65s cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 0.55s cubic-bezier(0.22, 1, 0.36, 1),
+    visibility 0.65s cubic-bezier(0.22, 1, 0.36, 1);
+  transform: scale(0);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  will-change: transform, opacity;
+}
+
+.mobile-menu-panel--open {
+  transform: scale(1);
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+
+.mobile-menu-panel__content {
+  transition: opacity 0.45s ease-out;
+}
+
+.mobile-menu-panel:not(.mobile-menu-panel--open) .mobile-menu-panel__content {
+  opacity: 0;
+}
+
+.mobile-menu-panel--open .mobile-menu-panel__content {
+  opacity: 1;
+  transition-delay: 0.14s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mobile-menu-panel,
+  .mobile-menu-backdrop {
+    transition: opacity 0.2s ease;
+  }
+
+  .mobile-menu-panel {
+    transform: none !important;
+  }
+
+  .mobile-menu-panel:not(.mobile-menu-panel--open) {
+    opacity: 0;
+  }
+
+  .mobile-menu-panel--open {
+    opacity: 1;
+  }
+
+  .mobile-menu-panel__content {
+    transition: none;
+    opacity: 1;
+  }
 }
 
 /* Hide navbar when any AutoplayVideo is in view – desktop only; keep navbar visible on mobile */

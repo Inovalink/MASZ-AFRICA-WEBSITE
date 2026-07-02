@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useLayoutEffect, useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { ChevronDown, ChevronRight, MoveRight } from "lucide-react";
@@ -49,22 +49,99 @@ export const navLinks = [
   // { id: "4", label: "careers", path: "/careers", hasSubmenu: false },
 ];
 
+const mobileNavLinks = [
+  ...navLinks,
+  { id: "5", label: "contact us", path: "/contactUs", hasSubmenu: false },
+];
+
 function Navbar() {
-  const [menuOpen, setMenuOpen] = useState<boolean>(false);
-  const [mobileSubmenuOpen, setMobileSubmenuOpen] = useState<boolean>(false);
-  const toggleMenu = () => setMenuOpen(!menuOpen);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [servicesExpanded, setServicesExpanded] = useState(false);
+  const [mobileMenuAnimCycle, setMobileMenuAnimCycle] = useState(0);
+  const prevMenuOpenRef = useRef(false);
   const [isScrolled, setIsScrolled] = useState(false);
 
   const headerRef = useRef<HTMLElement>(null);
   const innerRef = useRef<HTMLDivElement>(null);
-  const menuRef = useRef<HTMLDivElement>(null);
-  const itemRefs = useRef<(HTMLLIElement | null)[]>([]);
+  const menuIconRef = useRef<HTMLButtonElement>(null);
+  const menuPanelRef = useRef<HTMLDivElement>(null);
   const isExpandedRef = useRef(false);
 
   const pathname = usePathname();
 
-  // Navbar expands gradually as you scroll down, contracts gradually as you scroll up (1:1 with scroll)
   const SCROLL_RANGE_PX = 200;
+
+  useEffect(() => {
+    if (!menuOpen) {
+      setServicesExpanded(false);
+    }
+    if (menuOpen && !prevMenuOpenRef.current) {
+      setMobileMenuAnimCycle((c) => c + 1);
+    }
+    prevMenuOpenRef.current = menuOpen;
+  }, [menuOpen]);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    const html = document.documentElement;
+    const body = document.body;
+
+    const releaseLock = () => {
+      html.style.overflow = "";
+      body.style.overflow = "";
+      body.style.overscrollBehavior = "";
+    };
+
+    const sync = () => {
+      if (menuOpen && window.innerWidth < 1280) {
+        html.style.overflow = "hidden";
+        body.style.overflow = "hidden";
+        body.style.overscrollBehavior = "none";
+      } else {
+        releaseLock();
+      }
+    };
+
+    sync();
+    window.addEventListener("resize", sync);
+
+    return () => {
+      window.removeEventListener("resize", sync);
+      releaseLock();
+    };
+  }, [menuOpen]);
+
+  const updateMenuOrigin = () => {
+    const btn = menuIconRef.current;
+    const panel = menuPanelRef.current;
+    if (!btn || !panel) return;
+
+    const btnRect = btn.getBoundingClientRect();
+    const panelRect = panel.getBoundingClientRect();
+    const originX = btnRect.left + btnRect.width / 2 - panelRect.left;
+    const originY = btnRect.top + btnRect.height / 2 - panelRect.top;
+
+    panel.style.setProperty("--menu-origin-x", `${originX}px`);
+    panel.style.setProperty("--menu-origin-y", `${originY}px`);
+  };
+
+  useLayoutEffect(() => {
+    if (typeof window === "undefined" || window.innerWidth >= 1280) return;
+    updateMenuOrigin();
+  }, [menuOpen]);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    const onResize = () => {
+      if (window.innerWidth >= 1280) return;
+      updateMenuOrigin();
+    };
+
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
+  }, []);
 
   useEffect(() => {
     const header = headerRef.current;
@@ -74,79 +151,62 @@ function Navbar() {
     const mm = gsap.matchMedia();
 
     const ctx = gsap.context(() => {
-// 2XL Desktop / large screens: keep existing width + margin animation
-mm.add("(min-width: 1919px)", () => {
-  // gsap.set(header, {
-  //   width: '80%',
-  //   left: '10%',
-  //   y: '0',
-  //   backgroundColor: '#ffffff',
-  //   backdropFilter: 'blur(0px)',
-  // });
-  gsap.set(header, {
-    width: "calc(100% - 400px)",
-    left: "200px",
-    y: "0",
-    backgroundColor: "#ffffff",
-    backdropFilter: "blur(0px)",
-  });
-  gsap.set(inner, { marginLeft: "0rem", marginRight: "0rem" });
+      mm.add("(min-width: 1919px)", () => {
+        gsap.set(header, {
+          width: "calc(100% - 400px)",
+          left: "200px",
+          y: "0",
+          backgroundColor: "#ffffff",
+          backdropFilter: "blur(0px)",
+        });
+        gsap.set(inner, { marginLeft: "0rem", marginRight: "0rem" });
 
-  const tl = gsap.timeline({
-    scrollTrigger: {
-      trigger: document.body,
-      start: "top top",
-      end: `${SCROLL_RANGE_PX}px top`,
-      scrub: 1,
-      invalidateOnRefresh: true,
-      onUpdate: (self) => {
-        const shouldBeExpanded = self.progress > 0.4;
-        if (shouldBeExpanded !== isExpandedRef.current) {
-          isExpandedRef.current = shouldBeExpanded;
-          header.classList.toggle("navbar--expanded", shouldBeExpanded);
-          setIsScrolled(shouldBeExpanded);
-        }
-      },
-    },
-  });
+        const tl = gsap.timeline({
+          scrollTrigger: {
+            trigger: document.body,
+            start: "top top",
+            end: `${SCROLL_RANGE_PX}px top`,
+            scrub: 1,
+            invalidateOnRefresh: true,
+            onUpdate: (self) => {
+              const shouldBeExpanded = self.progress > 0.4;
+              if (shouldBeExpanded !== isExpandedRef.current) {
+                isExpandedRef.current = shouldBeExpanded;
+                header.classList.toggle("navbar--expanded", shouldBeExpanded);
+                setIsScrolled(shouldBeExpanded);
+              }
+            },
+          },
+        });
 
-  tl.to(
-    header,
-    {
-      width: "100%",
-      left: "0%",
-      y: 0,
-      backgroundColor: "rgba(13, 13, 13, 0.94)",
-      backdropFilter: "blur(14px)",
-      ease: "none",
-      duration: 1,
-      force3D: true,
-    },
-    0
-  );
-  tl.to(
-    inner,
-    {
-      marginLeft: "7.5rem",
-      marginRight: "7.5rem",
-      ease: "none",
-      duration: 1,
-      force3D: true,
-    },
-    0
-  );
-});
+        tl.to(
+          header,
+          {
+            width: "100%",
+            left: "0%",
+            y: 0,
+            backgroundColor: "rgba(13, 13, 13, 0.94)",
+            backdropFilter: "blur(14px)",
+            ease: "none",
+            duration: 1,
+            force3D: true,
+          },
+          0
+        );
+        tl.to(
+          inner,
+          {
+            marginLeft: "7.5rem",
+            marginRight: "7.5rem",
+            ease: "none",
+            duration: 1,
+            force3D: true,
+          },
+          0
+        );
+      });
 
-
-      // Desktop / large screens: keep existing width + margin animation
       mm.add("(min-width: 1280px) and (max-width: 1919px)", () => {
-        // gsap.set(header, {
-        //   width: '80%',
-        //   left: '10%',
-        //   y: '0',
-        //   backgroundColor: '#ffffff',
-        //   backdropFilter: 'blur(0px)',
-        // });
         gsap.set(header, {
           width: "calc(100% - 240px)",
           left: "120px",
@@ -201,7 +261,6 @@ mm.add("(min-width: 1919px)", () => {
         );
       });
 
-      // Mobile / tablet: only change background color, keep layout full-width
       mm.add("(max-width: 1279px)", () => {
         gsap.set(header, {
           width: "100%",
@@ -249,78 +308,40 @@ mm.add("(min-width: 1919px)", () => {
     };
   }, []);
 
-  // Sync GSAP initial state with the inline styles set on the menu div
-  useEffect(() => {
-    if (menuRef.current) {
-      gsap.set(menuRef.current, {
-        scaleY: 0,
-        opacity: 0,
-        transformOrigin: "top",
-        visibility: "hidden",
-      });
-
-      itemRefs.current.forEach((el) => {
-        if (el) gsap.set(el, { y: 20, opacity: 0 });
-        const arrow = el?.querySelector("svg");
-        if (arrow) gsap.set(arrow, { x: -20, opacity: 0 });
-      });
+  const isLinkActive = (link: {
+    path: string;
+    hasSubmenu?: boolean;
+    label?: string;
+  }) => {
+    if (link.hasSubmenu) {
+      return pathname === link.path || pathname?.startsWith(`${link.path}/`);
     }
-  }, []);
+    return pathname === link.path;
+  };
 
-  // Animate menu open/close
-  useEffect(() => {
-    if (!menuRef.current) return;
-
-    const tl = gsap.timeline({ defaults: { ease: "power4.inOut" } });
-
-    if (menuOpen) {
-      tl.set(menuRef.current, { visibility: "visible" });
-      tl.to(menuRef.current, { scaleY: 1, opacity: 1, duration: 0.65 });
-      tl.to(
-        itemRefs.current,
-        { y: 0, opacity: 1, stagger: 0.12, duration: 0.6 },
-        "-=0.45"
-      );
-      tl.to(
-        itemRefs.current.map((el) => el?.querySelector("svg")),
-        { x: 0, opacity: 1, stagger: 0.12, duration: 0.5 },
-        "-=0.55"
-      );
-    } else {
-      tl.to(
-        itemRefs.current.map((el) => el?.querySelector("svg")),
-        { x: -20, opacity: 0, stagger: 0.08, duration: 0.35 }
-      );
-      tl.to(
-        itemRefs.current,
-        { y: 20, opacity: 0, stagger: 0.1, duration: 0.45, ease: "power3.in" },
-        "-=0.2"
-      );
-      tl.to(
-        menuRef.current,
-        {
-          scaleY: 0,
-          opacity: 0,
-          duration: 0.6,
-          transformOrigin: "top",
-          ease: "power4.inOut",
-        },
-        "-=0.3"
-      );
-      tl.set(menuRef.current, { visibility: "hidden" });
-      // Reset mobile submenu when main menu closes
-      setMobileSubmenuOpen(false);
-    }
-  }, [menuOpen]);
+  const navActiveMobileRow =
+    "bg-blue-50 text-blue-700 font-semibold tracking-[-0.03em] rounded-lg px-3.5";
+  const navInactiveMobileRow =
+    "text-neutral-500 font-normal tracking-[-0.03em] px-3.5";
 
   return (
     <>
-      {/* Spacer so content doesn't hide behind fixed navbar */}
+      <button
+        type="button"
+        aria-label="Close menu"
+        aria-hidden={!menuOpen}
+        tabIndex={menuOpen ? 0 : -1}
+        className={`mobile-menu-backdrop fixed inset-0 z-[90] h-dvh w-full lg:hidden bg-neutral-950/45 backdrop-blur-md ${
+          menuOpen ? "mobile-menu-backdrop--open" : "mobile-menu-backdrop--closed"
+        }`}
+        onClick={() => setMenuOpen(false)}
+      />
+
       <div className="h-[90px]" />
 
       <header
         ref={headerRef}
-        className="navbar navbar--compact fixed top-0 z-[100] h-[90px] will-change-transform "
+        className="navbar navbar--compact fixed top-0 z-[100] h-[90px] will-change-transform"
         style={{
           width: "100%",
           left: "0",
@@ -331,10 +352,11 @@ mm.add("(min-width: 1919px)", () => {
           ref={innerRef}
           className="main-nav-container flex justify-between items-center h-full"
         >
-          {/* Logo */}
-          <Link href="/" className="nav-logo">
+          <Link href="/" aria-label="MASZ Africa — Home" className="nav-logo shrink-0">
             <Image
-              src="/maszAssets/website-logo.svg"
+              src={
+                isScrolled ? "/maszAssets/logo-white.svg" : "/maszAssets/website-logo.svg"
+              }
               width={140}
               height={50}
               alt="masz africa logo"
@@ -343,13 +365,10 @@ mm.add("(min-width: 1919px)", () => {
           </Link>
 
           <div className="nav-list flex items-center">
-            {/* Desktop Nav */}
             <div className="hidden lg:flex mr-[50px] p-[20px] text-default-body">
               <ul className="flex gap-8 uppercase items-center text-md-medium">
                 {navLinks.map((list) => {
-                  const isActive =
-                    pathname === list.path ||
-                    (list.hasSubmenu && pathname.startsWith("/services/"));
+                  const isActive = isLinkActive(list);
 
                   return (
                     <li key={list.id} className="relative group">
@@ -377,10 +396,9 @@ mm.add("(min-width: 1919px)", () => {
                         )}
                       </Link>
 
-                      {/* Dropdown Menu */}
                       {list.hasSubmenu && list.submenuItems && (
-                        <div className="absolute top-full  left-0 pt-4 opacity-0 invisible  group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50">
-                          <div className="bg-black/89 backdrop-blur-sm w-65 flex flex-col gap-2 flex-1 py-3 px-2.5  ">
+                        <div className="absolute top-full left-0 pt-4 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50">
+                          <div className="bg-black/89 backdrop-blur-sm w-65 flex flex-col gap-2 flex-1 py-3 px-2.5 dropdown-enter">
                             {list.submenuItems.map((item) => (
                               <Link
                                 key={item.id}
@@ -407,11 +425,9 @@ mm.add("(min-width: 1919px)", () => {
               </ul>
             </div>
 
-            {/* CTA */}
-            <div className="contact-us-cta flex justify-between items-center mr-[10px]">
+            <div className="contact-us-cta hidden lg:flex justify-between items-center mr-[10px]">
               <Link
                 href="/contactUs"
-                onClick={() => setMenuOpen(false)}
                 className="font-medium bg-transparent border-[1.5px] border-button-primary-default text-button-primary-default px-[8px] py-[7px] flex"
               >
                 Contact Us
@@ -419,10 +435,16 @@ mm.add("(min-width: 1919px)", () => {
               </Link>
             </div>
 
-            {/* Mobile Menu Icon */}
-            <div
-              className="menu-icon ml-2 w-[30px] h-[30px] flex flex-col justify-center items-center gap-[4px] cursor-pointer lg:hidden"
-              onClick={toggleMenu}
+            <button
+              ref={menuIconRef}
+              type="button"
+              aria-expanded={menuOpen}
+              aria-label={menuOpen ? "Close menu" : "Open menu"}
+              className="menu-icon relative z-[101] ml-2 w-[30px] h-[30px] flex flex-col justify-center items-center gap-[4px] cursor-pointer lg:hidden"
+              onClick={() => {
+                if (!menuOpen) updateMenuOrigin();
+                setMenuOpen((open) => !open);
+              }}
             >
               <span
                 className={`block h-[3px] w-full rounded transition-all duration-500 ${
@@ -439,103 +461,129 @@ mm.add("(min-width: 1919px)", () => {
                   isScrolled ? "bg-white" : "bg-black"
                 } ${menuOpen ? "-rotate-45 -translate-y-2" : ""}`}
               />
-            </div>
+            </button>
           </div>
+        </div>
 
-          {/* Mobile Menu */}
+        <div
+          ref={menuPanelRef}
+          className={`mobile-menu-panel mobile_navItems fixed z-[95] top-[90px] left-0 right-0 flex h-[calc(100dvh-90px)] flex-col overflow-hidden rounded-b-2xl bg-white lg:hidden ${
+            menuOpen ? "mobile-menu-panel--open" : ""
+          }`}
+          onClick={(e) => e.stopPropagation()}
+        >
           <div
-            ref={menuRef}
-            className="nav-bar-list-items  bg-surface-card-primary fixed z-40 top-[90px] w-full left-0 right-0 h-[calc(100vh-90px)] transform origin-top lg:hidden overflow-y-auto"
-            style={{ transform: 'scaleY(0)', opacity: 0, transformOrigin: 'top', visibility: 'hidden', scrollbarWidth: 'none' as 'none' }}
+            className="mobile-menu-panel__content flex min-h-0 flex-1 flex-col overflow-y-auto overscroll-contain pb-[max(1.25rem,env(safe-area-inset-bottom))] [scrollbar-width:thin] [-webkit-overflow-scrolling:touch] [scrollbar-color:rgba(115,115,115,0.25)_transparent]"
           >
-            <ul className="navList-item">
-              {navLinks.map((link, index) => (
-                <li
-                  key={link.id}
-                  ref={(el) => {
-                    itemRefs.current[index] = el;
-                  }}
-                  className="border-b border-gray-500"
-                >
-                  {link.hasSubmenu ? (
-                    // Services item with submenu
-                    <div className="flex flex-col">
-                      <div className="flex justify-between items-center px-[18px] py-[20px] cursor-pointer">
-                        <Link
-                          href={link.path}
-                          className="capitalize text-3xl-regular"
-                          onClick={() => {
-                            setMenuOpen(false);
-                            setMobileSubmenuOpen(false);
-                          }}
-                        >
-                           <span className="text-default-body">{link.label}</span>
-                        </Link>
-                        <ChevronDown
-                        
-                          onClick={() =>
-                            setMobileSubmenuOpen(!mobileSubmenuOpen)
-                          }
-                          size={24}
-                          className={`transition-transform text-default-body duration-300 ${
-                            mobileSubmenuOpen ? `rotate-180` : ``
-                          }`}
-                        />
-                      </div>
+            <div
+              key={mobileMenuAnimCycle}
+              className="mx-auto flex w-[90%] max-w-full flex-col px-2 pt-4"
+            >
+              {mobileNavLinks.map((link, index) => {
+                const staggerMs = 90;
+                const baseDelay = 60;
+                const rowDelay = menuOpen ? baseDelay + index * staggerMs : 0;
+                const rowActive = isLinkActive(link);
+                const rowText = rowActive ? navActiveMobileRow : navInactiveMobileRow;
+                const rowPad = "py-[1.1rem]";
+                const divider = "border-b border-neutral-100";
+                const isLastLink = link.label === "contact us";
 
-                      {/* Mobile Submenu */}
-                      <div
-                        className={`overflow-hidden transition-all duration-500 ease-in-out ${
-                          mobileSubmenuOpen
-                            ? "max-h-[800px] opacity-100"
-                            : "max-h-0 opacity-0"
-                        }`}
-                      >
-                        <div className="bg-neutral-100 py-2">
-                          {link.submenuItems?.map((item) => (
-                            <Link
-                              key={item.id}
-                              href={`/services/${item.slug}`}
-                              className={`
-                                block px-[30px] py-[14px] text-md-medium uppercase
-                                transition-all duration-200
-                                ${
-                                  pathname === `/services/${item.slug}`
-                                    ? "bg-blue-500 text-white"
-                                    : "text-neutral-700 hover:bg-blue-500 hover:text-white active:bg-blue-500 active:text-white"
-                                }
-                              `}
-                              onClick={() => {
-                                setMenuOpen(false);
-                                setMobileSubmenuOpen(false);
-                              }}
-                            >
-                              <div className="flex justify-between items-center">
-                                <span>{item.label}</span>
-                                <ChevronRight className="text-default-body" size={18} />
-                              </div>
-                            </Link>
-                          ))}
+                return (
+                  <div key={link.id}>
+                    {link.hasSubmenu ? (
+                      <>
+                        <div
+                          className={`mobile-nav-link-enter flex items-center justify-between gap-3 text-xl leading-snug capitalize ${rowPad} ${divider} ${rowText}`}
+                          style={{ animationDelay: `${rowDelay}ms` }}
+                        >
+                          <Link
+                            href={link.path}
+                            onClick={() => {
+                              setMenuOpen(false);
+                              setServicesExpanded(false);
+                            }}
+                            className="min-w-0 flex-1 outline-none focus-visible:ring-2 focus-visible:ring-blue-300/80 focus-visible:ring-inset focus-visible:rounded-lg"
+                          >
+                            {link.label}
+                          </Link>
+                          <button
+                            type="button"
+                            aria-expanded={servicesExpanded}
+                            aria-label="Toggle services menu"
+                            onClick={() => setServicesExpanded((v) => !v)}
+                            className="nav-icon-wiggle inline-flex shrink-0 cursor-pointer p-1 -mr-1"
+                          >
+                            <ChevronDown
+                              className={`size-4.5 transition-transform duration-300 ease-out ${rowActive ? "text-blue-600" : "text-neutral-600"} ${servicesExpanded ? "rotate-180" : ""}`}
+                              strokeWidth={rowActive ? 3 : 2.5}
+                            />
+                          </button>
                         </div>
-                      </div>
-                    </div>
-                  ) : (
-                    // Regular nav item
-                    <div className="flex justify-between items-center px-[18px] py-[20px]">
+
+                        <div
+                          className={`overflow-hidden transition-all duration-500 ease-in-out ${
+                            servicesExpanded
+                              ? "max-h-[800px] opacity-100 mt-2"
+                              : "max-h-0 opacity-0 mt-0"
+                          }`}
+                        >
+                          <div className="overflow-hidden rounded-lg bg-neutral-100 py-2">
+                            {link.submenuItems?.map((item, subIndex) => {
+                              const subActive =
+                                pathname === `/services/${item.slug}` ||
+                                pathname?.startsWith(`/services/${item.slug}/`);
+
+                              return (
+                                <Link
+                                  key={item.id}
+                                  href={`/services/${item.slug}`}
+                                  onClick={() => {
+                                    setMenuOpen(false);
+                                    setServicesExpanded(false);
+                                  }}
+                                  className={`mobile-nav-link-enter block px-[30px] py-[14px] text-md-medium uppercase transition-all duration-200 ${
+                                    subActive
+                                      ? "bg-blue-500 text-white"
+                                      : "text-neutral-700 hover:bg-blue-500 hover:text-white active:bg-blue-500 active:text-white"
+                                  }`}
+                                  style={{
+                                    animationDelay: `${baseDelay + index * staggerMs + 40 + subIndex * 55}ms`,
+                                  }}
+                                >
+                                  <div className="flex justify-between items-center gap-3">
+                                    <span>{item.label}</span>
+                                    <ChevronRight size={18} />
+                                  </div>
+                                </Link>
+                              );
+                            })}
+                          </div>
+                        </div>
+                      </>
+                    ) : (
                       <Link
                         href={link.path}
-                        className="capitalize flex-1  flex text-3xl-regular"
                         onClick={() => setMenuOpen(false)}
+                        className={`mobile-nav-link-enter flex w-full min-w-0 items-center justify-between gap-3 text-left text-xl leading-snug capitalize ${rowPad} ${rowText} ${isLastLink ? "border-b-0" : divider} outline-none focus-visible:ring-2 focus-visible:ring-blue-300/80 focus-visible:ring-inset focus-visible:rounded-lg`}
+                        style={{ animationDelay: `${rowDelay}ms` }}
                       >
-                        <span className="text-default-body">{link.label}</span>
-                        
+                        <span className="min-w-0">{link.label}</span>
+                        <span
+                          className="nav-icon-wiggle inline-flex shrink-0 text-current"
+                          aria-hidden
+                        >
+                          <MoveRight
+                            className={`size-4.5 ${rowActive ? "text-blue-600" : "text-neutral-600"}`}
+                            strokeWidth={rowActive ? 2.5 : 2}
+                          />
+                        </span>
                       </Link>
-                      <MoveRight className="text-default-body" size={20} />
-                    </div>
-                  )}
-                </li>
-              ))}
-            </ul>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
           </div>
         </div>
       </header>
