@@ -252,7 +252,7 @@ function PartnersMapSession() {
     // ── Shared bullet factory ─────────────────────────────────────────────
     const makeBullet = (
       _rt: am5.Root,
-      _sr: am5map.MapPointSeries,
+      _sr: am5.Series,
       dataItem: am5.DataItem<am5map.IMapPointSeriesDataItem>
     ): am5.Bullet => {
       const ctx = dataItem.dataContext as {
