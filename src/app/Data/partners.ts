@@ -92,7 +92,7 @@ export const PARTNERS: Partner[] = [
     address: "35 Nortei Ababio St, Accra",
     logo: "/partnerLogos/Adamus_Resources_Limited_logo.png",
     logoHeight: 50,
-    cardLogoHeight: 80,
+    cardLogoHeight: 43,
     noInvert: false,
     lat: 5.611451894178936, lon: -0.1838613674525461,
     testimonial: {
@@ -151,7 +151,7 @@ export const PARTNERS: Partner[] = [
     address: "8th Floor, Standard Chartered Bank (SCB), Head Office Building, 87 Independence Avenue, Liberation Rd, Accra",
     logo: "/partnerLogos/Newmont_Coporation_Ahafo_logo.png",
     logoHeight: 50,
-    cardLogoHeight: 60,
+    cardLogoHeight: 45,
     noInvert: false,
     lat: 5.5720357461606245, lon: -0.1909134578449212,
     testimonial: {
