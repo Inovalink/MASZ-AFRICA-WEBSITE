@@ -216,6 +216,27 @@ function PartnersMarqueeInline({
   );
 }
 
+/** Which partner tooltips to show at once (locked pin stays visible while previewing others). */
+function getVisibleTooltipIds(
+  locked: number | null,
+  pinHover: number | null,
+  active: number | null
+): number[] {
+  const ids = new Set<number>();
+  if (locked !== null) ids.add(locked);
+  if (pinHover !== null) ids.add(pinHover);
+  if (locked === null && pinHover === null && active !== null) ids.add(active);
+  return Array.from(ids);
+}
+
+type PinTooltip = {
+  id: number;
+  name: string;
+  address: string;
+  x: number;
+  y: number;
+};
+
 // ─── Main Component ───────────────────────────────────────────────────────────
 function PartnersMapSession() {
   const [activeId, setActiveId] = useState<number | null>(null);
@@ -224,15 +245,9 @@ function PartnersMapSession() {
   const [startTextAnimation, setStartTextAnimation] = useState(false);
   const [startSubtextAnimation, setStartSubtextAnimation] = useState(false);
   const visibleId = lockedId ?? activeId;
-  const tooltipPartnerId = lockedId ?? pinHoverId ?? activeId;
   /** Marquee hover + click lock zoom; pin hover does not. */
   const zoomTargetId = lockedId ?? activeId;
-  const [hoveredPin, setHoveredPin] = useState<{
-    name: string;
-    address: string;
-    x: number;
-    y: number;
-  } | null>(null);
+  const [pinTooltips, setPinTooltips] = useState<PinTooltip[]>([]);
 
   // ── amCharts instance refs ────────────────────────────────────────────────
   const chartDivRef = useRef<HTMLDivElement>(null);
@@ -493,24 +508,36 @@ function PartnersMapSession() {
     zoomToPartnerRef.current(zoomTargetId);
   }, [zoomTargetId]);
 
-  const updateTooltipPosition = useCallback((id: number | null) => {
-    if (id === null) {
-      setHoveredPin(null);
+  const updatePinTooltips = useCallback(() => {
+    const el = chartDivRef.current;
+    if (!el || el.offsetWidth === 0) return;
+
+    const ids = getVisibleTooltipIds(
+      lockedIdRef.current,
+      pinHoverIdRef.current,
+      activeIdRef.current
+    );
+
+    if (ids.length === 0) {
+      setPinTooltips([]);
       return;
     }
-    const container = bulletContainersRef.current.get(id);
-    const el = chartDivRef.current;
-    if (!container || !el || el.offsetWidth === 0) return;
-    const pos = container.toGlobal({ x: 0, y: 0 });
-    const partner = PARTNERS.find((p) => p.id === id);
-    if (partner) {
-      setHoveredPin({
+
+    const tips: PinTooltip[] = [];
+    for (const id of ids) {
+      const container = bulletContainersRef.current.get(id);
+      const partner = PARTNERS.find((p) => p.id === id);
+      if (!container || !partner) continue;
+      const pos = container.toGlobal({ x: 0, y: 0 });
+      tips.push({
+        id,
         name: partner.name,
         address: partner.address,
         x: (pos.x / el.offsetWidth) * 100,
         y: (pos.y / el.offsetHeight) * 100,
       });
     }
+    setPinTooltips(tips);
   }, []);
 
   /** Sync amCharts pin visuals, HTML hit targets, and tooltip positions. */
@@ -521,11 +548,16 @@ function PartnersMapSession() {
     const tick = () => {
       const el = chartDivRef.current;
       if (el && el.offsetWidth > 0) {
-        const highlightId =
-          lockedIdRef.current ?? pinHoverIdRef.current ?? activeIdRef.current;
+        const locked = lockedIdRef.current;
+        const pinHover = pinHoverIdRef.current;
+        const active = activeIdRef.current;
 
         bulletContainersRef.current.forEach((container, id) => {
-          container.states.apply(highlightId === id ? "hover" : "default");
+          const isHighlighted =
+            id === pinHover ||
+            id === locked ||
+            (locked === null && id === active);
+          container.states.apply(isHighlighted ? "hover" : "default");
           const btn = pinHitRefs.current.get(id);
           if (!btn) return;
           const pos = container.toGlobal({ x: 0, y: 0 });
@@ -533,22 +565,14 @@ function PartnersMapSession() {
           btn.style.top = `${(pos.y / el.offsetHeight) * 100}%`;
         });
 
-        if (highlightId !== null) {
-          updateTooltipPosition(highlightId);
-        }
+        updatePinTooltips();
       }
       rafId = requestAnimationFrame(tick);
     };
     tick();
 
     return () => cancelAnimationFrame(rafId);
-  }, [mapInteractive, updateTooltipPosition]);
-
-  useEffect(() => {
-    if (tooltipPartnerId === null) {
-      setHoveredPin(null);
-    }
-  }, [tooltipPartnerId]);
+  }, [mapInteractive, updatePinTooltips]);
 
   const sectionRef = useRef<HTMLElement>(null);
   const marqueeRef = useRef<HTMLDivElement>(null);
@@ -559,7 +583,7 @@ function PartnersMapSession() {
     setLockedId(null);
     setActiveId(null);
     setPinHoverId(null);
-    setHoveredPin(null);
+    setPinTooltips([]);
     if (ghanaDrilledRef.current) {
       zoomToPartnerRef.current(null);
     }
@@ -757,17 +781,18 @@ function PartnersMapSession() {
         <div className="partners-map-edge-fade-bottom" aria-hidden />
         <div className="partners-map-edge-fade-left" aria-hidden />
         <div className="partners-map-edge-fade-right" aria-hidden />
-        {hoveredPin && (
+        {pinTooltips.map((tip) => (
           <div
+            key={tip.id}
             className="absolute pointer-events-none z-[60]"
             style={{
-              left: `${hoveredPin.x}%`,
-              top: `${hoveredPin.y}%`,
+              left: `${tip.x}%`,
+              top: `${tip.y}%`,
             }}
           >
-            <Tooltip name={hoveredPin.name} address={hoveredPin.address} />
+            <Tooltip name={tip.name} address={tip.address} />
           </div>
-        )}
+        ))}
       </div>
 
       {/* Marquee */}
