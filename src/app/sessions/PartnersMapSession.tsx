@@ -14,6 +14,23 @@ import am5geodata_worldLow from "@amcharts/amcharts5-geodata/worldLow";
 import am5geodata_ghanaLow from "@amcharts/amcharts5-geodata/ghanaLow";
 import am5themes_Animated from "@amcharts/amcharts5/themes/Animated";
 
+/** Full Ghana bounds — default overview after drill-in. */
+function getGhanaDrillBounds() {
+  return { left: -4.2, right: 2.2, top: 12.0, bottom: 4.0 };
+}
+
+/** Tight bounds around a single partner for hover / click zoom. */
+function getPartnerZoomBounds(partner: { lat: number; lon: number }) {
+  const padLon = 0.2;
+  const padLat = 0.16;
+  return {
+    left: partner.lon - padLon,
+    right: partner.lon + padLon,
+    bottom: partner.lat - padLat,
+    top: partner.lat + padLat,
+  };
+}
+
 
 
 // ─── Tooltip ──────────────────────────────────────────────────────────────────
@@ -55,12 +72,14 @@ const INTERVAL_MS = 3000;
 const TRANSITION_MS = 800;
 
 function PartnersMarqueeInline({
+  marqueeRef,
   activeId,
   onEnter,
   onLeave,
   onTap,
   isPaused,
 }: {
+  marqueeRef?: React.RefObject<HTMLDivElement | null>;
   activeId: number | null;
   onEnter: (id: number) => void;
   onLeave: () => void;
@@ -130,6 +149,7 @@ function PartnersMarqueeInline({
 
   return (
     <div
+      ref={marqueeRef}
       className="w-full py-5 lg:py-[70px] overflow-hidden"
       style={{
         backgroundColor: BG_COLORS[colorIndex],
@@ -138,7 +158,7 @@ function PartnersMarqueeInline({
     >
       <div
         ref={trackRef}
-        className="flex items-center h-16 gap-12! md:gap-16! lg:gap-24! xl:gap-30! will-change-transform"
+        className="flex items-center h-11 md:h-16 gap-12! md:gap-16! lg:gap-24! xl:gap-30! will-change-transform"
         style={{ transition: "none" }}
       >
         {scrollingPartners.map((partner, index) => {
@@ -161,15 +181,17 @@ function PartnersMarqueeInline({
                 <div className="w-3 h-3 rotate-45 bg-white/30" />
               )}
               {partner.logo ? (
-                <div className="relative flex items-center">
+                <div
+                  className="relative flex items-center"
+                  style={{ ["--logo-h" as string]: `${partner.logoHeight}px` }}
+                >
                   <Image
                     src={partner.logo}
                     alt={partner.name}
                     width={0}
                     height={0}
                     sizes="200px"
-                    style={{ height: `${partner.logoHeight}px`, width: "auto" }}
-                    className={`object-contain ${
+                    className={`partners-marquee-logo object-contain ${
                       partner.noInvert ? "" : "brightness-0 invert"
                     }`}
                     loading="eager"
@@ -198,9 +220,13 @@ function PartnersMarqueeInline({
 function PartnersMapSession() {
   const [activeId, setActiveId] = useState<number | null>(null);
   const [lockedId, setLockedId] = useState<number | null>(null);
+  const [pinHoverId, setPinHoverId] = useState<number | null>(null);
   const [startTextAnimation, setStartTextAnimation] = useState(false);
   const [startSubtextAnimation, setStartSubtextAnimation] = useState(false);
   const visibleId = lockedId ?? activeId;
+  const tooltipPartnerId = lockedId ?? pinHoverId ?? activeId;
+  /** Marquee hover + click lock zoom; pin hover does not. */
+  const zoomTargetId = lockedId ?? activeId;
   const [hoveredPin, setHoveredPin] = useState<{
     name: string;
     address: string;
@@ -216,6 +242,20 @@ function PartnersMapSession() {
   const worldPinsRef = useRef<am5map.MapPointSeries | null>(null);
   const ghanaPinsRef = useRef<am5map.MapPointSeries | null>(null);
   const bulletContainersRef = useRef<Map<number, am5.Container>>(new Map());
+  const ghanaDrilledRef = useRef(false);
+  const zoomToPartnerRef = useRef<(id: number | null) => void>(() => {});
+  const deselectPartnerRef = useRef<() => void>(() => {});
+  const pinClickJustRef = useRef(false);
+  const lockedIdRef = useRef<number | null>(null);
+  const pinHoverIdRef = useRef<number | null>(null);
+  const activeIdRef = useRef<number | null>(null);
+  const onGhanaDrilledRef = useRef<(() => void) | null>(null);
+  const pinHitRefs = useRef<Map<number, HTMLButtonElement>>(new Map());
+  const [mapInteractive, setMapInteractive] = useState(false);
+  lockedIdRef.current = lockedId;
+  pinHoverIdRef.current = pinHoverId;
+  activeIdRef.current = activeId;
+  onGhanaDrilledRef.current = () => setMapInteractive(true);
 
   // ── amCharts 5 drill-down map ─────────────────────────────────────────────
   useEffect(() => {
@@ -235,21 +275,33 @@ function PartnersMapSession() {
       am5.Rectangle.new(root, { fillOpacity: 0, strokeOpacity: 0 })
     );
 
-    // ── Chart — user interaction locked; only programmatic zoom allowed ────
+    // ── Chart — display only; pins are HTML overlays so page scroll is never blocked ────
     const chart = root.container.children.push(
       am5map.MapChart.new(root, {
         projection: am5map.geoNaturalEarth1(),
         panX: "none",
         panY: "none",
+        wheelX: "none",
         wheelY: "none",
+        wheelable: false,
         pinchZoom: false,
         maxZoomLevel: 64,
       })
     );
     chart.get("background")?.setAll({ fillOpacity: 0, strokeOpacity: 0 });
+    chart.setAll({
+      paddingTop: 0,
+      paddingBottom: 0,
+      paddingLeft: 0,
+      paddingRight: 0,
+      interactive: false,
+      interactiveChildren: false,
+    });
+    chart.chartContainer.setAll({ interactive: false, interactiveChildren: false });
+    chart.seriesContainer?.setAll({ interactive: false, interactiveChildren: false });
     chartRef.current = chart;
 
-    // ── Shared bullet factory ─────────────────────────────────────────────
+    // ── Shared bullet factory (visual only — clicks handled by HTML overlay) ──
     const makeBullet = (
       _rt: am5.Root,
       _sr: am5.Series,
@@ -261,13 +313,10 @@ function PartnersMapSession() {
         address?: string;
         partnerId?: number;
       };
-      const pinName = ctx.name ?? ctx.title ?? "";
-      const pinAddress = ctx.address ?? "";
       const partnerId = ctx.partnerId;
 
       const container = am5.Container.new(root, {
-        cursorOverStyle: "pointer",
-        interactive: true,
+        interactive: false,
       });
       container.states.create("hover", { scale: 1.5 });
 
@@ -300,16 +349,6 @@ function PartnersMapSession() {
           strokeWidth: 2,
         })
       );
-      container.events.on("pointerover", () => {
-        const pos = container.toGlobal({ x: 0, y: 0 });
-        setHoveredPin({
-          name: pinName,
-          address: pinAddress,
-          x: (pos.x / el.offsetWidth) * 100,
-          y: (pos.y / el.offsetHeight) * 100,
-        });
-      });
-      container.events.on("pointerout", () => setHoveredPin(null));
       if (partnerId !== undefined) bulletContainers.set(partnerId, container);
       return am5.Bullet.new(root, { sprite: container });
     };
@@ -326,6 +365,7 @@ function PartnersMapSession() {
       strokeWidth: 0.5,
       interactive: false,
     });
+    worldSeries.setAll({ interactive: false, interactiveChildren: false });
 
     // ── World-view pins (test dataset — visible before drill-in) ──────────
     const worldPins = chart.series.push(
@@ -335,6 +375,7 @@ function PartnersMapSession() {
       })
     );
     worldPinsRef.current = worldPins;
+    worldPins.setAll({ interactive: false, interactiveChildren: false });
     worldPins.bullets.push(makeBullet);
     worldPins.data.setAll([]);
 
@@ -353,6 +394,7 @@ function PartnersMapSession() {
       strokeWidth: 0.5,
       interactive: false,
     });
+    countrySeries.setAll({ interactive: false, interactiveChildren: false });
 
     // ── Ghana partner pins (visible only in country view) ─────────────────
     const ghanaPins = chart.series.push(
@@ -363,6 +405,7 @@ function PartnersMapSession() {
       })
     );
     ghanaPinsRef.current = ghanaPins;
+    ghanaPins.setAll({ interactive: false, interactiveChildren: false });
     ghanaPins.bullets.push(makeBullet);
     ghanaPins.data.setAll(
       PARTNERS.map((p) => ({
@@ -386,10 +429,28 @@ function PartnersMapSession() {
         setTimeout(() => {
           countrySeries.show();
           ghanaPins.show();
-          chart.zoomToGeoBounds(
-            { left: -4.2, right: 2.2, top: 12.0, bottom: 4.0 },
-            1400
-          );
+          try {
+            chart.zoomToGeoBounds(getGhanaDrillBounds(), 1400);
+          } catch {
+            chart.zoomToGeoBounds(getGhanaDrillBounds(), 1400);
+          }
+          ghanaDrilledRef.current = true;
+          onGhanaDrilledRef.current?.();
+          zoomToPartnerRef.current = (id) => {
+            if (!chartRef.current || !ghanaDrilledRef.current) return;
+            if (id === null) {
+              chart.zoomToGeoBounds(getGhanaDrillBounds(), 800);
+              return;
+            }
+            const partner = PARTNERS.find((p) => p.id === id);
+            if (partner) {
+              chart.zoomToGeoBounds(getPartnerZoomBounds(partner), 700);
+            }
+          };
+          const focusId = lockedIdRef.current;
+          if (focusId !== null) {
+            zoomToPartnerRef.current(focusId);
+          }
         }, 200);
       }, 600);
     };
@@ -415,6 +476,8 @@ function PartnersMapSession() {
 
     return () => {
       ioRef?.disconnect();
+      ghanaDrilledRef.current = false;
+      zoomToPartnerRef.current = () => {};
       root.dispose();
       chartRef.current = null;
       worldSeriesRef.current = null;
@@ -425,11 +488,12 @@ function PartnersMapSession() {
     };
   }, []);
 
-  const sectionRef = useRef<HTMLElement>(null);
-  const lockedIdRef = useRef<number | null>(null);
+  useEffect(() => {
+    if (!ghanaDrilledRef.current) return;
+    zoomToPartnerRef.current(zoomTargetId);
+  }, [zoomTargetId]);
 
-  // Reads refs inside an event-handler callback — not during render, lint-safe.
-  const showMarqueeTooltip = useCallback((id: number | null) => {
+  const updateTooltipPosition = useCallback((id: number | null) => {
     if (id === null) {
       setHoveredPin(null);
       return;
@@ -438,23 +502,87 @@ function PartnersMapSession() {
     const el = chartDivRef.current;
     if (!container || !el || el.offsetWidth === 0) return;
     const pos = container.toGlobal({ x: 0, y: 0 });
-    const x = (pos.x / el.offsetWidth) * 100;
-    const y = (pos.y / el.offsetHeight) * 100;
-    if (x <= 0 || y <= 0) return;
     const partner = PARTNERS.find((p) => p.id === id);
-    if (partner)
-      setHoveredPin({ name: partner.name, address: partner.address, x, y });
+    if (partner) {
+      setHoveredPin({
+        name: partner.name,
+        address: partner.address,
+        x: (pos.x / el.offsetWidth) * 100,
+        y: (pos.y / el.offsetHeight) * 100,
+      });
+    }
+  }, []);
+
+  /** Sync amCharts pin visuals, HTML hit targets, and tooltip positions. */
+  useEffect(() => {
+    if (!mapInteractive) return;
+
+    let rafId = 0;
+    const tick = () => {
+      const el = chartDivRef.current;
+      if (el && el.offsetWidth > 0) {
+        const highlightId =
+          lockedIdRef.current ?? pinHoverIdRef.current ?? activeIdRef.current;
+
+        bulletContainersRef.current.forEach((container, id) => {
+          container.states.apply(highlightId === id ? "hover" : "default");
+          const btn = pinHitRefs.current.get(id);
+          if (!btn) return;
+          const pos = container.toGlobal({ x: 0, y: 0 });
+          btn.style.left = `${(pos.x / el.offsetWidth) * 100}%`;
+          btn.style.top = `${(pos.y / el.offsetHeight) * 100}%`;
+        });
+
+        if (highlightId !== null) {
+          updateTooltipPosition(highlightId);
+        }
+      }
+      rafId = requestAnimationFrame(tick);
+    };
+    tick();
+
+    return () => cancelAnimationFrame(rafId);
+  }, [mapInteractive, updateTooltipPosition]);
+
+  useEffect(() => {
+    if (tooltipPartnerId === null) {
+      setHoveredPin(null);
+    }
+  }, [tooltipPartnerId]);
+
+  const sectionRef = useRef<HTMLElement>(null);
+  const marqueeRef = useRef<HTMLDivElement>(null);
+  const mapContainerRef = useRef<HTMLDivElement>(null);
+
+  const deselectPartner = useCallback(() => {
+    lockedIdRef.current = null;
+    setLockedId(null);
+    setActiveId(null);
+    setPinHoverId(null);
+    setHoveredPin(null);
+    if (ghanaDrilledRef.current) {
+      zoomToPartnerRef.current(null);
+    }
   }, []);
 
   const handleTap = useCallback(
     (id: number) => {
-      const next = lockedIdRef.current === id ? null : id;
-      lockedIdRef.current = next;
-      setLockedId(next);
-      showMarqueeTooltip(next);
+      if (lockedIdRef.current === id) {
+        deselectPartner();
+        return;
+      }
+      lockedIdRef.current = id;
+      setLockedId(id);
+      setActiveId(id);
+      setPinHoverId(id);
+      if (ghanaDrilledRef.current) {
+        zoomToPartnerRef.current(id);
+      }
     },
-    [showMarqueeTooltip]
+    [deselectPartner]
   );
+
+  deselectPartnerRef.current = deselectPartner;
 
   const onHeaderComplete = useCallback(() => {
     setStartSubtextAnimation(true);
@@ -478,14 +606,23 @@ function PartnersMapSession() {
 
   useEffect(() => {
     if (lockedId === null) return;
-    const handleClickOutside = () => {
-      lockedIdRef.current = null;
-      setLockedId(null);
-      setHoveredPin(null);
+
+    const handleClickOutside = (e: MouseEvent) => {
+      if (marqueeRef.current?.contains(e.target as Node)) return;
+      if (mapContainerRef.current?.contains(e.target as Node)) return;
+      deselectPartner();
     };
+
     document.addEventListener("click", handleClickOutside);
     return () => document.removeEventListener("click", handleClickOutside);
-  }, [lockedId]);
+  }, [lockedId, deselectPartner]);
+
+  const handleMapBackgroundClick = useCallback(() => {
+    if (pinClickJustRef.current) return;
+    if (lockedIdRef.current !== null) {
+      deselectPartner();
+    }
+  }, [deselectPartner]);
 
   return (
     <section ref={sectionRef} className="my-[80px] lg:my-[140px]">
@@ -579,17 +716,53 @@ function PartnersMapSession() {
 
       {/* amCharts 5 — world view auto-drills into Ghana on scroll */}
       <div
-        className="mx-auto select-none   w-full  relative"
-        style={{ aspectRatio: "16 / 9", maxHeight: 650 }}
+        ref={mapContainerRef}
+        className="partners-map-container mx-auto w-full relative overflow-hidden mt-[28px] md:mt-[40px]"
+        onClick={handleMapBackgroundClick}
       >
-        <div ref={chartDivRef}  style={{ width: "100%", height: "100%" }} />
+        <div className="partners-map-mask partners-map-chart-layer absolute inset-0">
+          <div ref={chartDivRef} className="h-full w-full" />
+        </div>
+        {mapInteractive && (
+          <div className="absolute inset-0 z-20 pointer-events-none">
+            {PARTNERS.map((partner) => (
+              <button
+                key={partner.id}
+                ref={(node) => {
+                  if (node) pinHitRefs.current.set(partner.id, node);
+                  else pinHitRefs.current.delete(partner.id);
+                }}
+                type="button"
+                aria-label={partner.name}
+                className="partners-map-pin-hit absolute h-11 w-11 -translate-x-1/2 -translate-y-1/2 cursor-pointer rounded-full border-0 bg-transparent p-0 pointer-events-auto"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  pinClickJustRef.current = true;
+                  handleTap(partner.id);
+                  queueMicrotask(() => {
+                    pinClickJustRef.current = false;
+                  });
+                }}
+                onMouseEnter={() => setPinHoverId(partner.id)}
+                onMouseLeave={() => {
+                  if (lockedIdRef.current !== partner.id) {
+                    setPinHoverId(null);
+                  }
+                }}
+              />
+            ))}
+          </div>
+        )}
+        <div className="partners-map-edge-fade-top" aria-hidden />
+        <div className="partners-map-edge-fade-bottom" aria-hidden />
+        <div className="partners-map-edge-fade-left" aria-hidden />
+        <div className="partners-map-edge-fade-right" aria-hidden />
         {hoveredPin && (
           <div
-            className="absolute pointer-events-none"
+            className="absolute pointer-events-none z-[60]"
             style={{
               left: `${hoveredPin.x}%`,
               top: `${hoveredPin.y}%`,
-              zIndex: 50,
             }}
           >
             <Tooltip name={hoveredPin.name} address={hoveredPin.address} />
@@ -599,14 +772,11 @@ function PartnersMapSession() {
 
       {/* Marquee */}
       <PartnersMarqueeInline
+        marqueeRef={marqueeRef}
         activeId={visibleId}
-        onEnter={(id) => {
-          setActiveId(id);
-          if (lockedIdRef.current === null) showMarqueeTooltip(id);
-        }}
+        onEnter={(id) => setActiveId(id)}
         onLeave={() => {
-          setActiveId(null);
-          if (lockedIdRef.current === null) showMarqueeTooltip(null);
+          if (lockedIdRef.current === null) setActiveId(null);
         }}
         onTap={handleTap}
         isPaused={lockedId !== null}

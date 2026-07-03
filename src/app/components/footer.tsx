@@ -140,10 +140,10 @@ function Footer() {
               Join our newsletter for more updates about our Company
             </div>
             <div className="input-and-button flex lg:flex-col lg:gap-4 lg:items-start items-center my-[20] lg:w-full lg:justify-between">
-              <div className="input-bar bg-surface-card-primary bg-surface-card-primary h-[60] w-[250] lg:w-[400] text-center flex justify-center mr-[20]">
+              <div className="input-bar masz-form-field border border-[#E0E0E0] transition-colors duration-200 bg-surface-card-primary h-[60] w-[250] lg:w-[400] text-center flex justify-center mr-[20]">
                 <input
-                  className="w-full h-full focus:outline-none px-4"
-                  type="text"
+                  className="w-full h-full focus:outline-none px-4 bg-transparent text-default-body placeholder-[#CBCBCB]"
+                  type="email"
                   name="email"
                   placeholder="Enter your email"
                 />

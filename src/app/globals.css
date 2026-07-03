@@ -17,6 +17,28 @@ select {
   font-size: max(16px, 1em) !important;
 }
 
+/* MASZ form field — focus ring + autofill styling (primary blue) */
+.masz-form-field:focus-within {
+  border-color: var(--primary-color) !important;
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary-color) 18%, transparent);
+}
+
+.masz-form-field input:-webkit-autofill,
+.masz-form-field input:-webkit-autofill:hover,
+.masz-form-field textarea:-webkit-autofill,
+.masz-form-field textarea:-webkit-autofill:hover {
+  -webkit-text-fill-color: var(--text-default-body) !important;
+  -webkit-box-shadow: 0 0 0 1000px #ffffff inset !important;
+  caret-color: var(--text-default-body);
+  transition: background-color 5000s ease-in-out 0s;
+}
+
+.masz-form-field input:-webkit-autofill:focus,
+.masz-form-field textarea:-webkit-autofill:focus {
+  -webkit-text-fill-color: var(--text-default-body) !important;
+  box-shadow: 0 0 0 1000px #ffffff inset !important;
+}
+
 /* Navbar initial state — CSS variables so the correct width/left are set
    from the very first paint, before any JS hydration runs.
    GSAP takes over these properties after mount. */
@@ -796,6 +818,126 @@ section {
     var(--page-bg, #ffffff) 0%,
     rgba(255, 255, 255, 0) 100%
   );
+}
+
+/* Partners map — edge fade on all four sides */
+.partners-map-container {
+  position: relative;
+  overflow: hidden;
+  background-color: #ffffff;
+  aspect-ratio: 3 / 5;
+  min-height: 420px;
+  max-height: 560px;
+}
+
+@media (min-width: 640px) {
+  .partners-map-container {
+    aspect-ratio: 4 / 5;
+    min-height: 460px;
+    max-height: 620px;
+  }
+}
+
+@media (min-width: 768px) {
+  .partners-map-container {
+    aspect-ratio: 16 / 9;
+    min-height: unset;
+    max-height: 650px;
+  }
+}
+
+/* amCharts canvas must not capture pointer events — scroll passes to the page */
+.partners-map-chart-layer,
+.partners-map-chart-layer * {
+  pointer-events: none !important;
+}
+
+/* Partners marquee — 30% smaller logos on mobile */
+.partners-marquee-logo {
+  height: calc(var(--logo-h) * 0.7);
+  width: auto;
+}
+
+@media (min-width: 768px) {
+  .partners-marquee-logo {
+    height: var(--logo-h);
+  }
+}
+
+/* Fade map pixels at all edges */
+.partners-map-mask {
+  -webkit-mask-image:
+    linear-gradient(to bottom, transparent 0%, #000 10%, #000 90%, transparent 100%),
+    linear-gradient(to right, transparent 0%, #000 8%, #000 92%, transparent 100%);
+  mask-image:
+    linear-gradient(to bottom, transparent 0%, #000 10%, #000 90%, transparent 100%),
+    linear-gradient(to right, transparent 0%, #000 8%, #000 92%, transparent 100%);
+  -webkit-mask-composite: source-in;
+  mask-composite: intersect;
+}
+
+@media (min-width: 768px) {
+  .partners-map-mask {
+    -webkit-mask-image:
+      linear-gradient(to bottom, transparent 0%, #000 14%, #000 86%, transparent 100%),
+      linear-gradient(to right, transparent 0%, #000 10%, #000 90%, transparent 100%);
+    mask-image:
+      linear-gradient(to bottom, transparent 0%, #000 14%, #000 86%, transparent 100%),
+      linear-gradient(to right, transparent 0%, #000 10%, #000 90%, transparent 100%);
+  }
+}
+
+.partners-map-edge-fade-top,
+.partners-map-edge-fade-bottom,
+.partners-map-edge-fade-left,
+.partners-map-edge-fade-right {
+  position: absolute;
+  pointer-events: none;
+  z-index: 30;
+}
+
+.partners-map-edge-fade-top {
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 48px;
+  background: linear-gradient(to bottom, #ffffff 0%, rgba(255, 255, 255, 0) 100%);
+}
+
+.partners-map-edge-fade-bottom {
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 48px;
+  background: linear-gradient(to top, #ffffff 0%, rgba(255, 255, 255, 0) 100%);
+}
+
+.partners-map-edge-fade-left {
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 48px;
+  background: linear-gradient(to right, #ffffff 0%, rgba(255, 255, 255, 0) 100%);
+}
+
+.partners-map-edge-fade-right {
+  top: 0;
+  bottom: 0;
+  right: 0;
+  width: 48px;
+  background: linear-gradient(to left, #ffffff 0%, rgba(255, 255, 255, 0) 100%);
+}
+
+@media (min-width: 768px) {
+  .partners-map-edge-fade-top,
+  .partners-map-edge-fade-bottom {
+    height: 100px;
+  }
+
+  .partners-map-edge-fade-left,
+  .partners-map-edge-fade-right {
+    width: 120px;
+  }
 }
 
 /* Hide scrollbar */

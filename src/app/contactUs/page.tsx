@@ -437,7 +437,7 @@ export default function ContactPage() {
 
             {/* Full Name */}
             <div className="input-group mb-[26px]">
-              <div className="flex items-center gap-2 border px-[14px] lg:px-[22px] py-[12px] lg:py-[17px] transition-colors duration-200 focus-within:!border-[#016BF2]"
+              <div className="masz-form-field flex items-center gap-2 border px-[14px] lg:px-[22px] py-[12px] lg:py-[17px] transition-colors duration-200 focus-within:!border-[#016BF2]"
                   style={{ borderColor: fieldErrors.fullName ? '#EF4444' : '#E0E0E0' }}>
                 <IconUser size={18} className="text-[#777777] flex-shrink-0" />
                 <input
@@ -458,7 +458,7 @@ export default function ContactPage() {
             <div className="flex gap-[15px] flex-col xl:flex-row mb-[26px]">
               {/* Email */}
               <div className="input-group  flex-1">
-                <div className="flex items-center gap-2 border px-[14px] lg:px-[22px] py-[12px] lg:py-[17px] transition-colors duration-200 focus-within:!border-[#016BF2]"
+                <div className="masz-form-field flex items-center gap-2 border px-[14px] lg:px-[22px] py-[12px] lg:py-[17px] transition-colors duration-200 focus-within:!border-[#016BF2]"
                     style={{ borderColor: fieldErrors.email ? '#EF4444' : '#E0E0E0' }}>
                   <IconMail
                     size={18}
@@ -482,7 +482,7 @@ export default function ContactPage() {
 
               {/* Phone — with country code */}
               <div className="input-group flex-1">
-                <div className="flex items-center border py-[12px] lg:py-[17px] overflow-visible relative transition-colors duration-200 focus-within:!border-[#016BF2]"
+                <div className="masz-form-field flex items-center border py-[12px] lg:py-[17px] overflow-visible relative transition-colors duration-200 focus-within:!border-[#016BF2]"
                     style={{ borderColor: fieldErrors.phone ? '#EF4444' : '#E0E0E0' }}>
                   <CountryCodeDropdown
                     value={selectedCountry}
@@ -563,7 +563,7 @@ export default function ContactPage() {
 
             {/* Subject */}
             <div className="input-group mb-[26px]">
-              <div className="flex items-center gap-[10px] border border-[#D5D7DA] px-[24px] py-[17px] focus-within:border-[#016BF2] transition-colors duration-200">
+              <div className="masz-form-field flex items-center gap-[10px] border border-[#D5D7DA] px-[24px] py-[17px] focus-within:border-[#016BF2] transition-colors duration-200">
                 <input
                   type="text"
                   placeholder="Subject"
@@ -578,7 +578,7 @@ export default function ContactPage() {
 
             {/* Message */}
             <div className="input-group  mb-[17px]">
-              <div className="border px-[14px] py-[10px] transition-colors duration-200 focus-within:!border-[#016BF2]"
+              <div className="masz-form-field border px-[14px] py-[10px] transition-colors duration-200 focus-within:!border-[#016BF2]"
                   style={{ borderColor: fieldErrors.message ? '#EF4444' : '#D5D7DA' }}>
                 <textarea
                   placeholder="Type your message..."
