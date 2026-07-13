@@ -144,7 +144,11 @@ export default function LenisProvider({ children }: { children: ReactNode }) {
   // Scroll to top when route changes so new page starts at top and hero animates in once.
   // Refresh ScrollTrigger so all scroll reveals (including Testimonial, FAQ) have correct positions and trigger again on the new page.
   useEffect(() => {
-    lenisRef.current?.scrollTo(0, { immediate: true });
+    if (lenisRef.current) {
+      lenisRef.current.scrollTo(0, { immediate: true });
+    } else {
+      window.scrollTo(0, 0);
+    }
     const tid = setTimeout(() => ScrollTrigger.refresh(), 80);
     return () => clearTimeout(tid);
   }, [pathname]);

@@ -311,9 +311,9 @@ export default function ContactPage() {
   };
 
   return (
-    <section className="w-full">
+    <section className="w-full ">
       {/* ── FORM + IMAGE SECTION ── */}
-      <div className="contact-top-section mx-[24px] xl:mx-[120px] lg:my-[80px]  my-[42px]">
+      <div className="contact-top-section  mx-[24px] xl:mx-[120px] lg:my-[80px]  my-[42px]">
         <div className="md:flex md:gap-[32px] lg:gap-[60px] xl:gap-[100px] md:items-stretch">
           {/* LEFT — image card (desktop only) */}
           <div className="hidden md:block relative w-1/2  px-[36px] py-[39px]  flex-shrink-0 overflow-hidden">
@@ -406,7 +406,7 @@ export default function ContactPage() {
           </div>
 
           {/* RIGHT — form */}
-          <div className="md:w-1/2 h-full my-auto">
+          <div className="md:w-1/2  h-full my-auto">
             {/* Heading */}
             <div className="mb-[24px] lg:mb-[30px]">
               <LineByLineText

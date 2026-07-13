@@ -360,7 +360,7 @@ function Navbar() {
               width={140}
               height={50}
               alt="masz africa logo"
-              style={{ height: 25, width: "auto" }}
+              className={` ${isScrolled ? `h-[35px]`:`h-[25px]`} w-auto`}
             />
           </Link>
 

@@ -1649,7 +1649,9 @@ max-width: 800px;    }
 }
 
 
-
+.input-group  {
+  background-color: white;
+}
 
 
 

@@ -758,7 +758,7 @@ function PartnersMapSession() {
                 }}
                 type="button"
                 aria-label={partner.name}
-                className="partners-map-pin-hit absolute h-11 w-11 -translate-x-1/2 -translate-y-1/2 cursor-pointer rounded-full border-0 bg-transparent p-0 pointer-events-auto"
+                className="partners-map-pin-hit absolute h-[22px] w-[22px] -translate-x-1/2 -translate-y-1/2 cursor-pointer rounded-full border-0 bg-transparent p-0 pointer-events-auto"
                 onClick={(e) => {
                   e.stopPropagation();
                   pinClickJustRef.current = true;
