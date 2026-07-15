@@ -227,7 +227,7 @@ function TestimonialSession() {
               {/* Left fade/vanishing point */}
               <div className="pointer-events-none absolute left-0 top-0 h-full w-24 bg-linear-to-r from-[#f3f3f3] to-transparent" />
               {/* Right fade/vanishing point */}
-              <div className="pointer-events-none absolute right-0 top-0 h-full w-24 bg-linear-to-x from-[#f3f3f3] to-transparent" />
+              <div className="pointer-events-none absolute right-0 top-0 h-full w-24 bg-linear-to-l from-[#f3f3f3] to-transparent" />
             </div>
           </div>
         </div>

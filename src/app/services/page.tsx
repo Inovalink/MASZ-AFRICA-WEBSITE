@@ -21,7 +21,8 @@ export default function Page() {
 
   // Hide tag before first paint so it starts hidden before animating in.
   useLayoutEffect(() => {
-    if (tagRef.current) gsap.set(tagRef.current, { y: 20, opacity: 0, force3D: true });
+    if (tagRef.current)
+      gsap.set(tagRef.current, { y: 20, opacity: 0, force3D: true });
   }, []);
 
   // Wait for the page transition overlay to exit before starting animations.
@@ -74,7 +75,9 @@ export default function Page() {
               style={{ overflow: "hidden" }}
             >
               Strengthening the{" "}
-              <span className="text-primary-default">Global mining backbone</span>
+              <span className="text-primary-default">
+                Global mining backbone
+              </span>
             </HeaderLineByLineAnimation>
           </div>
           <LineByLineText
@@ -85,19 +88,19 @@ export default function Page() {
             className="description text-md-regular  lg:text-2xl-medium text-default-body lg:tracking-tight lg:leading-8"
           >
             At Masz-Africa, we do more than just supply mining products — we
-            become a true operational partner for your business. Our
-            commitment extends beyond delivery: we provide the tools,
-            expertise, and ongoing support necessary to keep your projects
-            running seamlessly. Whether it’s high-quality consumables,
-            specialized equipment, or expert technical consultancy,
-            Masz-Africa is dedicated to ensuring that every aspect of your
-            mining operations is efficient, safe, and productive. We
-            understand that each mining project has unique challenges, which
-            is why our solutions are tailored to meet the specific demands of
-            your site, no matter where you operate across West Africa. With
-            Masz-Africa, you gain more than a supplier — you gain a trusted
-            partner focused on maximizing performance, reducing downtime, and
-            helping your operations achieve their full potential.
+            become a true operational partner for your business. Our commitment
+            extends beyond delivery: we provide the tools, expertise, and
+            ongoing support necessary to keep your projects running seamlessly.
+            Whether it’s high-quality consumables, specialized equipment, or
+            expert technical consultancy, Masz-Africa is dedicated to ensuring
+            that every aspect of your mining operations is efficient, safe, and
+            productive. We are resilient ( We understand that each mining project
+            has unique challenges, which is why our solutions are tailored to
+            meet the specific demands of your site, no matter where you operate
+            across West Africa). With Masz-Africa, you gain more than a supplier
+            — you gain a trusted partner focused on maximizing performance,
+            reducing downtime, and helping your operations achieve their full
+            potential.
           </LineByLineText>
         </div>
       </div>
