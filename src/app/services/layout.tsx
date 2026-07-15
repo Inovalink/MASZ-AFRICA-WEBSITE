@@ -1,5 +1,7 @@
 import type { Metadata } from 'next';
 
+const BASE_URL = 'https://maszgh.com';
+
 export const metadata: Metadata = {
   title: 'Products & Services',
   description:
@@ -19,31 +21,57 @@ export const metadata: Metadata = {
     'field support mining',
   ],
   alternates: {
-    canonical: 'https://maszgh.com/services',
+    canonical: `${BASE_URL}/services`,
   },
   openGraph: {
     title: 'Mining Products & Services | MASZ-Africa Ghana',
     description:
       'Grinding media, activated carbon, steel pipes, gearbox servicing, crusher seals, procurement, and technical consultancy for mines across Ghana and West Africa.',
-    url: 'https://maszgh.com/services',
-    images: [
-      {
-        url: '/homeAssets/Image-4.webp',
-        width: 1200,
-        height: 630,
-        alt: 'MASZ-Africa Mining Products and Services',
-      },
-    ],
+    url: `${BASE_URL}/services`,
   },
   twitter: {
     card: 'summary_large_image',
     title: 'Mining Products & Services | MASZ-Africa Ghana',
     description:
       'Grinding media, activated carbon, steel pipes, gearbox servicing, and more — trusted mining services across Ghana and West Africa.',
-    images: ['/homeAssets/Image-4.webp'],
   },
 };
 
+const servicesPageSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'CollectionPage',
+  name: 'Mining Products & Services — MASZ-Africa',
+  description:
+    'Full range of MASZ-Africa mining products and services for mines across Ghana and West Africa.',
+  url: `${BASE_URL}/services`,
+  provider: {
+    '@type': 'Organization',
+    name: 'MASZ-Africa',
+    url: BASE_URL,
+  },
+};
+
+const servicesBreadcrumb = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: BASE_URL },
+    { '@type': 'ListItem', position: 2, name: 'Products & Services', item: `${BASE_URL}/services` },
+  ],
+};
+
 export default function ServicesLayout({ children }: { children: React.ReactNode }) {
-  return <>{children}</>;
+  return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(servicesPageSchema) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(servicesBreadcrumb) }}
+      />
+      {children}
+    </>
+  );
 }

@@ -1,5 +1,7 @@
 import type { Metadata } from 'next';
 
+const BASE_URL = 'https://maszgh.com';
+
 export const metadata: Metadata = {
   title: 'About Us',
   description:
@@ -15,31 +17,67 @@ export const metadata: Metadata = {
     'West Africa mining supply company',
   ],
   alternates: {
-    canonical: 'https://maszgh.com/aboutUs',
+    canonical: `${BASE_URL}/aboutUs`,
   },
   openGraph: {
     title: 'About MASZ-Africa | Mining Supply & Services Experts, Ghana',
     description:
       'MASZ-Africa is a trusted mining supply and services company headquartered in Tarkwa, Western Region, Ghana. We deliver certified consumables, technical expertise, and reliable support to mines across West Africa.',
-    url: 'https://maszgh.com/aboutUs',
-    images: [
-      {
-        url: '/homeAssets/Image-4.webp',
-        width: 1200,
-        height: 630,
-        alt: 'MASZ-Africa — About Us',
-      },
-    ],
+    url: `${BASE_URL}/aboutUs`,
   },
   twitter: {
     card: 'summary_large_image',
     title: 'About MASZ-Africa | Mining Supply & Services Experts, Ghana',
     description:
       'MASZ-Africa is a trusted mining supply and services company headquartered in Tarkwa, Western Region, Ghana.',
-    images: ['/homeAssets/Image-4.webp'],
   },
 };
 
+const aboutPageSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'AboutPage',
+  name: 'About MASZ-Africa',
+  description:
+    'MASZ-Africa is a trusted mining supply and services company headquartered in Tarkwa, Western Region, Ghana.',
+  url: `${BASE_URL}/aboutUs`,
+  mainEntity: {
+    '@type': 'Organization',
+    name: 'MASZ-Africa',
+    url: BASE_URL,
+    address: {
+      '@type': 'PostalAddress',
+      streetAddress: 'House #17, Breeze Street, GT 353-5495, Community 16, Terno',
+      postOfficeBoxNumber: 'P.O. Box 729',
+      addressLocality: 'Tarkwa',
+      addressRegion: 'Western Region',
+      addressCountry: 'GH',
+    },
+    telephone: '+233244163975',
+    email: 'admin@maszgh.com',
+  },
+};
+
+const aboutBreadcrumb = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: BASE_URL },
+    { '@type': 'ListItem', position: 2, name: 'About Us', item: `${BASE_URL}/aboutUs` },
+  ],
+};
+
 export default function AboutLayout({ children }: { children: React.ReactNode }) {
-  return <>{children}</>;
+  return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(aboutPageSchema) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(aboutBreadcrumb) }}
+      />
+      {children}
+    </>
+  );
 }
