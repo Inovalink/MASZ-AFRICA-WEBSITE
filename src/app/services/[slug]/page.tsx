@@ -3,7 +3,7 @@ import type { Metadata } from 'next';
 import { serviceDetailsTemplate } from '@/app/Data/serviceDetails';
 import ServiceDetailContent from './ServiceDetailContent';
 
-const BASE_URL = 'https://maszgh.com';
+const BASE_URL = 'https://www.maszgh.com';
 
 interface PageProps {
   params: Promise<{ slug: string }>;

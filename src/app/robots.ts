@@ -9,6 +9,6 @@ export default function robots(): MetadataRoute.Robots {
         disallow: ['/api/'],
       },
     ],
-    sitemap: 'https://maszgh.com/sitemap.xml',
+    sitemap: 'https://www.maszgh.com/sitemap.xml',
   };
 }

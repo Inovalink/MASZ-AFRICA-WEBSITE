@@ -17,7 +17,7 @@ const geistMono = Geist_Mono({
   variable: '--font-geist-mono',
 });
 
-const BASE_URL = 'https://maszgh.com';
+const BASE_URL = 'https://www.maszgh.com';
 
 export const metadata: Metadata = {
   metadataBase: new URL(BASE_URL),

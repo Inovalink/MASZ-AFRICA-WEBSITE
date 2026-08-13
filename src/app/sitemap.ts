@@ -1,7 +1,7 @@
 import { MetadataRoute } from 'next';
 import { serviceDetailsTemplate } from './Data/serviceDetails';
 
-const BASE_URL = 'https://maszgh.com';
+const BASE_URL = 'https://www.maszgh.com';
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const now = new Date();
