@@ -425,7 +425,7 @@ export default function ContactPage() {
                 stagger={0.05}
                 className="text-sm-medium lg:text-xl-medium text-default-body mt-[11px]"
               >
-                Our just reach out manually to{" "}
+                Or just reach out manually to{" "}
                 <a
                   href="mailto:admin@maszgh.com"
                   className="text-primary-default underline"
