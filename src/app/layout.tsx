@@ -171,8 +171,47 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={`${geistSans.className} ${geistMono.className}`}>
+    <html
+      lang="en"
+      className={`${geistSans.className} ${geistMono.className}`}
+      style={{ colorScheme: 'only light' }}
+    >
       <head>
+        {/* Light-only site: tell the UA up front so the very first paint (form
+            controls, scrollbars) is never dark-ified by an OS preference. */}
+        <meta name="color-scheme" content="only light" />
+        {/* Run before React: strip any dark-mode marker off the document and keep
+            stripping it, so a browser extension or stray component can never put
+            the site into a dark theme it has no palette for. */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function() {
+                if (typeof document === 'undefined') return;
+                var ATTRS = ['data-theme', 'data-mode', 'data-color-scheme'];
+                function scrub(el) {
+                  if (!el) return;
+                  if (el.classList && el.classList.contains('dark')) el.classList.remove('dark');
+                  for (var i = 0; i < ATTRS.length; i++) {
+                    var v = el.getAttribute(ATTRS[i]);
+                    if (v && v.toLowerCase().indexOf('dark') !== -1) el.setAttribute(ATTRS[i], 'light');
+                  }
+                }
+                function scrubAll() { scrub(document.documentElement); scrub(document.body); }
+                scrubAll();
+                try {
+                  var filter = ['class'].concat(ATTRS);
+                  var mo = new MutationObserver(scrubAll);
+                  mo.observe(document.documentElement, { attributes: true, attributeFilter: filter });
+                  document.addEventListener('DOMContentLoaded', function() {
+                    scrubAll();
+                    if (document.body) mo.observe(document.body, { attributes: true, attributeFilter: filter });
+                  });
+                } catch (e) {}
+              })();
+            `,
+          }}
+        />
         {/* Run before React: clear scroll history on every load so scroll-to-reveal starts fresh */}
         <script
           dangerouslySetInnerHTML={{
