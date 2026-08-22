@@ -64,6 +64,8 @@ export const metadata: Metadata = {
     'mining technical consultancy West Africa',
     'MASZ Africa',
     'MASZ-Africa Ghana',
+    'MASZ Ghana',
+    'MASZ',
     'Tarkwa mining services',
     'Tarkwa mining supplier',
     'Ghana gold mine equipment',
@@ -131,6 +133,9 @@ const organizationSchema = {
   '@context': 'https://schema.org',
   '@type': ['Organization', 'LocalBusiness'],
   name: 'MASZ-Africa',
+  // Brand spellings people actually search for. Teaches Google that these all
+  // refer to the same entity, which helps it resolve navigational queries.
+  alternateName: ['MASZ', 'MASZ Africa', 'MASZ-Africa Ghana', 'maszgh.com', 'MASZ Ghana'],
   url: BASE_URL,
   logo: `${BASE_URL}/maszAssets/website-logo.svg`,
   image: `${BASE_URL}/homeAssets/Image-4.webp`,
@@ -138,7 +143,6 @@ const organizationSchema = {
     'MASZ-Africa supplies certified mining consumables and professional services to mines across Ghana and West Africa, including grinding media, activated carbon, steel pipes, and gearbox maintenance.',
   address: {
     '@type': 'PostalAddress',
-    streetAddress: 'House #17, Breeze Street, GT 353-5495, Community 16, Terno',
     postOfficeBoxNumber: 'P.O. Box 729',
     addressLocality: 'Tarkwa',
     addressRegion: 'Western Region',
@@ -163,6 +167,22 @@ const organizationSchema = {
       { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Technical Consultancy & Field Support' } },
     ],
   },
+};
+
+const websiteSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  name: 'MASZ-Africa',
+  alternateName: ['MASZ', 'MASZ Africa', 'MASZ-Africa Ghana'],
+  url: BASE_URL,
+  description:
+    'Certified mining consumables, grinding media, activated carbon, steel pipes, and technical services for mines across Ghana and West Africa.',
+  publisher: {
+    '@type': 'Organization',
+    name: 'MASZ-Africa',
+    url: BASE_URL,
+  },
+  inLanguage: 'en-GH',
 };
 
 export default function RootLayout({
@@ -231,6 +251,10 @@ export default function RootLayout({
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema) }}
         />
         {/* Google Analytics */}
         {GA_MEASUREMENT_ID && (

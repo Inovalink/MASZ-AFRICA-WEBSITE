@@ -125,7 +125,9 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const plainDescription = stripHtml(service.description).slice(0, 155);
 
   return {
-    title,
+    // `absolute` because the /services layout consumes the root title template,
+    // which otherwise leaves detail pages with a bare, unbranded title.
+    title: { absolute: `${title} | MASZ-Africa` },
     description: plainDescription,
     keywords: SERVICE_KEYWORDS[slug] ?? [],
     alternates: {
