@@ -38,9 +38,9 @@ function Footer() {
       description: (
         <Link
           className="hover:text-[#016BF2] focus:text-[#016BF2]"
-          href="mailto:admin@maszgh.com"
+          href="mailto:info@maszgh.com"
         >
-          admin@maszgh.com
+          info@maszgh.com
         </Link>
       ),
       icon: <Mail size={16} />,

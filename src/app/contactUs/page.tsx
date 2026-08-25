@@ -22,7 +22,7 @@ import { Linkedin } from "lucide-react";
 import Link from "next/link";
 import LineByLineText from "../components/LineByLineText";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:5001';
+const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:5001";
 
 type ContactType = "individual" | "business";
 
@@ -85,7 +85,7 @@ function CountryCodeDropdown({
     if (!value) {
       onChange({ name: "Ghana", dialCode: "+233", code: "GH", flag: "🇬🇭" });
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -115,7 +115,10 @@ function CountryCodeDropdown({
       {/* Trigger */}
       <button
         type="button"
-        onClick={() => { if (!open) loadCountries(); setOpen(!open); }}
+        onClick={() => {
+          if (!open) loadCountries();
+          setOpen(!open);
+        }}
         className="flex items-center gap-[5px] px-[12px] h-full text-sm-medium text-default-body  bg-white"
       >
         <span>{value?.dialCode ?? "+..."}</span>
@@ -202,8 +205,10 @@ export default function ContactPage() {
     message: "",
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error' | 'validation'>('idle');
-  const [submitMessage, setSubmitMessage] = useState('');
+  const [submitStatus, setSubmitStatus] = useState<
+    "idle" | "success" | "error" | "validation"
+  >("idle");
+  const [submitMessage, setSubmitMessage] = useState("");
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
 
   // Hero text waits for the page transition overlay to exit before starting.
@@ -214,8 +219,8 @@ export default function ContactPage() {
       const id = requestAnimationFrame(() => requestAnimationFrame(start));
       return () => cancelAnimationFrame(id as number);
     }
-    window.addEventListener('masz:page-ready', start, { once: true });
-    return () => window.removeEventListener('masz:page-ready', start);
+    window.addEventListener("masz:page-ready", start, { once: true });
+    return () => window.removeEventListener("masz:page-ready", start);
   }, []);
 
   useEffect(() => {
@@ -224,51 +229,64 @@ export default function ContactPage() {
 
     // Mount iframes well before the section is visible so Maps JS loads quietly
     const ioMap = new IntersectionObserver(
-      ([entry]) => { if (entry.isIntersecting) { setShowMap(true); ioMap.disconnect(); } },
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setShowMap(true);
+          ioMap.disconnect();
+        }
+      },
       { rootMargin: "1200px" }
     );
     ioMap.observe(el);
 
     // Trigger text animations when section actually enters the viewport
     const ioReveal = new IntersectionObserver(
-      ([entry]) => { if (entry.isIntersecting) { setLocationRevealed(true); ioReveal.disconnect(); } },
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setLocationRevealed(true);
+          ioReveal.disconnect();
+        }
+      },
       { threshold: 0.1 }
     );
     ioReveal.observe(el);
 
-    return () => { ioMap.disconnect(); ioReveal.disconnect(); };
+    return () => {
+      ioMap.disconnect();
+      ioReveal.disconnect();
+    };
   }, []);
 
   const validateForm = (): boolean => {
     const errors: Record<string, string> = {};
 
     if (!formData.fullName.trim()) {
-      errors.fullName = 'Full name is required.';
+      errors.fullName = "Full name is required.";
     } else if (formData.fullName.trim().length < 2) {
-      errors.fullName = 'Name must be at least 2 characters.';
+      errors.fullName = "Name must be at least 2 characters.";
     }
 
     if (!formData.email.trim()) {
-      errors.email = 'Email address is required.';
+      errors.email = "Email address is required.";
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email.trim())) {
-      errors.email = 'Please enter a valid email address.';
+      errors.email = "Please enter a valid email address.";
     }
 
     if (formData.phone && !/^[\d\s()\-]{6,20}$/.test(formData.phone.trim())) {
-      errors.phone = 'Please enter a valid phone number.';
+      errors.phone = "Please enter a valid phone number.";
     }
 
     if (!formData.message.trim()) {
-      errors.message = 'Message is required.';
+      errors.message = "Message is required.";
     } else if (formData.message.trim().length < 10) {
-      errors.message = 'Message must be at least 10 characters.';
+      errors.message = "Message must be at least 10 characters.";
     }
 
     setFieldErrors(errors);
 
     if (Object.keys(errors).length > 0) {
-      setSubmitStatus('validation');
-      setSubmitMessage('Please fix the highlighted fields.');
+      setSubmitStatus("validation");
+      setSubmitMessage("Please fix the highlighted fields.");
       return false;
     }
 
@@ -276,35 +294,51 @@ export default function ContactPage() {
   };
 
   const handleSubmit = async () => {
-    setSubmitStatus('idle');
-    setSubmitMessage('');
+    setSubmitStatus("idle");
+    setSubmitMessage("");
     setFieldErrors({});
 
     if (!validateForm()) return;
 
     setIsSubmitting(true);
     try {
-      const phone = formData.phone ? `${selectedCountry?.dialCode ?? ''}${formData.phone}` : undefined;
+      const phone = formData.phone
+        ? `${selectedCountry?.dialCode ?? ""}${formData.phone}`
+        : undefined;
       const res = await fetch(`${API_URL}/api/contact`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           fullName: formData.fullName,
           email: formData.email,
           phoneNumber: phone,
-          subject: formData.subject || 'General Inquiry',
+          subject: formData.subject || "General Inquiry",
           message: formData.message,
-          contactingAs: contactType === 'individual' ? 'INDIVIDUAL' : 'BUSINESS',
+          contactingAs:
+            contactType === "individual" ? "INDIVIDUAL" : "BUSINESS",
         }),
       });
       const json = await res.json();
-      if (!res.ok) throw new Error(json.error?.message ?? 'Submission failed');
-      setSubmitStatus('success');
-      setSubmitMessage(json.message ?? "Thank you! We'll get back to you within 24\u201348 hours.");
-      setFormData({ fullName: '', email: '', phone: '', subject: '', message: '' });
+      if (!res.ok) throw new Error(json.error?.message ?? "Submission failed");
+      setSubmitStatus("success");
+      setSubmitMessage(
+        json.message ??
+          "Thank you! We'll get back to you within 24\u201348 hours."
+      );
+      setFormData({
+        fullName: "",
+        email: "",
+        phone: "",
+        subject: "",
+        message: "",
+      });
     } catch (err: unknown) {
-      setSubmitStatus('error');
-      setSubmitMessage(err instanceof Error ? err.message : 'Something went wrong. Please try again.');
+      setSubmitStatus("error");
+      setSubmitMessage(
+        err instanceof Error
+          ? err.message
+          : "Something went wrong. Please try again."
+      );
     } finally {
       setIsSubmitting(false);
     }
@@ -427,18 +461,22 @@ export default function ContactPage() {
               >
                 Or just reach out manually to{" "}
                 <a
-                  href="mailto:admin@maszgh.com"
+                  href="mailto:info@maszgh.com"
                   className="text-primary-default underline"
                 >
-                  admin@maszgh.com
+                  info@maszgh.com
                 </a>
               </LineByLineText>
             </div>
 
             {/* Full Name */}
             <div className="input-group mb-[26px]">
-              <div className="masz-form-field flex items-center gap-2 border px-[14px] lg:px-[22px] py-[12px] lg:py-[17px] transition-colors duration-200 focus-within:!border-[#016BF2]"
-                  style={{ borderColor: fieldErrors.fullName ? '#EF4444' : '#E0E0E0' }}>
+              <div
+                className="masz-form-field flex items-center gap-2 border px-[14px] lg:px-[22px] py-[12px] lg:py-[17px] transition-colors duration-200 focus-within:!border-[#016BF2]"
+                style={{
+                  borderColor: fieldErrors.fullName ? "#EF4444" : "#E0E0E0",
+                }}
+              >
                 <IconUser size={18} className="text-[#777777] flex-shrink-0" />
                 <input
                   type="text"
@@ -446,20 +484,30 @@ export default function ContactPage() {
                   value={formData.fullName}
                   onChange={(e) => {
                     setFormData({ ...formData, fullName: e.target.value });
-                    if (fieldErrors.fullName) setFieldErrors((prev) => { const { fullName, ...rest } = prev; return rest; });
+                    if (fieldErrors.fullName)
+                      setFieldErrors((prev) => {
+                        const { fullName, ...rest } = prev;
+                        return rest;
+                      });
                   }}
                   className="w-full text-sm-medium md:text-md-medium  lg:text-lg-medium text-default-body placeholder-[#CBCBCB] outline-none bg-transparent"
                 />
               </div>
               {fieldErrors.fullName && (
-                <p className="text-[#EF4444] text-[12px] mt-[6px] ml-[2px]">{fieldErrors.fullName}</p>
+                <p className="text-[#EF4444] text-[12px] mt-[6px] ml-[2px]">
+                  {fieldErrors.fullName}
+                </p>
               )}
             </div>
             <div className="flex gap-[15px] flex-col xl:flex-row mb-[26px]">
               {/* Email */}
               <div className="input-group  flex-1">
-                <div className="masz-form-field flex items-center gap-2 border px-[14px] lg:px-[22px] py-[12px] lg:py-[17px] transition-colors duration-200 focus-within:!border-[#016BF2]"
-                    style={{ borderColor: fieldErrors.email ? '#EF4444' : '#E0E0E0' }}>
+                <div
+                  className="masz-form-field flex items-center gap-2 border px-[14px] lg:px-[22px] py-[12px] lg:py-[17px] transition-colors duration-200 focus-within:!border-[#016BF2]"
+                  style={{
+                    borderColor: fieldErrors.email ? "#EF4444" : "#E0E0E0",
+                  }}
+                >
                   <IconMail
                     size={18}
                     className="text-[#777777] flex-shrink-0"
@@ -470,20 +518,30 @@ export default function ContactPage() {
                     value={formData.email}
                     onChange={(e) => {
                       setFormData({ ...formData, email: e.target.value });
-                      if (fieldErrors.email) setFieldErrors((prev) => { const { email, ...rest } = prev; return rest; });
+                      if (fieldErrors.email)
+                        setFieldErrors((prev) => {
+                          const { email, ...rest } = prev;
+                          return rest;
+                        });
                     }}
                     className=" w-full text-sm-medium md:text-md-medium  lg:text-lg-medium text-default-body placeholder-[#CBCBCB] outline-none bg-transparent"
                   />
                 </div>
                 {fieldErrors.email && (
-                  <p className="text-[#EF4444] text-[12px] mt-[6px] ml-[2px]">{fieldErrors.email}</p>
+                  <p className="text-[#EF4444] text-[12px] mt-[6px] ml-[2px]">
+                    {fieldErrors.email}
+                  </p>
                 )}
               </div>
 
               {/* Phone — with country code */}
               <div className="input-group flex-1">
-                <div className="masz-form-field flex items-center border py-[12px] lg:py-[17px] overflow-visible relative transition-colors duration-200 focus-within:!border-[#016BF2]"
-                    style={{ borderColor: fieldErrors.phone ? '#EF4444' : '#E0E0E0' }}>
+                <div
+                  className="masz-form-field flex items-center border py-[12px] lg:py-[17px] overflow-visible relative transition-colors duration-200 focus-within:!border-[#016BF2]"
+                  style={{
+                    borderColor: fieldErrors.phone ? "#EF4444" : "#E0E0E0",
+                  }}
+                >
                   <CountryCodeDropdown
                     value={selectedCountry}
                     onChange={setSelectedCountry}
@@ -494,13 +552,19 @@ export default function ContactPage() {
                     value={formData.phone}
                     onChange={(e) => {
                       setFormData({ ...formData, phone: e.target.value });
-                      if (fieldErrors.phone) setFieldErrors((prev) => { const { phone, ...rest } = prev; return rest; });
+                      if (fieldErrors.phone)
+                        setFieldErrors((prev) => {
+                          const { phone, ...rest } = prev;
+                          return rest;
+                        });
                     }}
                     className="flex-1 pr-[12px] w-full text-sm-medium md:text-md-medium lg:text-lg-medium text-default-body placeholder-[#CBCBCB] outline-none bg-transparent"
                   />
                 </div>
                 {fieldErrors.phone && (
-                  <p className="text-[#EF4444] text-[12px] mt-[6px] ml-[2px]">{fieldErrors.phone}</p>
+                  <p className="text-[#EF4444] text-[12px] mt-[6px] ml-[2px]">
+                    {fieldErrors.phone}
+                  </p>
                 )}
               </div>
             </div>
@@ -578,8 +642,12 @@ export default function ContactPage() {
 
             {/* Message */}
             <div className="input-group  mb-[17px]">
-              <div className="masz-form-field border px-[14px] py-[10px] transition-colors duration-200 focus-within:!border-[#016BF2]"
-                  style={{ borderColor: fieldErrors.message ? '#EF4444' : '#D5D7DA' }}>
+              <div
+                className="masz-form-field border px-[14px] py-[10px] transition-colors duration-200 focus-within:!border-[#016BF2]"
+                style={{
+                  borderColor: fieldErrors.message ? "#EF4444" : "#D5D7DA",
+                }}
+              >
                 <textarea
                   placeholder="Type your message..."
                   maxLength={300}
@@ -587,7 +655,11 @@ export default function ContactPage() {
                   value={formData.message}
                   onChange={(e) => {
                     setFormData({ ...formData, message: e.target.value });
-                    if (fieldErrors.message) setFieldErrors((prev) => { const { message, ...rest } = prev; return rest; });
+                    if (fieldErrors.message)
+                      setFieldErrors((prev) => {
+                        const { message, ...rest } = prev;
+                        return rest;
+                      });
                   }}
                   className="w-full text-sm-medium md:text-md-medium lg:text-lg-medium text-default-body placeholder-[#CBCBCB] outline-none bg-transparent resize-none"
                 />
@@ -599,7 +671,9 @@ export default function ContactPage() {
                 </div>
               </div>
               {fieldErrors.message && (
-                <p className="text-[#EF4444] text-[12px] mt-[6px] ml-[2px]">{fieldErrors.message}</p>
+                <p className="text-[#EF4444] text-[12px] mt-[6px] ml-[2px]">
+                  {fieldErrors.message}
+                </p>
               )}
             </div>
 
@@ -609,21 +683,21 @@ export default function ContactPage() {
               disabled={isSubmitting}
               className="w-full bg-primary-default text-white text-sm-medium lg:text-md-medium py-[14px] lg:py-[19px] uppercase tracking-wider bg-[#016BF2] transition-colors duration-300 disabled:opacity-60 disabled:cursor-not-allowed"
             >
-              {isSubmitting ? 'SENDING...' : 'SEND MESSAGE'}
+              {isSubmitting ? "SENDING..." : "SEND MESSAGE"}
             </button>
 
             {/* Subtle status text below button */}
-            {submitStatus === 'success' && (
+            {submitStatus === "success" && (
               <p className="mt-[12px] text-[13px] text-[#059669] text-center">
                 ✓ {submitMessage}
               </p>
             )}
-            {submitStatus === 'error' && (
+            {submitStatus === "error" && (
               <p className="mt-[12px] text-[13px] text-[#DC2626] text-center">
                 {submitMessage}
               </p>
             )}
-            {submitStatus === 'validation' && (
+            {submitStatus === "validation" && (
               <p className="mt-[12px] text-[13px] text-[#DC2626] text-center">
                 Please fix the errors above and try again.
               </p>
@@ -632,14 +706,140 @@ export default function ContactPage() {
         </div>
       </div>
 
-     {/* ── MAP + LOCATION SECTION ── */}
-        <div ref={mapSectionRef} id="talk-to-us" className="contact-bottom-section relative bg-[#016BF2] overflow-hidden mt-[60px] lg:mt-[100px]">
-          {/* SVG dot pattern background */}
-          <Image src="/contactBg.svg" alt="Background pattern" width={456} height={670} className=" hidden lg:block absolute right-0" />
+      {/* ── MAP + LOCATION SECTION ── */}
+      <div
+        ref={mapSectionRef}
+        id="talk-to-us"
+        className="contact-bottom-section relative bg-[#016BF2] overflow-hidden mt-[60px] lg:mt-[100px]"
+      >
+        {/* SVG dot pattern background */}
+        <Image
+          src="/contactBg.svg"
+          alt="Background pattern"
+          width={456}
+          height={670}
+          className=" hidden lg:block absolute right-0"
+        />
 
-          <div className="relative z-10 mx-[24px] xl:mx-[120px] min-[1920px]:mx-[200px] py-[40px] lg:py-[60px]">
-            {/* Mobile/Tablet: map on top (below lg) */}
-            <div className="lg:hidden w-full h-[280px] overflow-hidden mb-[32px]">
+        <div className="relative z-10 mx-[24px] xl:mx-[120px] min-[1920px]:mx-[200px] py-[40px] lg:py-[60px]">
+          {/* Mobile/Tablet: map on top (below lg) */}
+          <div className="lg:hidden w-full h-[280px] overflow-hidden mb-[32px]">
+            {showMap && (
+              <iframe
+                title="MASZ Africa Head Office"
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3970.7!2d-1.9947!3d5.3054!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNcKwMTgnMTkuNCJOIDHCsDU5JzQxLjAiVw!5e0!3m2!1sen!2sgh!4v1234567890"
+                width="100%"
+                height="100%"
+                style={{ border: 0 }}
+                referrerPolicy="no-referrer-when-downgrade"
+              />
+            )}
+          </div>
+
+          <div className="flex flex-col lg:flex-row lg:gap-[40px] xl:gap-[60px] lg:items-stretch">
+            {/* LEFT — heading + cards */}
+            <div className="flex-shrink-0 lg:w-[458px]">
+              <LineByLineText
+                startAnimation={locationRevealed}
+                delay={0.5}
+                duration={0.35}
+                stagger={0.07}
+                className="text-2xl-regular text-[#8DBCF9] md:text-3xl-medium lg:text-4xl-medium tracking-tight   leading-tight mb-[32px] lg:mb-[67px]"
+              >
+                We Are Based In
+                <br />
+                <span className="font-medium text-white">
+                  Western Region,
+                  <br />
+                  Ghana
+                </span>
+              </LineByLineText>
+
+              <div className="flex flex-col gap-[12px] lg:gap-[14px]">
+                {/* Street address */}
+                <div className="flex items-center cursor-pointer lg:max-w-[363px] group transition-colors duration-200 ease-in-out hover:bg-white focus:bg-white gap-[14px] bg-[#4693F6] px-[20px] lg:px-[24px] py-[16px] lg:py-[20px]">
+                  <div className="flex-shrink-0 w-[36px] group-hover:bg-[#016BF2] group-focus:bg-[#016BF2] h-[36px] rounded-full bg-white flex items-center justify-center">
+                    <IconMapPin
+                      size={16}
+                      className="text-[#016BF2] group-hover:text-white group-focus:text-white"
+                    />
+                  </div>
+                  <LineByLineText
+                    startAnimation={locationRevealed}
+                    delay={0.7}
+                    duration={0.3}
+                    stagger={0.06}
+                    className="text-sm-medium md:text-md-medium lg:text-lg-medium text-white group-hover:text-[#016BF2] group-focus:text-[#016BF2] leading-snug"
+                  >
+                    House #17, Breeze Street,
+                    <br />
+                    GT 353-5495, Community 16, Terno
+                  </LineByLineText>
+                </div>
+
+                {/* PO Box */}
+                <div className="flex items-center lg:max-w-[363px] group cursor-pointer transition-colors duration-200 ease-in-out hover:bg-white focus:bg-white gap-[14px] bg-[#4693F6] px-[20px] lg:px-[24px] py-[16px] lg:py-[20px]">
+                  <div className="flex-shrink-0 w-[36px] group-hover:bg-[#016BF2] h-[36px] rounded-full bg-white flex items-center justify-center">
+                    <IconMail
+                      size={16}
+                      className="text-[#016BF2] group-hover:text-white group-focus:text-white"
+                    />
+                  </div>
+                  <LineByLineText
+                    startAnimation={locationRevealed}
+                    delay={0.7}
+                    duration={0.3}
+                    stagger={0.06}
+                    className="text-sm-medium md:text-md-medium lg:text-lg-medium text-white group-hover:text-[#016BF2] group-focus:text-[#016BF2] leading-snug"
+                  >
+                    P.O. Box 729, Tarkwa,
+                    <br />
+                    Western Region, Ghana
+                  </LineByLineText>
+                </div>
+
+                {/* Phone numbers */}
+                <div className="flex items-center lg:max-w-[363px] group cursor-pointer transition-colors duration-200 ease-in-out hover:bg-white focus:bg-white gap-[14px] bg-[#4693F6] px-[20px] lg:px-[24px] py-[16px] lg:py-[20px]">
+                  <div className="flex-shrink-0 w-[36px] group-hover:bg-[#016BF2] h-[36px] rounded-full bg-white flex items-center justify-center">
+                    <IconPhone
+                      size={16}
+                      className="text-[#016BF2] group-hover:text-white group-focus:text-white"
+                    />
+                  </div>
+                  <div className="flex flex-col gap-[2px]">
+                    <LineByLineText
+                      startAnimation={locationRevealed}
+                      delay={0.7}
+                      duration={0.3}
+                      stagger={0.06}
+                      className="text-sm-medium text-white flex flex-col md:text-md-medium lg:text-lg-medium"
+                    >
+                      <Link
+                        href="tel:+233507256956"
+                        className="group-hover:text-[#016BF2] group-focus:text-[#016BF2] hover:underline block"
+                      >
+                        +233 50 725 6956
+                      </Link>
+                      <Link
+                        href="tel:+233556164749"
+                        className="group-hover:text-[#016BF2] group-focus:text-[#016BF2] hover:underline block"
+                      >
+                        +233 55 616 4749
+                      </Link>
+                      <Link
+                        href="tel:+233244171179"
+                        className="group-hover:text-[#016BF2] group-focus:text-[#016BF2] hover:underline block"
+                      >
+                        +233 24 417 1179
+                      </Link>
+                    </LineByLineText>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* RIGHT — Google Map (desktop only, lg+) */}
+            <div className="hidden lg:block flex-1 min-h-[400px] overflow-hidden">
               {showMap && (
                 <iframe
                   title="MASZ Africa Head Office"
@@ -651,108 +851,9 @@ export default function ContactPage() {
                 />
               )}
             </div>
-
-            <div className="flex flex-col lg:flex-row lg:gap-[40px] xl:gap-[60px] lg:items-stretch">
-              {/* LEFT — heading + cards */}
-              <div className="flex-shrink-0 lg:w-[458px]">
-                <LineByLineText
-                  startAnimation={locationRevealed}
-                  delay={0.5}
-                  duration={0.35}
-                  stagger={0.07}
-                  className="text-2xl-regular text-[#8DBCF9] md:text-3xl-medium lg:text-4xl-medium tracking-tight   leading-tight mb-[32px] lg:mb-[67px]"
-                >
-                  We Are Based In
-                  <br />
-                  <span className="font-medium text-white">
-                    Western Region,
-                    <br />
-                    Ghana
-                  </span>
-                </LineByLineText>
-
-                <div className="flex flex-col gap-[12px] lg:gap-[14px]">
-                  {/* Street address */}
-                  <div className="flex items-center cursor-pointer lg:max-w-[363px] group transition-colors duration-200 ease-in-out hover:bg-white focus:bg-white gap-[14px] bg-[#4693F6] px-[20px] lg:px-[24px] py-[16px] lg:py-[20px]">
-                    <div className="flex-shrink-0 w-[36px] group-hover:bg-[#016BF2] group-focus:bg-[#016BF2] h-[36px] rounded-full bg-white flex items-center justify-center">
-                      <IconMapPin size={16} className="text-[#016BF2] group-hover:text-white group-focus:text-white" />
-                    </div>
-                    <LineByLineText
-                      startAnimation={locationRevealed}
-                      delay={0.7}
-                      duration={0.3}
-                      stagger={0.06}
-                      className="text-sm-medium md:text-md-medium lg:text-lg-medium text-white group-hover:text-[#016BF2] group-focus:text-[#016BF2] leading-snug"
-                    >
-                      House #17, Breeze Street,
-                      <br />
-                      GT 353-5495, Community 16, Terno
-                    </LineByLineText>
-                  </div>
-
-                  {/* PO Box */}
-                  <div className="flex items-center lg:max-w-[363px] group cursor-pointer transition-colors duration-200 ease-in-out hover:bg-white focus:bg-white gap-[14px] bg-[#4693F6] px-[20px] lg:px-[24px] py-[16px] lg:py-[20px]">
-                    <div className="flex-shrink-0 w-[36px] group-hover:bg-[#016BF2] h-[36px] rounded-full bg-white flex items-center justify-center">
-                      <IconMail size={16} className="text-[#016BF2] group-hover:text-white group-focus:text-white" />
-                    </div>
-                    <LineByLineText
-                      startAnimation={locationRevealed}
-                      delay={0.7}
-                      duration={0.3}
-                      stagger={0.06}
-                      className="text-sm-medium md:text-md-medium lg:text-lg-medium text-white group-hover:text-[#016BF2] group-focus:text-[#016BF2] leading-snug"
-                    >
-                      P.O. Box 729, Tarkwa,
-                      <br />
-                      Western Region, Ghana
-                    </LineByLineText>
-                  </div>
-
-                  {/* Phone numbers */}
-                  <div className="flex items-center lg:max-w-[363px] group cursor-pointer transition-colors duration-200 ease-in-out hover:bg-white focus:bg-white gap-[14px] bg-[#4693F6] px-[20px] lg:px-[24px] py-[16px] lg:py-[20px]">
-                    <div className="flex-shrink-0 w-[36px] group-hover:bg-[#016BF2] h-[36px] rounded-full bg-white flex items-center justify-center">
-                      <IconPhone size={16} className="text-[#016BF2] group-hover:text-white group-focus:text-white" />
-                    </div>
-                    <div className="flex flex-col gap-[2px]">
-                      <LineByLineText
-                        startAnimation={locationRevealed}
-                        delay={0.7}
-                        duration={0.3}
-                        stagger={0.06}
-                        className="text-sm-medium text-white flex flex-col md:text-md-medium lg:text-lg-medium"
-                      >
-                        <Link href="tel:+233507256956" className="group-hover:text-[#016BF2] group-focus:text-[#016BF2] hover:underline block">
-                        +233 50 725 6956
-                        </Link>                   
-                        <Link href="tel:+233556164749" className="group-hover:text-[#016BF2] group-focus:text-[#016BF2] hover:underline block">
-                        +233 55 616 4749
-                        </Link>
-                        <Link href="tel:+233244171179" className="group-hover:text-[#016BF2] group-focus:text-[#016BF2] hover:underline block">
-                        +233 24 417 1179
-                        </Link>
-                      </LineByLineText>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* RIGHT — Google Map (desktop only, lg+) */}
-              <div className="hidden lg:block flex-1 min-h-[400px] overflow-hidden">
-                {showMap && (
-                  <iframe
-                    title="MASZ Africa Head Office"
-                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3970.7!2d-1.9947!3d5.3054!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNcKwMTgnMTkuNCJOIDHCsDU5JzQxLjAiVw!5e0!3m2!1sen!2sgh!4v1234567890"
-                    width="100%"
-                    height="100%"
-                    style={{ border: 0 }}
-                    referrerPolicy="no-referrer-when-downgrade"
-                  />
-                )}
-              </div>
-            </div>
           </div>
         </div>
+      </div>
     </section>
   );
-
 }
