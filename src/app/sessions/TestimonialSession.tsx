@@ -139,7 +139,7 @@ function TestimonialSession() {
                 stagger={0.08}
                 delay={0.08}
                 yFrom={24}
-                as="div"
+                as="h2"
               >
                <span className=" text-nowrap">Why our clients</span> <br />
                 <span className="text-primary-default text-nowrap">

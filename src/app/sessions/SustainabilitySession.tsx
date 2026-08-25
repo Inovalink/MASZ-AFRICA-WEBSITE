@@ -523,6 +523,7 @@ function SustainabilitySession({
               <div className="flex flex-col gap-[32px] max-w-[485px] lg:max-w-[751px]">
                 <div className="text-xl-semibold lg:text-3xl-semibold xl:text-[44px] uppercase tracking-tight text-white leading-[1.15]">
                   <HeaderLineByLineAnimation
+                    as="h2"
                     startAnimation={startTextAnimation}
                     onComplete={onHeaderComplete}
                     lineY={28}

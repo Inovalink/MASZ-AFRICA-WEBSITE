@@ -25,6 +25,10 @@ export interface HeaderLineByLineAnimationProps {
   className?: string;
   /** Additional style */
   style?: React.CSSProperties;
+  /** Element to render. Use a heading tag to give the section a real outline;
+   *  Tailwind preflight resets heading font-size/weight, so styling is
+   *  unchanged and the tag is purely semantic. */
+  as?: 'div' | 'h1' | 'h2' | 'h3' | 'h4';
 }
 
 /**
@@ -46,8 +50,9 @@ export default function HeaderLineByLineAnimation({
   children,
   className,
   style,
+  as: Wrapper = 'div',
 }: HeaderLineByLineAnimationProps) {
-  const headerTextRef = useRef<HTMLDivElement>(null);
+  const headerTextRef = useRef<HTMLDivElement | HTMLHeadingElement>(null);
   const splitRef = useRef<{ split: SplitType; lines: Element[] } | null>(null);
   const hasAnimatedRef = useRef(false);
 
@@ -117,8 +122,12 @@ export default function HeaderLineByLineAnimation({
   }, [startAnimation, ready, duration, stagger, delay, ease, onComplete]);
 
   return (
-    <div ref={headerTextRef} className={className} style={style}>
+    <Wrapper
+      ref={headerTextRef as React.Ref<HTMLDivElement & HTMLHeadingElement>}
+      className={className}
+      style={style}
+    >
       {children}
-    </div>
+    </Wrapper>
   );
 }

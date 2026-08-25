@@ -189,7 +189,7 @@ export default function FaqSession() {
                 stagger={0.12}
                 delay={0.04}
                 yFrom={24}
-                as="div"
+                as="h2"
                 className="text-white! uppercase "
               >
                 GOT ANY QUESTIONS? <br />

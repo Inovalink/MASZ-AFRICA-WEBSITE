@@ -26,7 +26,7 @@ export const metadata: Metadata = {
     template: "%s | MASZ-Africa",
   },
   description:
-    "MASZ-Africa supplies certified mining consumables, grinding media, activated carbon, steel pipes, and gearbox maintenance services to mines across Ghana and West Africa. Reliable supply chain backed by expert technical support.",
+    "Certified mining consumables, grinding media, activated carbon and steel pipes for mines across Ghana and West Africa, backed by expert technical support.",
   keywords: [
     "mining equipment Ghana",
     "mining consumables Ghana",

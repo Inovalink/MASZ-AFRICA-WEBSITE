@@ -29,16 +29,19 @@ function HeroSession({ startTextAnimation = false }: HeroSessionProps) {
           }}
         />
         <div className="hero-message lg:flex lg:items-center lg:justify-between lg:mx-[24] xl:mx-[120] min-[1920px]:mx-[200]! lg:my-[80] relative z-10">
-          <div className="hero-logo mx-[24px] lg:mx-0 flex items-center justify-center mt-[40] lg:mt-0">
+          {/* The logotype is this page's headline, so it carries the h1. Its
+              alt text is what crawlers and screen readers read as the heading,
+              which is why it spells out the offering rather than saying "logo". */}
+          <h1 className="hero-logo mx-[24px] lg:mx-0 flex items-center justify-center mt-[40] lg:mt-0">
             <Image
               src="/maszAssets/logotype.svg"
-              alt="masz-africa logotype"
+              alt="MASZ-Africa — Mining Equipment & Services in Ghana"
               width={370}
               height={100}
               priority
               className="w-full h-auto lg:h-auto lg:w-[500] xl:w-[550]"
             />
-          </div>
+          </h1>
 
           {/* Hero subtext: line-by-line reveal after scroll reveal */}
           <div className="hero-section-logo-and-subtext lg:w-[40%]">

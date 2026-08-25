@@ -23,8 +23,10 @@ export interface LineByLineTextProps {
    *  the SplitText mask approach, which always starts lines at yPercent:100
    *  so they are fully hidden behind their per-line clip masks. */
   yFrom?: number;
-  /** Wrapper element. */
-  as?: 'div' | 'p' | 'span';
+  /** Wrapper element. Heading tags are allowed so section titles can carry a
+   *  real document outline without any visual change (Tailwind preflight
+   *  resets heading font-size and weight to inherit). */
+  as?: 'div' | 'p' | 'span' | 'h1' | 'h2' | 'h3' | 'h4';
   /** If true, keep SplitText wrappers after animation completes. */
   keepSplit?: boolean;
   /** If true, defer splitting until startAnimation becomes true. */
@@ -55,7 +57,9 @@ export default function LineByLineText({
   keepSplit = false,
   deferSplit = false,
 }: LineByLineTextProps) {
-  const wrapperRef = useRef<HTMLDivElement | HTMLParagraphElement | HTMLSpanElement>(null);
+  const wrapperRef = useRef<
+    HTMLDivElement | HTMLParagraphElement | HTMLSpanElement | HTMLHeadingElement
+  >(null);
   const splitRef = useRef<SplitText | null>(null);
   const hasAnimatedRef = useRef(false);
   const [fontsReady, setFontsReady] = useState(false);

@@ -82,7 +82,7 @@ function CarouselSlide({
       <div className="relative shrink-0 w-34 h-26.5 sm:w-40 sm:h-30 md:w-55 md:h-52 rounded overflow-hidden bg-white/10">
         <Image
           src={image}
-          alt=""
+          alt={`${title} — ${subtitle}`}
           fill
           sizes="(max-width: 768px) 200px, 240px"
           className="object-cover"

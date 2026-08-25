@@ -117,6 +117,7 @@ function AchievementsSession({
           {/* Header */}
           <div className="section-header uppercase text-xl-semibold leading-[110%] tracking-tight lg:text-4xl-semibold mb-[20px]">
             <HeaderLineByLineAnimation
+              as="h2"
               startAnimation={startTextAnimation}
               onComplete={onHeaderComplete}
               lineY={HEADER_LINE_Y}

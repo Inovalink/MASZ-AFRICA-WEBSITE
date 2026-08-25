@@ -120,6 +120,7 @@ function AboutSession({ startTextAnimation = false }: AboutSessionProps) {
           <Tag text="About us" className="ml-[22] lg:ml-[0]" />
           <div className="about-us-header text-xl-semibold leading-[110%] uppercase ml-[22] lg:ml-[0] my-[30] lg:my-[37]  lg:text-4xl-semibold tracking-tight ">
             <HeaderLineByLineAnimation
+              as="h2"
               startAnimation={startTextAnimation}
               onComplete={() => setStartBodyAnimation(true)}
               lineY={HEADER_LINE_Y}

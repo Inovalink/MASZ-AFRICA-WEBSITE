@@ -654,6 +654,7 @@ function PartnersMapSession() {
       <div className="mx-[22px] lg:mx-[24px] md:flex md:justify-between md:gap-[50] xl:mx-[120px] min-[1920px]:mx-[200px]  ">
         <div className="section-header uppercase text-xl-semibold leading-[110%] lg:text-4xl-semibold tracking-tight mb-[12px]">
           <HeaderLineByLineAnimation
+            as="h2"
             startAnimation={startTextAnimation}
             onComplete={onHeaderComplete}
             lineY={28}

@@ -117,6 +117,7 @@ function ServiceSession({ startTextAnimation = false }: ServiceSessionProps) {
 
         <div className="services-section-header flex items-start justify-between text-xl-semibold  leading-[110%] uppercase my-[30] lg:mt-[37] lg:mb-[98] lg:text-4xl-semibold tracking-tight">
           <HeaderLineByLineAnimation
+            as="h2"
             startAnimation={startTextAnimation}
             onComplete={() => setStartListAnimation(true)}
             lineY={HEADER_LINE_Y}

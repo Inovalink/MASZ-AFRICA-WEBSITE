@@ -260,6 +260,7 @@ function CoreValueSession({
         {/* Header — line-by-line reveal */}
         <div className="section-header uppercase text-xl-semibold lg:mx-[24] xl:mx-[120] min-[1920px]:mx-[200]! ml-[22] mt-[30] mb-[51] tracking-tight lg:text-4xl-semibold">
           <HeaderLineByLineAnimation
+            as="h2"
             startAnimation={shouldStart}
             onComplete={() => setStartBodyAnimation(true)}
             lineY={HEADER_LINE_Y}
