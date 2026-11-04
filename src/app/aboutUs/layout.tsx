@@ -47,7 +47,7 @@ const aboutPageSchema = {
     address: {
       "@type": "PostalAddress",
       streetAddress:
-        "House #17, Breeze Street, GT 353-5495, Community 16, Terno",
+        "House #17, Breeze Street, GT 353-5495, Community 16, Tema",
       postOfficeBoxNumber: "P.O. Box 729",
       addressLocality: "Tarkwa",
       addressRegion: "Western Region",

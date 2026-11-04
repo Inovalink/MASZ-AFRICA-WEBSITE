@@ -773,7 +773,7 @@ export default function ContactPage() {
                   >
                     House #17, Breeze Street,
                     <br />
-                    GT 353-5495, Community 16, Terno
+                    GT 353-5495, Community 16, Tema
                   </LineByLineText>
                 </div>
 
