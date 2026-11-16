@@ -68,7 +68,7 @@ export default function Image() {
               }}
             >
               Based in Tarkwa, Western Region, Ghana. Email info@maszgh.com or
-              call +233 24 416 3975.
+              call +233 59 670 3795.
             </div>
           </div>
         </div>

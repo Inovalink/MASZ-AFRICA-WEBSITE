@@ -5,7 +5,7 @@ const BASE_URL = "https://www.maszgh.com";
 export const metadata: Metadata = {
   title: "Contact Us",
   description:
-    "Get in touch with MASZ-Africa. Our team is based in Tarkwa, Western Region, Ghana. Reach us at info@maszgh.com or call +233 24 416 3975. We respond to all inquiries within 24 hours.",
+    "Get in touch with MASZ-Africa. Our team is based in Tarkwa, Western Region, Ghana. Reach us at info@maszgh.com or call +233 59 670 3795. We respond to all inquiries within 24 hours.",
   keywords: [
     "contact MASZ-Africa",
     "MASZ Africa contact",
@@ -22,14 +22,14 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Contact MASZ-Africa | Mining Operations Support, Ghana",
     description:
-      "Get in touch with MASZ-Africa. Based in Tarkwa, Western Region, Ghana. Email info@maszgh.com or call +233 24 416 3975. We respond within 24 hours.",
+      "Get in touch with MASZ-Africa. Based in Tarkwa, Western Region, Ghana. Email info@maszgh.com or call +233 59 670 3795. We respond within 24 hours.",
     url: `${BASE_URL}/contactUs`,
   },
   twitter: {
     card: "summary_large_image",
     title: "Contact MASZ-Africa | Mining Operations Support, Ghana",
     description:
-      "Based in Tarkwa, Western Region, Ghana. Email info@maszgh.com or call +233 24 416 3975.",
+      "Based in Tarkwa, Western Region, Ghana. Email info@maszgh.com or call +233 59 670 3795.",
   },
 };
 
@@ -46,7 +46,7 @@ const contactPageSchema = {
     url: BASE_URL,
     contactPoint: {
       "@type": "ContactPoint",
-      telephone: "+233244163975",
+      telephone: "+233596703795",
       email: "info@maszgh.com",
       contactType: "customer service",
       areaServed: ["GH", "West Africa"],

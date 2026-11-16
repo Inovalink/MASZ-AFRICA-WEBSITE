@@ -154,7 +154,7 @@ const organizationSchema = {
     addressRegion: "Western Region",
     addressCountry: "GH",
   },
-  telephone: "+233244163975",
+  telephone: "+233596703795",
   email: "info@maszgh.com",
   areaServed: [
     { "@type": "Country", name: "Ghana" },
